@@ -1,6 +1,5 @@
 //This code was written for FRC Team 3164 by Jaxon Brown and Brendan Gregos!
 
-
 package org.usfirst.frc.team3164.robot;
 
 import edu.wpi.first.wpilibj.Gyro;
