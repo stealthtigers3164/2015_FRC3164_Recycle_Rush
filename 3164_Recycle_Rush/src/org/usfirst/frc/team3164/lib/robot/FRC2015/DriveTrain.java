@@ -12,6 +12,15 @@ public class DriveTrain {
 	public boolean slowMode = false;
 	
 	
+	public DriveTrain(IMotor leftFront, IMotor rightFront, IMotor leftBack, IMotor rightBack, boolean slowMode) {
+		this.leftFront = leftFront;
+		this.rightFront = rightFront;
+		this.leftBack = leftBack;
+		this.rightBack = rightBack;
+		this.slowMode = slowMode;
+	}
+	
+	
 	public void setMotorPower(double leftBack, double rightBack, double leftFront, double rightFront) {
 		this.leftBack.setPower(limit(leftBack * (slowMode ? 0.6 : 1)));
 		this.rightBack.setPower(limit(rightBack * (slowMode ? 0.6 : 1)));
