@@ -1,0 +1,29 @@
+package org.usfirst.frc.team3164.lib.baseComponents.motors;
+
+public interface IMotor {
+	/**
+     * Set the power of the motor
+     * @param pwr power of the motor, -1.0 to 1.0
+     */
+    public void setPower(double pwr);
+    
+    /**
+     * Set the scaled power of the motor
+     * @param pwr power of the motor, -100 to 100
+     */
+    public void setScaledPower(int pwr);
+    
+    /**
+     * Adds power for incrementing power purposes
+     * @param pwr power to increase/decrease by.
+     */
+    public void addPower(double pwr);
+    
+    /**
+     * Stop the motor.
+     */
+    public void stop();
+    
+    @Deprecated //Unfinished
+    public void slowStop();
+}
