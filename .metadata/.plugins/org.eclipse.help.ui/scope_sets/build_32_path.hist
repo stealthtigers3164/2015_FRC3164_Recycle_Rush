@@ -1,0 +1,4 @@
+#Fri Jan 16 17:05:51 EST 2015
+__DEFAULT__=false
+org.eclipse.help.ui.localSearch.master=true
+expression=build path
