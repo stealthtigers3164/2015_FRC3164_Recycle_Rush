@@ -1,10 +1,10 @@
 package org.usfirst.frc.team3164.lib.baseComponents.motors;
 
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.VictorSP;
 
 public class VicMotor implements IMotor {
     private int pwmLoc;
-    private Victor m;
+    private VictorSP m;
     private double power;
     private boolean reversed;
     
@@ -14,7 +14,7 @@ public class VicMotor implements IMotor {
      */
     public VicMotor(int pwmLoc) {
         this.pwmLoc = pwmLoc;
-        this.m = new Victor(this.pwmLoc);
+        this.m = new VictorSP(this.pwmLoc);
         this.power = 0;
     }
     
@@ -33,7 +33,7 @@ public class VicMotor implements IMotor {
      * @return The Jag cotroller
      */
     @Deprecated
-    public Victor getVic() {
+    public VictorSP getVic() {
     	return m;
     }
     

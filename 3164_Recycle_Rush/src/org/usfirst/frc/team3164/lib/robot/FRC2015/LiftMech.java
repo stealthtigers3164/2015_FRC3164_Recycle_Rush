@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
+import org.usfirst.frc.team3164.lib.baseComponents.LimitSwitch;
 import org.usfirst.frc.team3164.lib.baseComponents.MotorLink;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 
@@ -9,6 +10,8 @@ public class LiftMech {
 	
 	
 	private MotorLink motors;
+	private LimitSwitch topLim;
+	private LimitSwitch lowLim;
 	
 	public LiftMech(IMotor... ms) {
 		this.motors = new MotorLink(ms);
@@ -16,7 +19,17 @@ public class LiftMech {
 			@Override
 			public void run() {
 				while(true) {
-					
+					if(topLim.isPressed() && motors.getPower()>0) {
+						motors.stop();
+					}
+					if(lowLim.isPressed() && motors.getPower()<0) {
+						motors.stop();
+					}
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}).start();
