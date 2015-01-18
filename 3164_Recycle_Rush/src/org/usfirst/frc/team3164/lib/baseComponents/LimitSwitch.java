@@ -1,18 +1,28 @@
 package org.usfirst.frc.team3164.lib.baseComponents;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
+
+import org.usfirst.frc.team3164.lib.util.ICallback;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
+/**
+ * Limit switch class. Uses Digital Input.
+ * @author jaxon
+ *
+ */
 public class LimitSwitch {
 	private DigitalInput lin;
-	private ArrayList<Method> callbacks;
+	private ArrayList<ICallback> callbacks;
 	private boolean wasPressed = false;
 	
+	/**
+	 * Instantiate a new Limit Switch with the port.
+	 * @param port port value
+	 */
 	public LimitSwitch(final int port) {
 		lin = new DigitalInput(port);
-		callbacks = new ArrayList<Method>();
+		callbacks = new ArrayList<ICallback>();
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -20,9 +30,9 @@ public class LimitSwitch {
 					if(!wasPressed && isPressed()) {
 						wasPressed = true;
 						try {
-							for(Method m : callbacks) {
+							for(ICallback cb : callbacks) {
 								try {
-									m.invoke(m.getDeclaringClass(), port);
+									cb.call();
 								} catch(Exception ex) {}
 							}
 						} catch(Exception ex) {}
@@ -40,11 +50,19 @@ public class LimitSwitch {
 		});
 	}
 	
+	/**
+	 * Gets if the limit switch is pressed.
+	 * @return true if the limit switch is pressed.
+	 */
 	public boolean isPressed() {
 		return lin.get();
 	}
 	
-	public void addCallback(Method m) {
-		callbacks.add(m);
+	/**
+	 * Adds callback. All callbacks will be invoked when the limit switch enters a depressed state.
+	 * @param cb Callback to be called.
+	 */
+	public void addCallback(ICallback cb) {
+		callbacks.add(cb);
 	}
 }

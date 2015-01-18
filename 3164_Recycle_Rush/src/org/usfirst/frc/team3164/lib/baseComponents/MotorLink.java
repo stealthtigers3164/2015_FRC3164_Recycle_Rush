@@ -4,16 +4,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
-
+/**
+ * Class that links multiple motors to one power control.
+ * @author jaxon
+ *
+ */
 public class MotorLink {
 	private ArrayList<IMotor> motors;
 	private double power;
 	
+	/**
+	 * Instantiate a new MotorLink
+	 * @param ms List Motors to link in this system.
+	 */
 	public MotorLink(IMotor... ms) {
 		motors.addAll(Arrays.asList(ms));
 		this.power = 0;
 	}
 	
+	/**
+	 * When necessary gets the motors controlled by this link.
+	 * @return ArrayList of IMotors controlled by this link.
+	 */
+	@Deprecated
 	public ArrayList<IMotor> getMotors() {
 		return motors;
 	}

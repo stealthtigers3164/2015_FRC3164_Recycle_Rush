@@ -1,5 +1,10 @@
 package org.usfirst.frc.team3164.lib.baseComponents.motors;
 
+/**
+ * Interface that controls all motor controller types for compatibility. JagMotor, TalMotor, and VicMotor implement this interface.
+ * @author Jaxon
+ *
+ */
 public interface IMotor {
 	/**
      * Set the power of the motor
