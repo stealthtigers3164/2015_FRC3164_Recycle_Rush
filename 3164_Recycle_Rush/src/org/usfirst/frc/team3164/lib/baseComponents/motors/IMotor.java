@@ -29,6 +29,11 @@ public interface IMotor {
      */
     public void stop();
     
+    /**
+     * Reverses the motor.
+     */
+    public void reverse();
+    
     @Deprecated //Unfinished
     public void slowStop();
 }

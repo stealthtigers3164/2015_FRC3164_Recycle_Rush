@@ -81,6 +81,11 @@ public class VicMotor implements IMotor {
     }
     
     @Override
+    public void reverse() {
+    	reversed = !reversed;
+    }
+    
+    @Override
     @Deprecated //Unfinished
     public void slowStop() {
         //TODO Use a thread calling back here to stop slowly

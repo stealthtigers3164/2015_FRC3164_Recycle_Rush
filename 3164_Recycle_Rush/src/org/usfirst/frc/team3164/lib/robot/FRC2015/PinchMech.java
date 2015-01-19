@@ -3,10 +3,20 @@ package org.usfirst.frc.team3164.lib.robot.FRC2015;
 import org.usfirst.frc.team3164.lib.baseComponents.MotorEncoder;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 
+/**
+ * Controls the Pinch mechanism.
+ * @author J
+ *
+ */
 public class PinchMech {
 	private IMotor motor;
 	private MotorEncoder enc;
 	
+	/**
+	 * Instantiates new PinchMech controller
+	 * @param m The motor controlling the mechanism
+	 * @param en The encoder attached to the rotating axis of m
+	 */
 	public PinchMech(IMotor m, MotorEncoder en) {
 		motor = m;
 		enc = en;
@@ -55,24 +65,48 @@ public class PinchMech {
 		}
 	}
 	
+	/**
+	 * Starts closing the pinching mechanism
+	 */
 	public void close() {
 		if(isAuto)
 			motor.setPower(1.0);
 	}
 	
+	/**
+	 * Starts opening the pinching mechanism
+	 */
 	public void open() {
 		if(isAuto)
 			motor.setPower(-1.0);
 	}
 	
+	/**
+	 * Indicates different positions the Pinch Mech can be opened to
+	 * @author J
+	 *
+	 */
 	public enum FieldObject {
+		/**
+		 * The grey or yellow totes
+		 */
 		TOTE(50),
+		/**
+		 * The trash cans
+		 */
 		TRASH_CAN(75),
+		/**
+		 * Will open to a full opened state
+		 */
 		OPEN(0);
 		private int size;
 		private FieldObject(int i) {
 			size = i;
 		}
+		/**
+		 * Internal.
+		 * @return Internal.
+		 */
 		public int getSize() {
 			return size;
 		}
@@ -100,8 +134,12 @@ public class PinchMech {
 		}
 	}
 	
+	/**
+	 * Closes to object listed. Don't pass FieldObject.OPEN, as it won't work.
+	 * @param object FieldObject to close to the value of.
+	 */
 	public void closeTo(FieldObject object) {
-		if(isAuto) {
+		if(isAuto || object == FieldObject.OPEN) {
 			return;
 		}
 		close();
@@ -111,6 +149,9 @@ public class PinchMech {
 		closeThread.start();
 	}
 
+	/**
+	 * Opens the mechanism all the way.
+	 */
 	public void openATW() {
 		if(isAuto) {
 			return;
@@ -122,6 +163,10 @@ public class PinchMech {
 		closeThread.start();
 	}
 
+	/**
+	 * Cancels automatic tasks. Control will be regained momentarily after this is called.
+	 * @return the thread that was being used. If you intend to set power immediately after calling, you may wish to use "pinchMechObj.cancelAutoTask().join();" to wait for the thread.
+	 */
 	public Thread cancelAutoTask() {
 		if(isAuto) {
 			closeTask.kill();
