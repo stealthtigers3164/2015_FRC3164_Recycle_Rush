@@ -133,6 +133,9 @@ public class LiftMech {
 	 * @return the thread that was being used. If you intend to set power immediately after calling, you may wish to use "liftMechObj.cancelGoingUp().join();" to wait for the thread.
 	 */
 	public Thread cancelGoingUp() {
+		if(gUR==null || !isInAuto) {
+			return null;
+		}
 		gUR.kill();
 		return gUT;
 	}
