@@ -11,19 +11,19 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 public abstract class JSRobot extends IterativeRobot {
 	//Drive train
 	public static int DRIVETRAIN_MOTOR_FRONTLEFT = 0;
-	public static int DRIVETRAIN_MOTOR_FRONTRIGHT = 0;
-	public static int DRIVETRAIN_MOTOR_REARLEFT = 0;
-	public static int DRIVETRAIN_MOTOR_REARRIGHT = 0;
+	public static int DRIVETRAIN_MOTOR_FRONTRIGHT = 1;
+	public static int DRIVETRAIN_MOTOR_REARLEFT = 2;
+	public static int DRIVETRAIN_MOTOR_REARRIGHT = 3;
 	
 	//Lift Mech
-	public static int LIFTMECH_MOTOR_1 = 0;
-	public static int LIFTMECH_LIMIT_TOP = 0;
-	public static int LIFTMECH_LIMIT_BOTTOM = 0;
+	public static int LIFTMECH_MOTOR_1 = 4;
+	public static int LIFTMECH_LIMIT_TOP = 6;
+	public static int LIFTMECH_LIMIT_BOTTOM = 7;
 	public static int LIFTMECH_ENCODER_AC = 0;
 	public static int LIFTMECH_ENCODER_BC = 0;
 	
 	//Pinch Mech
-	public static int PINCHMECH_MOTOR = 0;
+	public static int PINCHMECH_MOTOR = 5;
 	public static int PINCHMECH_ENCODER_AC = 0;
 	public static int PINCHMECH_ENCODER_BC = 0;
 	
