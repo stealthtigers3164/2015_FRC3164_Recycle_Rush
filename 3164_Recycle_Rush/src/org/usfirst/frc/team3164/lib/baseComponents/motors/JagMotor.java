@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3164.lib.baseComponents.motors;
 
+import org.usfirst.frc.team3164.lib.baseComponents.Watchdog;
+
 import edu.wpi.first.wpilibj.Jaguar;
 
 public class JagMotor implements IMotor {
@@ -49,6 +51,7 @@ public class JagMotor implements IMotor {
     public void setPower(double pwr) {
         this.power = pwr;
         m.set(reversed ? -power : power);
+        
     }
     
     /**

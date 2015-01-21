@@ -6,6 +6,8 @@ package org.usfirst.frc.team3164.lib.baseComponents.motors;
  *
  */
 public interface IMotor {
+	
+	
 	/**
      * Set the power of the motor
      * @param pwr power of the motor, -1.0 to 1.0
@@ -33,6 +35,12 @@ public interface IMotor {
      * Reverses the motor.
      */
     public void reverse();
+    
+    /**
+     * Kills the motor
+     * @param shouldBeDead should the motor be killed or re-enabled
+     */
+    public void setDead(boolean shouldBeDead);
     
     @Deprecated //Unfinished
     public void slowStop();
