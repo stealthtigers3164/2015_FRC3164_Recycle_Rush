@@ -1,6 +1,6 @@
 package org.usfirst.frc.team3164.lib.baseComponents.motors;
 
-import org.usfirst.frc.team3164.lib.baseComponents.Watchdog;
+import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 
 import edu.wpi.first.wpilibj.Jaguar;
 
@@ -9,6 +9,7 @@ public class JagMotor implements IMotor {
     private Jaguar m;
     private double power;
     private boolean reversed;
+    private boolean dead;
     
     /**
      * Make a new Motor Object
@@ -18,6 +19,7 @@ public class JagMotor implements IMotor {
         this.pwmLoc = pwmLoc;
         this.m = new Jaguar(this.pwmLoc);
         this.power = 0;
+        Watchcat.registerMotor(this);
     }
     
     /**
@@ -49,6 +51,8 @@ public class JagMotor implements IMotor {
      */
     @Override
     public void setPower(double pwr) {
+    	if(dead)
+    		return;
         this.power = pwr;
         m.set(reversed ? -power : power);
         
@@ -60,6 +64,8 @@ public class JagMotor implements IMotor {
      */
     @Override
     public void setScaledPower(int pwr) {
+    	if(dead)
+    		return;
         this.power = pwr/100.0;
         m.set(reversed ? -power : power);
     }
@@ -70,6 +76,8 @@ public class JagMotor implements IMotor {
      */
     @Override
     public void addPower(double pwr) {
+    	if(dead)
+    		return;
         this.power += pwr;
         this.checkPower();
         m.set(reversed ? -power : power);
@@ -80,6 +88,8 @@ public class JagMotor implements IMotor {
      */
     @Override
     public void stop() {
+    	if(dead)
+    		return;
         m.set(0);
     }
     
@@ -91,6 +101,8 @@ public class JagMotor implements IMotor {
     @Override
     @Deprecated //Unfinished
     public void slowStop() {
+    	if(dead)
+    		return;
         //TODO Use a thread calling back here to stop slowly
     }
     
@@ -106,4 +118,16 @@ public class JagMotor implements IMotor {
         	this.power = -1.0;
         }
     }
+
+	@Override
+	public int getLoc() {
+		return pwmLoc;
+	}
+
+	@Override
+	public void setDead(boolean shouldBeDead) {
+		if(shouldBeDead)
+			this.power = 0;
+		this.dead = shouldBeDead;
+	}
 }

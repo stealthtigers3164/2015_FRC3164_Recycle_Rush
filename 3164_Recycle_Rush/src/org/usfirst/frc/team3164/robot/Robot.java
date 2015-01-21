@@ -3,6 +3,7 @@
 
 package org.usfirst.frc.team3164.robot;
 
+import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor; 
 import org.usfirst.frc.team3164.lib.baseComponents.motors.JagMotor;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain;
@@ -39,7 +40,7 @@ public class Robot extends IterativeRobot {
     //Constructor
     public Robot() {
     	//Disable robot if no comms fail- prevent Charlie drivers!
-    	//robotDrive.setExpiration(0.1);
+    	Watchcat.init();
         //Setup new drivetrain
     	IMotor frontleft= new JagMotor(0,true);//reversed
     	IMotor rearleft= new JagMotor(1,true);//reversed
@@ -74,7 +75,7 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousPeriodic() {
-
+    	Watchcat.feed();
     }
 
     /**
@@ -88,6 +89,8 @@ public class Robot extends IterativeRobot {
     	
     	//emergency gyro reset during match
     	if(stick1.getRawButton(10)){ drivegyro.initGyro(); }
+    	
+    	Watchcat.feed();
     }
     
     /**

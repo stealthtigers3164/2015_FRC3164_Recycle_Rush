@@ -7,9 +7,8 @@ import java.util.UUID;
 
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 
-public class Watchdog {
+public class Watchcat {
 	private static int timeout;//In ms
-	private static boolean hasGottenCall = false;
 	private static Thread wdTrd;
 	private static WDTask wdTsk;
 	public static boolean isRobotDead = false;
@@ -44,7 +43,18 @@ public class Watchdog {
 		private Map<UUID, IMotor> motors = new HashMap<UUID, IMotor>();
 		
 		public void addMotor(IMotor m) {
-			
+			if(!isHere(m)) {
+				motors.put(UUID.randomUUID(), m);
+			}
+		}
+		
+		private boolean isHere(IMotor m) {
+			for(IMotor mo : motors.values()) {
+				if(m.getLoc()==mo.getLoc()) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 	
@@ -57,7 +67,21 @@ public class Watchdog {
 		}
 	}
 	
-	public static void call() {
+	public static void reviveRobot() {
+		if(!isRobotDead)
+			return;
+		isRobotDead = false;
+		for(IMotor m : mReg.motors.values()) {
+			m.setDead(false);
+		}
+	}
+	
+	public static void feed() {
 		last = new Date().getTime();
+		reviveRobot();
+	}
+	
+	public static void registerMotor(IMotor m) {
+		mReg.addMotor(m);
 	}
 }

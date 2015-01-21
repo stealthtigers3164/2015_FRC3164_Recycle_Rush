@@ -6,7 +6,11 @@ package org.usfirst.frc.team3164.lib.baseComponents.motors;
  *
  */
 public interface IMotor {
-	
+	/**
+	 * Gets the location of the motor
+	 * @return int loc of motor
+	 */
+	public int getLoc();
 	
 	/**
      * Set the power of the motor
