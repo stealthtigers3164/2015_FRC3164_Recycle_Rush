@@ -32,8 +32,6 @@ public class Robot extends JSRobot {
     
     //Constructor
     public Robot() {
-    	//Disable robot if no comms fail- prevent Charlie drivers!
-    	Watchcat.init();
         //Setup new drivetrain
     	drivegyro=new Gyro(0);
         stick1 = new Joystick(joystickChannel);
