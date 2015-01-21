@@ -99,7 +99,7 @@ public class Robot extends IterativeRobot {
     @Override
     public void testPeriodic() {
     	drivegyro.initGyro(); //Reset Gyro when robot placed into test mode.
-    	
+    	Watchcat.feed();
     }
     
 }
