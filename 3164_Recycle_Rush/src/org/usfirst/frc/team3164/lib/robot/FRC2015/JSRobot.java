@@ -1,10 +1,10 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
-import org.usfirst.frc.team3164.lib.baseComponents.LimitSwitch;
-import org.usfirst.frc.team3164.lib.baseComponents.MotorEncoder;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.JagMotor;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.VicMotor;
+import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
+import org.usfirst.frc.team3164.lib.baseComponents.sensors.MotorEncoder;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 

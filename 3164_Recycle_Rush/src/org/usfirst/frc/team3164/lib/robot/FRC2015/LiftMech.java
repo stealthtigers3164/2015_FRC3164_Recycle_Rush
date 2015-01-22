@@ -1,9 +1,9 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
-import org.usfirst.frc.team3164.lib.baseComponents.LimitSwitch;
-import org.usfirst.frc.team3164.lib.baseComponents.MotorEncoder;
 import org.usfirst.frc.team3164.lib.baseComponents.MotorLink;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
+import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
+import org.usfirst.frc.team3164.lib.baseComponents.sensors.MotorEncoder;
 
 /**
  * Controls the Lift Mechanism. Use it to manage the Lifting mechanism.

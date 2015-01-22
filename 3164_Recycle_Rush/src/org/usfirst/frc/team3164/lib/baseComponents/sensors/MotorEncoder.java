@@ -1,4 +1,4 @@
-package org.usfirst.frc.team3164.lib.baseComponents;
+package org.usfirst.frc.team3164.lib.baseComponents.sensors;
 
 import edu.wpi.first.wpilibj.Encoder;
 

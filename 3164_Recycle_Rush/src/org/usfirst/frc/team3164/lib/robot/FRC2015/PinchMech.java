@@ -1,6 +1,5 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
-import org.usfirst.frc.team3164.lib.baseComponents.MotorEncoder;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 
 /**
@@ -10,24 +9,24 @@ import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
  */
 public class PinchMech {
 	private IMotor motor;
-	private MotorEncoder enc;
+	//private MotorEncoder enc;
 	
 	/**
 	 * Instantiates new PinchMech controller
-	 * @param m The motor controlling the mechanism
-	 * @param en The encoder attached to the rotating axis of m
+	 * @param m The motor controlling the mechanism*/
+	 /* @param en The encoder attached to the rotating axis of m
 	 */
-	public PinchMech(IMotor m, MotorEncoder en) {
+	public PinchMech(IMotor m/*, MotorEncoder en*/) {
 		motor = m;
-		enc = en;
-		new Thread(new PinchLimiter()).start();
+		//enc = en;
+		//new Thread(new PinchLimiter()).start();
 	}
 	
-	private static final int LIMIT_HIGH = 100;
-	private static final boolean OUT_OF_HIGH_UP = true;
-	private static final int LIMIT_LOW = 0;
-	private boolean isAutoBOlim = false;
-	private class PinchLimiter implements Runnable {
+	//private static final int LIMIT_HIGH = 100;
+	//private static final boolean OUT_OF_HIGH_UP = true;
+	//private static final int LIMIT_LOW = 0;
+	//private boolean isAutoBOlim = false;
+	/*private class PinchLimiter implements Runnable {
 		@Override
 		public void run() {
 			while(true) {
@@ -63,7 +62,7 @@ public class PinchMech {
 				} catch(Exception ex) {}
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * Starts closing the pinching mechanism
@@ -112,10 +111,10 @@ public class PinchMech {
 		}
 	}
 	private boolean isAuto = false;
-	private static final int tolerance = 5;
-	private CloseToTask closeTask;
-	private Thread closeThread;
-	private class CloseToTask implements Runnable {
+	//private static final int tolerance = 5;
+	//private CloseToTask closeTask;
+	//private Thread closeThread;
+	/*private class CloseToTask implements Runnable {
 		private FieldObject obj;
 		public CloseToTask(FieldObject obj) {
 			this.obj = obj;
@@ -132,13 +131,13 @@ public class PinchMech {
 			motor.stop();
 			isAuto = false;
 		}
-	}
+	}*/
 	
 	/**
 	 * Closes to object listed. Don't pass FieldObject.OPEN, as it won't work.
 	 * @param object FieldObject to close to the value of.
 	 */
-	public void closeTo(FieldObject object) {
+	/*public void closeTo(FieldObject object) {
 		if(isAuto || object == FieldObject.OPEN) {
 			return;
 		}
@@ -147,12 +146,12 @@ public class PinchMech {
 		closeTask = new CloseToTask(object);
 		closeThread = new Thread(closeTask);
 		closeThread.start();
-	}
+	}*/
 
 	/**
 	 * Opens the mechanism all the way.
 	 */
-	public void openATW() {
+	/*public void openATW() {
 		if(isAuto) {
 			return;
 		}
@@ -161,17 +160,17 @@ public class PinchMech {
 		closeTask = new CloseToTask(FieldObject.OPEN);
 		closeThread = new Thread(closeTask);
 		closeThread.start();
-	}
+	}*/
 
 	/**
 	 * Cancels automatic tasks. Control will be regained momentarily after this is called.
 	 * @return the thread that was being used. If you intend to set power immediately after calling, you may wish to use "pinchMechObj.cancelAutoTask().join();" to wait for the thread.
 	 */
-	public Thread cancelAutoTask() {
+	/*public Thread cancelAutoTask() {
 		if(isAuto) {
 			closeTask.kill();
 			return closeThread;
 		}
 		return null;
-	}
+	}*/
 }
