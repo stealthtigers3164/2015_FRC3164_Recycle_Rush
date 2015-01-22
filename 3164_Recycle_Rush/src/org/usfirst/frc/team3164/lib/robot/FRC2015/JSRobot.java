@@ -41,7 +41,6 @@ public abstract class JSRobot extends IterativeRobot {
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARRIGHT), false);
 		this.liftMech = new LiftMech(new LimitSwitch(JSRobot.LIFTMECH_LIMIT_TOP), new LimitSwitch(JSRobot.LIFTMECH_LIMIT_BOTTOM),
 				new MotorEncoder(JSRobot.LIFTMECH_ENCODER_AC, JSRobot.LIFTMECH_ENCODER_BC, false), new VicMotor(JSRobot.LIFTMECH_MOTOR_1));
-		this.pinchMech = new PinchMech(new VicMotor(JSRobot.PINCHMECH_MOTOR),
-				new MotorEncoder(JSRobot.PINCHMECH_ENCODER_AC, JSRobot.PINCHMECH_ENCODER_BC, false));
+		this.pinchMech = new PinchMech(new VicMotor(JSRobot.PINCHMECH_MOTOR));
 	}
 }
