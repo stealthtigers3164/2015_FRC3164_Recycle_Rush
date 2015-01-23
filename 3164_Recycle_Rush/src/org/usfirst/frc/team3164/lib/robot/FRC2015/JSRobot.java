@@ -28,8 +28,6 @@ public abstract class JSRobot extends IterativeRobot {
 	public static int PINCHMECH_ENCODER_BC = 0;
 	
 	
-	
-	
 	public DriveTrain driveTrain;
 	public LiftMech liftMech;
 	public PinchMech pinchMech;

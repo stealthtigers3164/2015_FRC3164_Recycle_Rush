@@ -4,14 +4,9 @@
 package org.usfirst.frc.team3164.robot;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
-import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor; 
-import org.usfirst.frc.team3164.lib.baseComponents.motors.JagMotor;
-import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
-import org.usfirst.frc.team3164.lib.robot.FRC2015.LiftMech;
 
 import edu.wpi.first.wpilibj.Gyro;
-import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
