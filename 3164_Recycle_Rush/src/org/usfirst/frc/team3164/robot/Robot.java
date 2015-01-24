@@ -50,7 +50,7 @@ public class Robot extends JSRobot {
     }
     
     /**
-     * This function is called periodically during autonomous
+     * This function is called periodically during autonomouschgchg
      */
     @Override
     public void autonomousPeriodic() {
