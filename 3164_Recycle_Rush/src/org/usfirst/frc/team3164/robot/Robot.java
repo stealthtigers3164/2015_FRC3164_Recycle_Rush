@@ -3,6 +3,7 @@
 
 package org.usfirst.frc.team3164.robot;
 
+import org.usfirst.frc.team3164.lib.baseComponents.BigJoystick;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
 
