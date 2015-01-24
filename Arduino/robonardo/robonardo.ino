@@ -1,10 +1,10 @@
 //Most of this code is from here: http://blog.tkjelectronics.dk/2011/10/nxt-shield-ver2/
 //As such, this file is released under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported license
 //which can be found here http://creativecommons.org/licenses/by-nc-sa/3.0/
-//Other modifications have been made by Brendan Gregos for FRC Team 3164, Stealth Tigers
+//A few modifications have been made by Brendan Gregos for FRC Team 3164, Stealth Tigers
 #include <i2cmaster.h>
 
-byte clockPin = 4;
+byte clockPin = 3;
 byte buf[9];//Buffer to store the received valeus
 byte addr = 0x02;//address 0x02 in a 8-bit context - 0x01 in a 7-bit context
 byte distance;
@@ -23,10 +23,13 @@ void loop()
 {    
 //  printUltrasonicCommand(0x42);//Read Measurement Byte 0
   distance = readDistance();
-  if(distance == 0xFF)
+  if(distance == 0xFF){
     Serial.println("Error Reading Distance");
-  else
-    Serial.println(distance, DEC);    
+    analogWrite(A0, ((int)(distance))/100);
+  }else{
+    Serial.println(distance, DEC);
+    analogWrite(A0, ((int)(distance))/100); 
+  }
 }
 byte readDistance()
 {  
