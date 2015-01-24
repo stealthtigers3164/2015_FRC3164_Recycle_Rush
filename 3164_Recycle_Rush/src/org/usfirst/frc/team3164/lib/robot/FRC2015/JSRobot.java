@@ -19,8 +19,8 @@ public abstract class JSRobot extends IterativeRobot {
 	public static int LIFTMECH_MOTOR_1 = 4;
 	public static int LIFTMECH_LIMIT_TOP = 6;
 	public static int LIFTMECH_LIMIT_BOTTOM = 7;
-	public static int LIFTMECH_ENCODER_AC = 0;
-	public static int LIFTMECH_ENCODER_BC = 0;
+	public static int LIFTMECH_ENCODER_AC = 8;
+	public static int LIFTMECH_ENCODER_BC = 9;
 	
 	//Pinch Mech
 	public static int PINCHMECH_MOTOR = 5;
@@ -34,8 +34,8 @@ public abstract class JSRobot extends IterativeRobot {
 	
 	public JSRobot() {
 		Watchcat.init();
-		this.driveTrain = new DriveTrain(new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTLEFT),
-				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTRIGHT), new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARLEFT),
+		this.driveTrain = new DriveTrain(new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTLEFT, true),
+				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTRIGHT, true), new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARLEFT,false),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARRIGHT), false);
 		this.liftMech = new LiftMech(new LimitSwitch(JSRobot.LIFTMECH_LIMIT_TOP), new LimitSwitch(JSRobot.LIFTMECH_LIMIT_BOTTOM),
 				new MotorEncoder(JSRobot.LIFTMECH_ENCODER_AC, JSRobot.LIFTMECH_ENCODER_BC, false), new VicMotor(JSRobot.LIFTMECH_MOTOR_1));

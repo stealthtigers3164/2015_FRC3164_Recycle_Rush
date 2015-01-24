@@ -21,7 +21,7 @@ public class Watchcat {
 		mReg = new MotorRegistry();
 		wdTsk = new WDTask();
 		wdTrd = new Thread(wdTsk);
-		wdTrd.start();
+		//wdTrd.start();
 	}
 	
 	private static class WDTask implements Runnable {

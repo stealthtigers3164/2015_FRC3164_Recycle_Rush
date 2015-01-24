@@ -15,7 +15,7 @@ public class LiftMech {
 	private static double DEFAULT_DOWN_SPEED = 1.0;
 	
 	
-	private MotorLink motors;
+	private IMotor motors;
 	private LimitSwitch topLim;
 	private LimitSwitch lowLim;
 	private MotorEncoder enc;
@@ -28,8 +28,8 @@ public class LiftMech {
 	 * @param enc Encoder attached to a controlling motor
 	 * @param ms List all motors used in the subsystem.
 	 */
-	public LiftMech(LimitSwitch topLS, LimitSwitch lowLS, MotorEncoder enc, IMotor... ms) {
-		this.motors = new MotorLink(ms);
+	public LiftMech(LimitSwitch topLS, LimitSwitch lowLS, MotorEncoder enc, IMotor m) {
+		this.motors = m;
 		
 		new Thread(new Runnable() {
 			@Override

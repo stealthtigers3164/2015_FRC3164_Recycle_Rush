@@ -48,4 +48,6 @@ public interface IMotor {
     
     @Deprecated //Unfinished
     public void slowStop();
+    
+    public double getPower();
 }

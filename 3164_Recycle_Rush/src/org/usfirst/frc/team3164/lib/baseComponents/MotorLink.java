@@ -18,7 +18,10 @@ public class MotorLink {
 	 * @param ms List Motors to link in this system.
 	 */
 	public MotorLink(IMotor... ms) {
-		motors.addAll(Arrays.asList(ms));
+		for(IMotor mmm : ms) {
+			motors.add(mmm);
+		}
+		//motors.addAll(Arrays.asList(ms));
 		this.power = 0;
 	}
 	

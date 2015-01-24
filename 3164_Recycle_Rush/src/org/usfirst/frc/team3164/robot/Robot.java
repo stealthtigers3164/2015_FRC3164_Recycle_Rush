@@ -3,7 +3,7 @@
 
 package org.usfirst.frc.team3164.robot;
 
-import org.usfirst.frc.team3164.lib.baseComponents.BigJoystick;
+import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
 
@@ -20,17 +20,18 @@ import edu.wpi.first.wpilibj.Joystick;
 public class Robot extends JSRobot {
 	
 	//List of all declared robot parts
-    Joystick stick1;
+    Controller ftcCont;
+    Joystick stick;
     Gyro drivegyro;
     
     // The channel on the driver station that the joystick is connected to
-    final int joystickChannel	= 0;
+    final int joystickChannel	= 1;
     
     //Constructor
     public Robot() {
         //Setup new drivetrain
     	drivegyro=new Gyro(0);
-        stick1 = new Joystick(joystickChannel);
+        ftcCont = new Controller(joystickChannel);
     }
     
     /**
@@ -64,10 +65,11 @@ public class Robot extends JSRobot {
     public void teleopPeriodic() {
     	
     	////Wheel movement/////
-    	driveTrain.mecanumDrive_Cartesian(stick1.getX(), stick1.getY(), stick1.getZ(), drivegyro.getAngle() );
+    	driveTrain.mecanumDrive_Cartesian(ftcCont.sticks.LEFT_STICK_X.getRaw(),
+    			ftcCont.sticks.LEFT_STICK_Y.getRaw(), ftcCont.sticks.RIGHT_STICK_X.getRaw(), drivegyro.getAngle() );
     	
     	//emergency gyro reset during match
-    	if(stick1.getRawButton(10)){ drivegyro.initGyro(); }
+    	if(ftcCont.buttons.BUTTON_START.isOn()){ drivegyro.initGyro(); }
     	
     	Watchcat.feed();
     }

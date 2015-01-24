@@ -130,4 +130,8 @@ public class VicMotor implements IMotor {
 			this.power = 0;
 		this.dead = shouldBeDead;
 	}
+	
+	public double getPower() {
+		return this.power;
+	}
 }
