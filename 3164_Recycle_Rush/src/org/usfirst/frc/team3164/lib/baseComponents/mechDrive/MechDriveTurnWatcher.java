@@ -13,8 +13,8 @@ public class MechDriveTurnWatcher implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
-			mdc.setAngle(mdc.getAngle()+ctrl.sticks.RIGHT_STICK_X.getRaw());
-			try {Thread.sleep(100);} catch(Exception ex) {}
+			mdc.setAngle(mdc.getAngle()+ctrl.sticks.RIGHT_STICK_X.getRaw()*5);
+			try {Thread.sleep(50);} catch(Exception ex) {}
 		}
 	}
 }

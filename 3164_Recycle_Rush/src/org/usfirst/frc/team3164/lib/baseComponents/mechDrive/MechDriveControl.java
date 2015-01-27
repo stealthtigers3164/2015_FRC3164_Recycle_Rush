@@ -24,18 +24,22 @@ public class MechDriveControl implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
-    		double currA = getGyroAngle();
+    		double currA = normalizeAngleDeg(getGyroAngle());
     		double offset = normalizeAngleDeg(currA-this.keepAtAngle);
-    		offset-=180;
-    		offset/=180;
-    		dTrain.mecanumDrive_Cartesian(ctrl.sticks.LEFT_STICK_X.getRaw(), ctrl.sticks.LEFT_STICK_Y.getRaw(), offset, gyro.getAngle());
-    		try {Thread.sleep(40);} catch(Exception ex) {}
+    		if(offset>5 || offset<-5) {
+	    		offset-=180;
+	    		offset/=180;
+	    		if(offset>0.1 || offset<-0.1) {
+	    			dTrain.mecanumDrive_Cartesian(-ctrl.sticks.LEFT_STICK_X.getRaw(), -ctrl.sticks.LEFT_STICK_Y.getRaw(), offset/5, gyro.getAngle());
+	    		}
+    		}
+	    	try {Thread.sleep(10);} catch(Exception ex) {}
 		}
 	}
 	private double getGyroAngle() {
 		return gyro.getAngle();
 	}
-	private static double normalizeAngleDeg(double angle) {
+	private static double normalizeAngleDeg(double angle) {//  [0, 360)
     	while(!(angle>=0 && angle<360)) {
     		if(angle>=360) angle-=360;
     		if(angle<0) angle+=360;
