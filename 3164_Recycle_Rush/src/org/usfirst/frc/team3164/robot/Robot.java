@@ -5,11 +5,12 @@ package org.usfirst.frc.team3164.robot;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
-import org.usfirst.frc.team3164.lib.baseComponents.mechDrive.MechDriveManager;
+import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
 
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.hal.PDPJNI;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,6 +25,8 @@ public class Robot extends JSRobot {
     Controller ftcCont;
     Joystick stick;
     Gyro drivegyro;
+    Dashboard dash;
+    PDPJNI pdp;
     
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
@@ -33,7 +36,6 @@ public class Robot extends JSRobot {
         //Setup new drivetrain
     	drivegyro=new Gyro(0);
         ftcCont = new Controller(joystickChannel);
-        mechDrive = new MechDriveManager(super.driveTrain, this.drivegyro, this.ftcCont);
     }
     
     /**
@@ -67,7 +69,8 @@ public class Robot extends JSRobot {
     public void teleopPeriodic() {
     	
     	////Wheel movement/////
-    	mechDrive.start();
+    	driveTrain.mecanumDrive_Cartesian(ftcCont.sticks.LEFT_STICK_X.getRaw(),
+    			ftcCont.sticks.LEFT_STICK_Y.getRaw(), ftcCont.sticks.RIGHT_STICK_X.getRaw(), drivegyro.getAngle() );
     	
     	//emergency gyro reset during match
     	if(ftcCont.buttons.BUTTON_START.isOn()){ drivegyro.initGyro(); }
