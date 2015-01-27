@@ -29,7 +29,7 @@ public class Watchcat {
 		public void run() {
 			while(true) {
 				long now = new Date().getTime();
-				if(last+timeout>=now) {
+				if(last+timeout<=now) {
 					killRobot();
 				}
 				try {
