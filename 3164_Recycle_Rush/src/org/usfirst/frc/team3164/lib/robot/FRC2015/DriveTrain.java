@@ -1,8 +1,10 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
+import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Gyro;
 
 public class DriveTrain {
 	private IMotor leftBack;
@@ -188,6 +190,22 @@ public class DriveTrain {
         this.rightFront.setPower(wheelSpeeds.FRONT_RIGHT);
         this.leftBack.setPower(wheelSpeeds.BACK_LEFT);
         this.rightBack.setPower(wheelSpeeds.BACK_RIGHT);
+    }
+    
+    private static double normalizeAngleDeg(double angle) {
+    	while(!(angle>=0 && angle<360)) {
+    		if(angle>=360) angle-=360;
+    		if(angle<0) angle+=360;
+    	}
+    	return angle;
+    }
+    
+    private static double normalizeAngleRad(double angle) {
+    	while(!(angle>=0 && angle<(2*Math.PI))) {
+    		if(angle>=(2*Math.PI)) angle-=(2*Math.PI);
+    		if(angle<0) angle+=(2*Math.PI);
+    	}
+    	return angle;
     }
 
     /**

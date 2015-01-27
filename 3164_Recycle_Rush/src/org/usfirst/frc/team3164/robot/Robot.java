@@ -5,6 +5,7 @@ package org.usfirst.frc.team3164.robot;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
+import org.usfirst.frc.team3164.lib.baseComponents.mechDrive.MechDriveManager;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
 
 import edu.wpi.first.wpilibj.Gyro;
@@ -32,6 +33,7 @@ public class Robot extends JSRobot {
         //Setup new drivetrain
     	drivegyro=new Gyro(0);
         ftcCont = new Controller(joystickChannel);
+        mechDrive = new MechDriveManager(super.driveTrain, this.drivegyro, this.ftcCont);
     }
     
     /**
@@ -65,8 +67,7 @@ public class Robot extends JSRobot {
     public void teleopPeriodic() {
     	
     	////Wheel movement/////
-    	driveTrain.mecanumDrive_Cartesian(ftcCont.sticks.LEFT_STICK_X.getRaw(),
-    			ftcCont.sticks.LEFT_STICK_Y.getRaw(), ftcCont.sticks.RIGHT_STICK_X.getRaw(), drivegyro.getAngle() );
+    	mechDrive.start();
     	
     	//emergency gyro reset during match
     	if(ftcCont.buttons.BUTTON_START.isOn()){ drivegyro.initGyro(); }

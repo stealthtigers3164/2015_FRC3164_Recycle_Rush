@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
+import org.usfirst.frc.team3164.lib.baseComponents.mechDrive.MechDriveManager;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.JagMotor;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.VicMotor;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
@@ -31,6 +32,7 @@ public abstract class JSRobot extends IterativeRobot {
 	public DriveTrain driveTrain;
 	public LiftMech liftMech;
 	public PinchMech pinchMech;
+	public MechDriveManager mechDrive;
 	
 	public JSRobot() {
 		Watchcat.init();
