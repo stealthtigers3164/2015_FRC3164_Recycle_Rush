@@ -19,6 +19,13 @@ public class Dashboard {
 		dash=new SmartDashboard();
 		pdp=inPDP;
 	}
+
+	/**
+	*Collects all data to be pushed to the dash and pushes it. Run this in a periodic loop.
+	*/
+	public updateDash(){
+		//dash.putNumber("Robot amperage consumption" , )
+	}
 	
 	
 }
