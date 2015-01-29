@@ -173,8 +173,8 @@ public class BDriveTrain {
      */
     public void mecanumDrive_Cartesian(double x, double y, double rotationIn, double gyroAngle) {
         //compensate for directional drift
-    	setpoint+=rotationIn;
-    	double rotationAdj = (setpoint-gyroAngle)/35; //35 is a multiplier that tells it how fast to turn (lower = faster)
+    	setpoint+=rotationIn*2;
+    	double rotationAdj = (setpoint-gyroAngle)/50; //last number is a multiplier that tells it how fast to turn (lower = faster)
         //50 worked previously but turned too slow. Best value is not yet final.
     	
     	
