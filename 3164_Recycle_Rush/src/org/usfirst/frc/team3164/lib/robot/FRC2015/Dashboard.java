@@ -13,10 +13,10 @@ public class Dashboard {
 	private PowerDistributionPanel pdp;
 	/**
 	 * Constructor.
-	 * @argument PDPJNI PDP Requires a power distribution board object.
+	 * @argument PowerDistributionPanel pdp Requires a power distribution board object.
 	 */
-	public Dashboard(){
-	
+	public Dashboard(PowerDistributionPanel pdpIn){
+		pdp= new PowerDistributionPanel();
 	}
 
 	/**

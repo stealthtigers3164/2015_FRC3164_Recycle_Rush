@@ -11,6 +11,7 @@ import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
 
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.hal.PDPJNI;
 
 /**
@@ -27,7 +28,7 @@ public class Robot extends JSRobot {
     Joystick stick;
     Gyro drivegyro;
     Dashboard dash;
-    PDPJNI pdp;
+    PowerDistributionPanel pdp;
     
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
@@ -38,6 +39,8 @@ public class Robot extends JSRobot {
     	drivegyro=new Gyro(0);
         ftcCont = new Controller(joystickChannel);
        // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
+        pdp= new PowerDistributionPanel();
+        dash = new Dashboard(pdp);
     }
     
     /**
@@ -70,6 +73,7 @@ public class Robot extends JSRobot {
     boolean hasDone = false;
     @Override
     public void teleopPeriodic() {
+    	
     	/*if(!hasDone) {
     		mechDrive.start();
     		hasDone = true;
@@ -81,6 +85,9 @@ public class Robot extends JSRobot {
     	
     	//emergency gyro reset during match
     	if(ftcCont.buttons.BUTTON_START.isOn()){ drivegyro.initGyro(); }
+    	
+    	//send updates to dashboard
+    	dash.updateDash();
     	
     	Watchcat.feed();
     }
