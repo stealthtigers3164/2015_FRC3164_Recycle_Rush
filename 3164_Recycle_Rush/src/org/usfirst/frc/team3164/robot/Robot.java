@@ -71,6 +71,8 @@ public class Robot extends JSRobot {
      * This function is called periodically during operator control
      */
     boolean hasDone = false;
+    double speedPointFwd = 0;
+    double speedPointStr = 0;
     @Override
     public void teleopPeriodic() {
     	
@@ -80,7 +82,27 @@ public class Robot extends JSRobot {
     	}
     	*/
     	
+    	if(ftcCont.sticks.LEFT_STICK_X.getIntensity()>0.1) {
+    		speedPointStr = (ftcCont.sticks.LEFT_STICK_X.getRaw()<0 ? -1 : 1) * 
+    				Math.pow(2, Math.abs(ftcCont.sticks.LEFT_STICK_X.getRaw()))/2;
+    	} else {
+    		if(Math.abs(speedPointStr)<0.1) {
+	    		if(speedPointStr==0) {
+	    			speedPointStr /= 1.1;
+	    		}
+    		}
+    	}
     	
+    	if(ftcCont.sticks.LEFT_STICK_Y.getIntensity()>0.1) {
+    		speedPointFwd = (ftcCont.sticks.LEFT_STICK_Y.getRaw()<0 ? -1 : 1) * 
+    				Math.pow(2, Math.abs(ftcCont.sticks.LEFT_STICK_Y.getRaw()))/2;
+    	} else {
+    		if(Math.abs(speedPointFwd)<0.1) {
+	    		if(speedPointFwd==0) {
+	    			speedPointFwd /= 1.1;
+	    		}
+    		}
+    	}
     	
     	////Wheel movement/////
     	driveTrain.mecanumDrive_Cartesian1(ftcCont.sticks.LEFT_STICK_X.getRaw(),
