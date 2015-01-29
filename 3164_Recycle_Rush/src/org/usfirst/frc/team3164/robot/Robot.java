@@ -79,8 +79,11 @@ public class Robot extends JSRobot {
     		hasDone = true;
     	}
     	*/
+    	
+    	
+    	
     	////Wheel movement/////
-    	driveTrain.mecanumDrive_Cartesian(ftcCont.sticks.LEFT_STICK_X.getRaw(),
+    	driveTrain.mecanumDrive_Cartesian1(ftcCont.sticks.LEFT_STICK_X.getRaw(),
     			ftcCont.sticks.LEFT_STICK_Y.getRaw(), ftcCont.sticks.RIGHT_STICK_X.getRaw(), drivegyro.getAngle() );
     	
     	//emergency gyro reset during match

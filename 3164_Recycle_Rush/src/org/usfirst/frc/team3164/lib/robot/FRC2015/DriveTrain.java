@@ -191,6 +191,56 @@ public class DriveTrain {
         this.leftBack.setPower(wheelSpeeds.BACK_LEFT);
         this.rightBack.setPower(wheelSpeeds.BACK_RIGHT);
     }
+    private double trackingAngle;
+	private boolean trackingStraight = true;
+    public void mecanumDrive_Cartesian1(double x, double y, double rotation, double gyroAngle) {
+        double xIn = x;
+        double yIn = y;
+        // Negate y for the joystick.
+        yIn = -yIn;
+        // Compenstate for gyro angle.
+
+        ///////////////
+        //This might solve the problems with tracking straight,
+        //it would check if the rate of rotation is being changed
+        //and if it is not, it will then try to fix the rotation
+        //in the case that the robot is accidently moved
+        if(Math.abs(rotation*100) < 5) {//A little leeway
+        	if(trackingStraight) {
+        		trackingStraight = false;
+        		trackingAngle = gyroAngle;//This would be the last correct line after the driver gets to the intended position and the robot isn't being moved
+        	} else {
+        		if((gyroAngle-trackingAngle) >= 3) {
+        		//Robot has been moved clockwise, rotate left (or negative rotation) to fix
+        			rotation = -0.3; //MAY NEED TO BE ADJUSTED
+        		} else if ((gyroAngle-trackingAngle) <= -3) {
+        		//Robot has been moved counter clockwise, rotate right (or positive rotation) to fix
+        			rotation = 0.3;	//MAY NEED TO BE ADJUSTED
+        		}
+        		//Tracking straight does not need to be set to true here because the robot can still be rotated accidently
+        	}
+        } else {
+        	trackingStraight = true; //True because the intentional turning of the robot
+        }
+        
+        ///////////////
+        
+        
+        double rotated[] = rotateVector(xIn, yIn, gyroAngle);
+        xIn = rotated[0];
+        yIn = rotated[1];
+        SpeedStorage wheelSpeeds = new SpeedStorage();
+        wheelSpeeds.FRONT_LEFT = xIn + yIn + rotation;
+        wheelSpeeds.FRONT_RIGHT = -xIn + yIn - rotation;
+        wheelSpeeds.BACK_LEFT = -xIn + yIn + rotation;
+        wheelSpeeds.BACK_RIGHT = xIn + yIn - rotation;
+        wheelSpeeds = new SpeedStorage(normalize(wheelSpeeds.getArray()));
+        
+        this.leftFront.setPower(wheelSpeeds.FRONT_LEFT);
+        this.rightFront.setPower(wheelSpeeds.FRONT_RIGHT);
+        this.leftBack.setPower(wheelSpeeds.BACK_LEFT);
+        this.rightBack.setPower(wheelSpeeds.BACK_RIGHT);
+    }
     
     private static double normalizeAngleDeg(double angle) {
     	while(!(angle>=0 && angle<360)) {
