@@ -12,7 +12,8 @@ public class DriveTrain {
 	private IMotor leftFront;
 	private IMotor rightFront;
 	public boolean slowMode = false;
-	
+	private double trackingLine;
+	private boolean trackingStraight = true;
 	
 	public DriveTrain(IMotor leftFront, IMotor rightFront, IMotor leftBack, IMotor rightBack, boolean slowMode) {
 		this.leftFront = leftFront;
@@ -175,6 +176,33 @@ public class DriveTrain {
         // Negate y for the joystick.
         yIn = -yIn;
         // Compenstate for gyro angle.
+        
+        ///////////////
+        //This might solve the problems with tracking straight,
+        //it would check if the rate of rotation is being changed
+        //and if it is not, it will then try to fix the rotation
+        //in the case that the robot is accidently moved
+        if(abs(rotation*100) < 5) {//A little leeway
+        	if(trackingStraight) {
+        		trackingStraight = false;
+        		trackingLine = gyroAngle;//This would be the last correct line after the driver gets to the intended position and the robot isn't being moved
+        	} else {
+        		if((gyroAngle-trackingAngle) >= 3) {
+        		//Robot has been moved clockwise, rotate left (or negative rotation) to fix
+        			rotation = -0.3; //MAY NEED TO BE ADJUSTED
+        		} else if ((gyroAngle-trackingAngle) <= -3) {
+        		//Robot has been moved counter clockwise, rotate right (or positive rotation) to fix
+        			rotation = 0.3;	//MAY NEED TO BE ADJUSTED
+        		}
+        		//Tracking straight does not need to be set to true here because the robot can still be rotated accidently
+        	}
+        } else {
+        	trackingStraight = true; //True because the intentional turning of the robot
+        }
+        
+        ///////////////
+        
+        
         double rotated[] = rotateVector(xIn, yIn, gyroAngle);
         xIn = rotated[0];
         yIn = rotated[1];
