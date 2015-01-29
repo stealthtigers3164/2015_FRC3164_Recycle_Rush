@@ -29,14 +29,14 @@ public abstract class JSRobot extends IterativeRobot {
 	public static int PINCHMECH_ENCODER_BC = 0;
 	
 	
-	public DriveTrain driveTrain;
+	public BDriveTrain driveTrain;
 	public LiftMech liftMech;
 	public PinchMech pinchMech;
 	public MechDriveManager mechDrive;
 	
 	public JSRobot() {
 		Watchcat.init();
-		this.driveTrain = new DriveTrain(new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTLEFT, true),
+		this.driveTrain = new BDriveTrain(new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTLEFT, true),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTRIGHT, false), new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARLEFT, true),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARRIGHT), false);
 		this.liftMech = new LiftMech(new LimitSwitch(JSRobot.LIFTMECH_LIMIT_TOP), new LimitSwitch(JSRobot.LIFTMECH_LIMIT_BOTTOM),
