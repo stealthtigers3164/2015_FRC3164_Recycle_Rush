@@ -29,5 +29,14 @@ public class Dashboard {
 		
 	}
 	
+	/**
+	 * Allows other parts of the program to upload data to the Dashboard.
+	 * @argument String key Name for the data to be sent.
+	 * @argument double number Value to be sent.
+	 */
+	public void uploadNumber(String key, double number){
+		SmartDashboard.putNumber(key,number);
+	}
+	
 	
 }
