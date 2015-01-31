@@ -201,7 +201,7 @@ public class DriveTrain {
 			trackingStraight = 0;
 			trackingAngle = 0;
 		}
-    public void mecanumDrive_Cartesian1(double x, double y, double rotation, double gyroAngle) {
+    public void mecanumDrive_Cartesian2(double x, double y, double rotation, double gyroAngle) {
         double xIn = x;
         double yIn = y;
         // Negate y for the joystick.
