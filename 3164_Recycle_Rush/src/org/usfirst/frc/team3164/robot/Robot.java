@@ -26,14 +26,10 @@ public class Robot extends JSRobot {
 	//List of all declared robot parts
     Controller ftcCont;
     Joystick stick;
-<<<<<<< HEAD
     Gyro driveGyro;
-=======
-    Gyro drivegyro;
     Dashboard dash;
     PowerDistributionPanel pdp;
->>>>>>> 8e8f913c97e479cd3aa6e72f501725bb1db1a175
-    
+
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
     
@@ -43,7 +39,7 @@ public class Robot extends JSRobot {
     	driveGyro = new Gyro(0);
         ftcCont = new Controller(joystickChannel);
        // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
-        pdp= new PowerDistributionPanel();
+        pdp = new PowerDistributionPanel();
         dash = new Dashboard(pdp);
     }
     
