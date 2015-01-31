@@ -1,6 +1,6 @@
-# Recycle Rush Code - 2015
-## FRC Team 3164, Jesuit High School, Tampa Florida
+## Recycle Rush Code - 2015
+### FRC Team 3164 | Jesuit Tampa
 
-robot yet to be names
+The robot is yet to be named.
 
 For more information, go visit the [wiki](https://github.com/stealthtigers3164/2015_FRC3164_Recycle_Rush/wiki/Home)! 
