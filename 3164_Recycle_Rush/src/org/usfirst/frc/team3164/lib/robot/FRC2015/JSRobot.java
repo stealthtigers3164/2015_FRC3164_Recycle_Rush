@@ -1,6 +1,7 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
+import org.usfirst.frc.team3164.lib.baseComponents.mechDrive.MechDriveManager;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.JagMotor;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.VicMotor;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
@@ -28,14 +29,15 @@ public abstract class JSRobot extends IterativeRobot {
 	public static int PINCHMECH_ENCODER_BC = 0;
 	
 	
-	public DriveTrain driveTrain;
+	public BDriveTrain driveTrain;
 	public LiftMech liftMech;
 	public PinchMech pinchMech;
+	public MechDriveManager mechDrive;
 	
 	public JSRobot() {
 		Watchcat.init();
-		this.driveTrain = new DriveTrain(new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTLEFT, true),
-				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTRIGHT, true), new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARLEFT,false),
+		this.driveTrain = new BDriveTrain(new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTLEFT, true),
+				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTRIGHT, false), new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARLEFT, true),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARRIGHT), false);
 		this.liftMech = new LiftMech(new LimitSwitch(JSRobot.LIFTMECH_LIMIT_TOP), new LimitSwitch(JSRobot.LIFTMECH_LIMIT_BOTTOM),
 				new MotorEncoder(JSRobot.LIFTMECH_ENCODER_AC, JSRobot.LIFTMECH_ENCODER_BC, false), new VicMotor(JSRobot.LIFTMECH_MOTOR_1));

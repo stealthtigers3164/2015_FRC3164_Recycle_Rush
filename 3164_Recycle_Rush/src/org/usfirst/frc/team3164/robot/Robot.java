@@ -5,10 +5,14 @@ package org.usfirst.frc.team3164.robot;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
+import org.usfirst.frc.team3164.lib.baseComponents.mechDrive.MechDriveManager;
+import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
 
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.hal.PDPJNI;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,7 +26,13 @@ public class Robot extends JSRobot {
 	//List of all declared robot parts
     Controller ftcCont;
     Joystick stick;
+<<<<<<< HEAD
     Gyro driveGyro;
+=======
+    Gyro drivegyro;
+    Dashboard dash;
+    PowerDistributionPanel pdp;
+>>>>>>> 8e8f913c97e479cd3aa6e72f501725bb1db1a175
     
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
@@ -32,6 +42,9 @@ public class Robot extends JSRobot {
         //Setup new drivetrain
     	driveGyro = new Gyro(0);
         ftcCont = new Controller(joystickChannel);
+       // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
+        pdp= new PowerDistributionPanel();
+        dash = new Dashboard(pdp);
     }
     
     /**
@@ -61,8 +74,39 @@ public class Robot extends JSRobot {
     /**
      * This function is called periodically during operator control
      */
+    boolean hasDone = false;
+    double speedPointFwd = 0;
+    double speedPointStr = 0;
     @Override
     public void teleopPeriodic() {
+    	
+    	/*if(!hasDone) {
+    		mechDrive.start();
+    		hasDone = true;
+    	}
+    	*/
+    	
+    	if(ftcCont.sticks.LEFT_STICK_X.getIntensity()>0.1) {
+    		speedPointStr = (ftcCont.sticks.LEFT_STICK_X.getRaw()<0 ? -1 : 1) * 
+    				Math.pow(2, Math.abs(ftcCont.sticks.LEFT_STICK_X.getRaw()))/2;
+    	} else {
+    		if(Math.abs(speedPointStr)<0.1) {
+	    		if(speedPointStr==0) {
+	    			speedPointStr /= 1.1;
+	    		}
+    		}
+    	}
+    	
+    	if(ftcCont.sticks.LEFT_STICK_Y.getIntensity()>0.1) {
+    		speedPointFwd = (ftcCont.sticks.LEFT_STICK_Y.getRaw()<0 ? -1 : 1) * 
+    				Math.pow(2, Math.abs(ftcCont.sticks.LEFT_STICK_Y.getRaw()))/2;
+    	} else {
+    		if(Math.abs(speedPointFwd)<0.1) {
+	    		if(speedPointFwd==0) {
+	    			speedPointFwd /= 1.1;
+	    		}
+    		}
+    	}
     	
     	////Wheel movement/////
     	driveTrain.mecanumDrive_Cartesian2(
@@ -76,6 +120,9 @@ public class Robot extends JSRobot {
     		driveGyro.initGyro();
     		driveTrain.resetGyro();
     	}
+    	
+    	//send updates to dashboard
+    	dash.updateDash();
     	
     	Watchcat.feed();
     }
