@@ -22,7 +22,7 @@ public class Robot extends JSRobot {
 	//List of all declared robot parts
     Controller ftcCont;
     Joystick stick;
-    Gyro drivegyro;
+    Gyro driveGyro;
     
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
@@ -30,7 +30,7 @@ public class Robot extends JSRobot {
     //Constructor
     public Robot() {
         //Setup new drivetrain
-    	drivegyro=new Gyro(0);
+    	driveGyro = new Gyro(0);
         ftcCont = new Controller(joystickChannel);
     }
     
@@ -40,7 +40,7 @@ public class Robot extends JSRobot {
      */
     @Override
     public void robotInit() {
-    	drivegyro.initGyro();
+    	driveGyro.initGyro();
     }
     /**
      * This function is called when autonomous starts
@@ -65,11 +65,17 @@ public class Robot extends JSRobot {
     public void teleopPeriodic() {
     	
     	////Wheel movement/////
-    	driveTrain.mecanumDrive_Cartesian(ftcCont.sticks.LEFT_STICK_X.getRaw(),
-    			ftcCont.sticks.LEFT_STICK_Y.getRaw(), ftcCont.sticks.RIGHT_STICK_X.getRaw(), drivegyro.getAngle() );
+    	driveTrain.mecanumDrive_Cartesian2(
+    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
+    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
+    		driveGyro.getAngle());
     	
     	//emergency gyro reset during match
-    	if(ftcCont.buttons.BUTTON_START.isOn()){ drivegyro.initGyro(); }
+    	if(ftcCont.buttons.BUTTON_START.isOn()){
+    		driveGyro.initGyro();
+    		driveTrain.resetGyro();
+    	}
     	
     	Watchcat.feed();
     }
@@ -79,7 +85,7 @@ public class Robot extends JSRobot {
      */
     @Override
     public void testPeriodic() {
-    	drivegyro.initGyro(); //Reset Gyro when robot placed into test mode.
+    	driveGyro.initGyro(); //Reset Gyro when robot placed into test mode.
     	Watchcat.feed();
     }
     
