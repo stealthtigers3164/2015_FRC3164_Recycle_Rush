@@ -6,15 +6,17 @@ import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Gyro;
 
-public class DriveTrain {
+public class BDriveTrain {
 	private IMotor leftBack;
 	private IMotor rightBack;
 	private IMotor leftFront;
 	private IMotor rightFront;
 	public boolean slowMode = false;
+	private double setpoint=0;
+	private double rotationAdj=0;
 	
 	
-	public DriveTrain(IMotor leftFront, IMotor rightFront, IMotor leftBack, IMotor rightBack, boolean slowMode) {
+	public BDriveTrain(IMotor leftFront, IMotor rightFront, IMotor leftBack, IMotor rightBack, boolean slowMode) {
 		this.leftFront = leftFront;
 		this.rightFront = rightFront;
 		this.leftBack = leftBack;
@@ -169,71 +171,28 @@ public class DriveTrain {
      * the translation. [-1.0..1.0]
      * @param gyroAngle The current angle reading from the gyro.  Use this to implement field-oriented controls.
      */
-    public void mecanumDrive_Cartesian(double x, double y, double rotation, double gyroAngle) {
-        double xIn = x;
+    public void mecanumDrive_Cartesian(double x, double y, double rotationIn, double gyroAngle) {
+        //compensate for directional drift
+    	setpoint+=rotationIn*2;
+    	double rotationAdj = (setpoint-gyroAngle)/50; //last number is a multiplier that tells it how fast to turn (lower = faster)
+        //50 worked previously but turned too slow. Best value is not yet final.
+    	
+    	
+    	//begin unmodded code
+    	double xIn = x;
         double yIn = y;
         // Negate y for the joystick.
         yIn = -yIn;
-        // Compenstate for gyro angle.
+        // Compensate for gyro angle.
         double rotated[] = rotateVector(xIn, yIn, gyroAngle);
         xIn = rotated[0];
         yIn = rotated[1];
         SpeedStorage wheelSpeeds = new SpeedStorage();
-        wheelSpeeds.FRONT_LEFT = xIn + yIn + rotation;
-        wheelSpeeds.FRONT_RIGHT = -xIn + yIn - rotation;
-        wheelSpeeds.BACK_LEFT = -xIn + yIn + rotation;
-        wheelSpeeds.BACK_RIGHT = xIn + yIn - rotation;
+        wheelSpeeds.FRONT_LEFT = xIn + yIn + rotationAdj;
+        wheelSpeeds.FRONT_RIGHT = -xIn + yIn - rotationAdj;
+        wheelSpeeds.BACK_LEFT = -xIn + yIn + rotationAdj;
+        wheelSpeeds.BACK_RIGHT = xIn + yIn - rotationAdj;
 
-        wheelSpeeds = new SpeedStorage(normalize(wheelSpeeds.getArray()));
-        
-        this.leftFront.setPower(wheelSpeeds.FRONT_LEFT);
-        this.rightFront.setPower(wheelSpeeds.FRONT_RIGHT);
-        this.leftBack.setPower(wheelSpeeds.BACK_LEFT);
-        this.rightBack.setPower(wheelSpeeds.BACK_RIGHT);
-    }
-    private double trackingAngle;
-	private boolean trackingStraight = true;
-    public void mecanumDrive_Cartesian1(double x, double y, double rotation, double gyroAngle) {
-        double xIn = x;
-        double yIn = y;
-        // Negate y for the joystick.
-        yIn = -yIn;
-        // Compenstate for gyro angle.
-
-        ///////////////
-        //This might solve the problems with tracking straight,
-        //it would check if the rate of rotation is being changed
-        //and if it is not, it will then try to fix the rotation
-        //in the case that the robot is accidently moved
-        if(Math.abs(rotation*100) < 5) {//A little leeway
-        	if(trackingStraight) {
-        		trackingStraight = false;
-        		trackingAngle = gyroAngle;//This would be the last correct line after the driver gets to the intended position and the robot isn't being moved
-        	} else {
-        		if((gyroAngle-trackingAngle) >= 3) {
-        		//Robot has been moved clockwise, rotate left (or negative rotation) to fix
-        			rotation = -0.3; //MAY NEED TO BE ADJUSTED
-        		} else if ((gyroAngle-trackingAngle) <= -3) {
-        		//Robot has been moved counter clockwise, rotate right (or positive rotation) to fix
-        			rotation = 0.3;	//MAY NEED TO BE ADJUSTED
-        		}
-        		//Tracking straight does not need to be set to true here because the robot can still be rotated accidently
-        	}
-        } else {
-        	trackingStraight = true; //True because the intentional turning of the robot
-        }
-        
-        ///////////////
-        
-        
-        double rotated[] = rotateVector(xIn, yIn, gyroAngle);
-        xIn = rotated[0];
-        yIn = rotated[1];
-        SpeedStorage wheelSpeeds = new SpeedStorage();
-        wheelSpeeds.FRONT_LEFT = xIn + yIn + rotation;
-        wheelSpeeds.FRONT_RIGHT = -xIn + yIn - rotation;
-        wheelSpeeds.BACK_LEFT = -xIn + yIn + rotation;
-        wheelSpeeds.BACK_RIGHT = xIn + yIn - rotation;
         wheelSpeeds = new SpeedStorage(normalize(wheelSpeeds.getArray()));
         
         this.leftFront.setPower(wheelSpeeds.FRONT_LEFT);
@@ -258,84 +217,6 @@ public class DriveTrain {
     	return angle;
     }
 
-
-		private double trackingAngle;
-		private byte trackingStraight = 0; // To tell if the robot just stopped spinning
-			//0 means that the robot is spinning
-			//1 means that the robot just stopped spinning
-			//2 means the robot has a gyro angle
-		private double trackingTime = 0; // A small waiting time so the gyro is set correctly when the robot's momentum isn't in effect
-		public void resetGyro() {
-			trackingStraight = 0;
-			trackingAngle = 0;
-		}
-    public void mecanumDrive_Cartesian2(double x, double y, double rotation, double gyroAngle) {
-        double xIn = x;
-        double yIn = y;
-        // Negate y for the joystick.
-        yIn = -yIn;
-        // Compenstate for gyro angle.
-
-        ///////////////
-        //This might solve the problems with tracking straight,
-        //it would check if the rate of rotation is being changed
-        //and if it is not, it will then try to fix the rotation
-        //in the case that the robot is accidently moved
-        
-        /***************************\
-        | * Why is trackingStraight a byte?:
-        | * Being a byte allows it to have more than two values
-        | * Which allows three states:
-        | * The previous 2 (user controlled spin [0] and computer gyro fix [2])
-        | * The intermediate state allows for the program to wait a small time (250 millaseconds now could probably by less)
-        | * to allow the robots momentum to slow down a tiny bit to get a more accurate reading
-        | * If this proves to be problematic, change "trackingStraight = 0;" (last instance of it) to 1
-         \***************************/
-        
-        if(Math.abs(rotation) < 0.075) {//A little leeway
-        	rotation = 0; //Just in case :)
-        	if(trackingStraight == 2) {
-        		if((gyroAngle-trackingAngle) >= 5) {
-        		//Robot has been moved clockwise, rotate left (or negative rotation) to fix
-        			rotation = -0.15; //MAY NEED TO BE ADJUSTED
-        		} else if ((gyroAngle-trackingAngle) <= -5) {
-        		//Robot has been moved counter clockwise, rotate right (or positive rotation) to fix
-        			rotation = 0.15;	//MAY NEED TO BE ADJUSTED
-        		}
-        		//Tracking straight does not need to be set to true here because the robot can still be rotated accidently
-        	} else if(trackingStraight == 1) {
-        		if(trackingTime < System.currentTimeMillis()) {
-        			trackingStraight = 2;
-        			trackingAngle = gyroAngle;//This would be the last correct line after the driver gets to the intended position and the robot isn't being moved
-        		}
-        	} else if(trackingStraight == 0) {
-        		trackingStraight = 1;
-        		trackingTime = System.currentTimeMillis() + 250;
-        	}
-        } else {
-        	trackingStraight = 0; //True because the intentional turning of the robot
-        }
-        
-        ///////////////
-        
-        
-        double rotated[] = rotateVector(xIn, yIn, gyroAngle);
-        xIn = rotated[0];
-        yIn = rotated[1];
-        SpeedStorage wheelSpeeds = new SpeedStorage();
-        wheelSpeeds.FRONT_LEFT = xIn + yIn + rotation;
-        wheelSpeeds.FRONT_RIGHT = -xIn + yIn - rotation;
-        wheelSpeeds.BACK_LEFT = -xIn + yIn + rotation;
-        wheelSpeeds.BACK_RIGHT = xIn + yIn - rotation;
-        wheelSpeeds = new SpeedStorage(normalize(wheelSpeeds.getArray()));
-        
-        this.leftFront.setPower(wheelSpeeds.FRONT_LEFT);
-        this.rightFront.setPower(wheelSpeeds.FRONT_RIGHT);
-        this.leftBack.setPower(wheelSpeeds.BACK_LEFT);
-        this.rightBack.setPower(wheelSpeeds.BACK_RIGHT);
-    }
-
-		
     /**
      * Drive method for Mecanum wheeled robots.
      *
