@@ -241,7 +241,7 @@ public class DriveTrain {
         			trackingAngle = gyroAngle;//This would be the last correct line after the driver gets to the intended position and the robot isn't being moved
         		}
         	} else if(trackingStraight == 0) {
-        		trackintStraight = 1;
+        		trackingStraight = 1;
         		trackingTime = System.currentTimeMillis() + 250;
         	}
         } else {
