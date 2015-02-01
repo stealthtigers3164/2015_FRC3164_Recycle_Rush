@@ -26,20 +26,20 @@ public class Robot extends JSRobot {
 	//List of all declared robot parts
     Controller ftcCont;
     Joystick stick;
-    Gyro drivegyro;
+    Gyro driveGyro;
     Dashboard dash;
     PowerDistributionPanel pdp;
-    
+
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
     
     //Constructor
     public Robot() {
         //Setup new drivetrain
-    	drivegyro=new Gyro(0);
+    	driveGyro = new Gyro(0);
         ftcCont = new Controller(joystickChannel);
        // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
-        pdp= new PowerDistributionPanel();
+        pdp = new PowerDistributionPanel();
         dash = new Dashboard(pdp);
     }
     
@@ -49,7 +49,7 @@ public class Robot extends JSRobot {
      */
     @Override
     public void robotInit() {
-    	drivegyro.initGyro();
+    	driveGyro.initGyro();
     }
     /**
      * This function is called when autonomous starts
@@ -105,11 +105,17 @@ public class Robot extends JSRobot {
     	}
     	
     	////Wheel movement/////
-    	driveTrain.mecanumDrive_Cartesian(ftcCont.sticks.LEFT_STICK_X.getRaw(),
-    			ftcCont.sticks.LEFT_STICK_Y.getRaw(), ftcCont.sticks.RIGHT_STICK_X.getRaw(), drivegyro.getAngle() );
+    	driveTrain.mecanumDrive_Cartesian2(
+    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
+    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
+    		driveGyro.getAngle());
     	
     	//emergency gyro reset during match
-    	if(ftcCont.buttons.BUTTON_START.isOn()){ drivegyro.initGyro(); }
+    	if(ftcCont.buttons.BUTTON_START.isOn()){
+    		driveGyro.initGyro();
+    		driveTrain.resetGyro();
+    	}
     	
     	//send updates to dashboard
     	dash.updateDash();
@@ -122,7 +128,7 @@ public class Robot extends JSRobot {
      */
     @Override
     public void testPeriodic() {
-    	drivegyro.initGyro(); //Reset Gyro when robot placed into test mode.
+    	driveGyro.initGyro(); //Reset Gyro when robot placed into test mode.
     	Watchcat.feed();
     }
     
