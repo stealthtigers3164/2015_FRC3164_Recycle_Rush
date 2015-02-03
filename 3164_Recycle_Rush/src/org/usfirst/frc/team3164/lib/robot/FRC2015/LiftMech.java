@@ -140,5 +140,13 @@ public class LiftMech {
 		return gUT;
 	}
 	
+	/**
+	 * Gets if it is down
+	 * @return true if the lift is down
+	 */
+	public boolean isDown() {
+		return lowLim.isPressed();
+	}
+	
 	
 }

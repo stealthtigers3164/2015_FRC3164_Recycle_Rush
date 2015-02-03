@@ -1,7 +1,11 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Controller;
+import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
+import org.usfirst.frc.team3164.lib.util.Conditional;
+import org.usfirst.frc.team3164.lib.util.IConditional;
+import org.usfirst.frc.team3164.lib.util.Timer;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Gyro;
@@ -21,7 +25,6 @@ public class DriveTrain {
 		this.rightBack = rightBack;
 		this.slowMode = slowMode;
 	}
-	
 	
 	public void setMotorPower(double leftBack, double rightBack, double leftFront, double rightFront) {
 		this.leftBack.setPower(limit(leftBack * (slowMode ? 0.6 : 1)));
@@ -382,5 +385,94 @@ public class DriveTrain {
 			return a;
 		}
 	}
+	
+	public enum TurnDir {
+		LEFT(1, -1),
+		RIGHT(-1, 1);
+		private double lm;
+		private double rm;
+		private TurnDir(double l, double r) {
+			this.lm = l;
+			this.rm = r;
+		}
+		private double getLMPW() {
+			return lm;
+		}
+		private double getRMPW() {
+			return rm;
+		}
+	}
+	// lr rr lf rf
+	public void turn(int deg, TurnDir dir, Gyro gyro) {
+		this.setMotorPower(dir.getLMPW(), dir.getRMPW());
+		int currDeg;
+		while(true) {
+			currDeg = (int) Math.abs(gyro.getAngle())%360;
+			if(Math.abs(deg-currDeg)<7) {
+				break;
+			}
+		}
+		this.setMotorPower(-dir.getLMPW(), -dir.getRMPW());
+		while(true) {
+			currDeg = (int) Math.abs(gyro.getAngle())%360;
+			if(Math.abs(deg-currDeg)<3) {
+				break;
+			}
+			Timer.waitMilis(20);
+		}
+		this.setMotorPower(0, 0, 0, 0);
+	}
+	
+	public void turn(int deg, TurnDir dir, Gyro gyro, IConditional cond) {
+		this.setMotorPower(dir.getLMPW(), dir.getRMPW());
+		int currDeg;
+		while(cond.check()) {
+			currDeg = (int) Math.abs(gyro.getAngle())%360;
+			if(Math.abs(deg-currDeg)<7) {
+				break;
+			}
+			Timer.waitMilis(20);
+		}
+		this.setMotorPower(-dir.getLMPW(), -dir.getRMPW());
+		while(cond.check()) {
+			currDeg = (int) Math.abs(gyro.getAngle())%360;
+			if(Math.abs(deg-currDeg)<3) {
+				break;
+			}
+			Timer.waitMilis(20);
+		}
+		this.setMotorPower(0, 0, 0, 0);
+	}
+	
+	public enum DriveDir {
+		FORWARDS(1.0, 1.0, 1.0, 1.0),
+		REVERSE(-1.0, -1.0, -1.0, -1.0),
+		LEFT(1.0, -1.0, -1.0, 1.0),
+		RIGHT(-1.0, 1.0, 1.0, -1.0);
+		
+		private double lf, lr, rf, rr;
+		private DriveDir(double lf, double lr, double rf, double rr) {
+			this.lf = lf;
+			this.lr = lr;
+			this.rf = rf;
+			this.rr = rr;
+		}
+	}
+	// lr rr lf rf
+	public void driveTime(double power, DriveDir dir, int time) {
+		this.setMotorPower(power * dir.lr, power * dir.rr, power * dir.lf, power * dir.rf);
+		Timer.waitMilis(time);
+		this.setMotorPower(0, 0);
+	}
+	
+	public void startDrive(double power, DriveDir dir) {
+		this.setMotorPower(power * dir.lr, power * dir.rr, power * dir.lf, power * dir.rf);
+	}
+	
+	public void stop() {
+		this.setMotorPower(0, 0);
+	}
+	
+	
 	
 }

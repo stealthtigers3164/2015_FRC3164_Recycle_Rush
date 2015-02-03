@@ -72,4 +72,50 @@ public class NXTRangefinder {
 			objLTH.kill();
 		}
 	}
+	
+	private ObjLTHloss objLTHloss;
+	private class ObjLTHloss extends Thread {
+		private int lastRange;
+		private int range;
+		private boolean go = true;
+		private ICallback cb;
+		public ObjLTHloss(ICallback cb) {
+			this.cb = cb;
+		}
+		public void kill() {
+			go = false;
+		}
+		@Override
+		public void run() {
+			range = getRange();
+			lastRange = range;
+			while(go) {
+				range = getRange();
+				if(Math.abs(range-lastRange)>40 || range>50) {//TODO Thresholds to be changed as needed
+					break;
+				}
+				lastRange = range;
+				try {Thread.sleep(30);} catch(Exception ex) {}
+			}
+			cb.call();
+		}
+	}
+	
+	/**
+	 * Starts a listener that will execute the callback when an object is located.
+	 * @param cb Callback to be run when an object is located.
+	 */
+	public void startObjectLossListener(ICallback cb) {
+		this.objLTHloss = new ObjLTHloss(cb);
+		this.objLTHloss.start();
+	}
+	
+	/**
+	 * Stops the object listener.
+	 */
+	public void stopObjectLossListener() {
+		if(objLTHloss!=null && objLTHloss.isAlive()) {
+			objLTHloss.kill();
+		}
+	}
 }
