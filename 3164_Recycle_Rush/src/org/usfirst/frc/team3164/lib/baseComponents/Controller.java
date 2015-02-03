@@ -1,13 +1,34 @@
 package org.usfirst.frc.team3164.lib.baseComponents;
 
 import edu.wpi.first.wpilibj.Joystick;
-
+/**
+ * FTC Game controller wrapper class.
+ * Use the following to get access to the controls:
+ * controller.sticks
+ * controller.buttons
+ * controller.trigger
+ * @author jaxon
+ *
+ */
 public class Controller {
 	private Joystick jstick;
+	/**
+	 * Controller button wrapper
+	 */
 	public FTCButtons buttons;
+	/**
+	 * Controller stick wrapper
+	 */
 	public FTCAxes sticks;
+	/**
+	 * Controller trigger wrapper
+	 */
 	public FTCTriggers trigger;
 	
+	/**
+	 * Controller constructor
+	 * @param port The port of the controller
+	 */
 	public Controller(int port) {
 		this.jstick = new Joystick(port);
 		this.buttons = new FTCButtons();
@@ -15,6 +36,11 @@ public class Controller {
 		this.trigger = new FTCTriggers(3);
 	}
 	
+	/**
+	 * Buttons on the FTC Controller
+	 * @author jaxon
+	 *
+	 */
 	public class FTCButtons {
 		public Button BUTTON_A = new Button(1);
 		public Button BUTTON_B = new Button(2);
@@ -28,6 +54,11 @@ public class Controller {
 		public Button RIGHT_STICK_BUTTON = new Button(10);
 	}
 	
+	/**
+	 * Sticks on the FTC Controller
+	 * @author jaxon
+	 *
+	 */
 	public class FTCAxes {
 		public LeftRightAxis LEFT_STICK_X = new LeftRightAxis(0);
 		public UpDownAxis LEFT_STICK_Y = new UpDownAxis(1);
@@ -35,64 +66,141 @@ public class Controller {
 		public UpDownAxis RIGHT_STICK_Y = new UpDownAxis(5);
 	}
 	
+	/**
+	 * Triggers on the FTC Controller
+	 * @author jaxon
+	 *
+	 */
 	public class FTCTriggers {
 		private int port;
 		public FTCTriggers(int port) {
 			this.port = port;
 		}
+		/**
+		 * Get the value of the triggers
+		 * @return value of the triggers
+		 */
 		public double getVal() {
 			return jstick.getRawAxis(port);
 		}
+		/**
+		 * Gets which side is pressed down harder.
+		 * @return Which direction is pressed more
+		 */
 		public LeftRightDir getMorePressed() {
 			return getVal() >= 0 ? LeftRightDir.LEFT : LeftRightDir.RIGHT;
 		}
 	}
 	
+	/**
+	 * Class to read an axis accuating left and right
+	 * @author jaxon
+	 *
+	 */
 	public class LeftRightAxis extends JoystickAxis {
+		/**
+		 * Set up an axis that can be read
+		 * @param port port of axis
+		 */
 		public LeftRightAxis(int port) {
 			super(port);
 		}
+		/**
+		 * get direction of axis
+		 * @return enum dir of axis
+		 */
 		public LeftRightDir getDirection() {
 			return getRaw() >=0 ? LeftRightDir.RIGHT : LeftRightDir.LEFT;
 		}
+		/**
+		 * returns the intenity (absolute val) of the 
+		 * @return [0, 1]
+		 */
 		public double getIntensity() {
 			return Math.abs(getRaw());
 		}
 	}
+	/**
+	 * Left or right?
+	 * @author jaxon
+	 *
+	 */
 	public enum LeftRightDir {
 		LEFT(),
 		RIGHT();
 	}
 	
+	/**
+	 * Class reading the value of an axis that goes up and down
+	 */
 	public class UpDownAxis extends JoystickAxis {
+		/**
+		 * Creates new axis reader
+		 * @param port port of the axis
+		 */
 		public UpDownAxis(int port) {
 			super(port);
 		}
+		/**
+		 * Gets the direction, up or down
+		 * @return enum value, up or down
+		 */
 		public UpDownDir getDirection() {
 			return getRaw() >=0 ? UpDownDir.DOWN : UpDownDir.UP;
 		}
+		/**
+		 * gets the intensity of the axis
+		 * @return [0, 1]
+		 */
 		public double getIntensity() {
 			return Math.abs(getRaw());
 		}
 	}
+	/**
+	 * Up or down?
+	 * @author jaxon
+	 *
+	 */
 	public enum UpDownDir {
 		UP(),
 		DOWN();
 	}
 	
+	/**
+	 * Top hat wrapper
+	 * @author jaxon
+	 *
+	 */
 	public class TopHat {
 		private int lrPort;
 		private int udPort;
+		/**
+		 * Sets up new top hat
+		 * @param lrPort port of the left/right axis
+		 * @param udPort port of the up/down axis
+		 */
 		public TopHat(int lrPort, int udPort) {
 			this.lrPort = lrPort;
 			this.udPort = udPort;
 		}
+		/**
+		 * Gets raw of up and down axis.
+		 * @return -1, 0, or 1
+		 */
 		public int getUpDownRaw() {
 			return (int) jstick.getRawAxis(udPort);
 		}
+		/**
+		 * Gets raw of left right axis,
+		 * @return -1, 0, or 1
+		 */
 		public int getLeftRightRaw() {
 			return (int) jstick.getRawAxis(lrPort);
 		}
+		/**
+		 * Gets direction of the tophat
+		 * @return Top hat enum of direction
+		 */
 		public TopHatDir getDir() {
 			switch(getUpDownRaw()) {
 			case 1:
@@ -126,6 +234,11 @@ public class Controller {
 			return TopHatDir.NONE;
 		}
 	}
+	/**
+	 * Direction of top hat
+	 * @author jaxon
+	 *
+	 */
 	public enum TopHatDir {
 		NONE(),
 		UP(),
@@ -137,22 +250,47 @@ public class Controller {
 		DOWN_LEFT(),
 		DOWN_RIGHT();
 	}
-	
+	/**
+	 * Button wrapper
+	 * @author jaxon
+	 *
+	 */
 	public class Button {
 		private int port;
+		/**
+		 * Set up button
+		 * @param port using port id
+		 */
 		public Button(int port) {
 			this.port = port;
 		}
+		/**
+		 * Is the button being pressed?
+		 * @return true if button is pressed
+		 */
 		public boolean isOn() {
 			return jstick.getRawButton(port);
 		}
 	}
 	
+	/**
+	 * Joystick wrapper
+	 * @author jaxon
+	 *
+	 */
 	public class JoystickAxis {
 		private int port;
+		/**
+		 * Set up a joystick axis
+		 * @param port the port
+		 */
 		public JoystickAxis(int port) {
 			this.port = port;
 		}
+		/**
+		 * Get raw value of jstick
+		 * @return raw value of stick, [-1, 1]
+		 */
 		public double getRaw() {
 			return jstick.getRawAxis(port);
 		}
