@@ -4,7 +4,16 @@
 //A few modifications have been made by Brendan Gregos for FRC Team 3164, Stealth Tigers
 #include <i2cmaster.h>
 
-byte clockPin = 3;
+byte clockPin = 3;//Should this be pin 4?
+/*The sensor's port 6 is an SDA data line, and 5 the SCL clock line, and isnt analog 4 on the arduino the clock line?
+So shouldnt ports 6 on the Sensor go to analog 5; 5 go to analog 4
+*/
+/*
+Different for mega?
+"To use the ultrasonic sensor with an Arduino Mega, one have to connect pin 20 (SDA) to A4 and pin 21 (SCL) to A5.
+A new revision of the shield might use the two extra SDA and SCL pins that are near to the AREF pin on r3 versions
+of the new Arduino boards."
+*/
 byte buf[9];//Buffer to store the received valeus
 byte addr = 0x02;//address 0x02 in a 8-bit context - 0x01 in a 7-bit context
 byte distance;
