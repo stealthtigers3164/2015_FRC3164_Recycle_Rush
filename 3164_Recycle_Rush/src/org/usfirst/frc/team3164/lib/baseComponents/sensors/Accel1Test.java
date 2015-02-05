@@ -62,14 +62,14 @@ public class Accel1Test {
 	}
 	
 	private double deadband(double val) {
-		if(Math.abs(val)>=ACCEL_DEADBAND_THRESHOLD) {
+		if(Math.abs(val)<=ACCEL_DEADBAND_THRESHOLD) {
 			return 0;
 		}
 		return val;
 	}
 	
 	private void manage() {
-		double period = (lastRead - new Date().getTime())/1000.0;
+		double period = (new Date().getTime() - lastRead)/1000.0;
 		lastRead = period;
 		AccelerationData accelData = getAccelData();
 		accelData.XAxis -= calib.XAxis;
