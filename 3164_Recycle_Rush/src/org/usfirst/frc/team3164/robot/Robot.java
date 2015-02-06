@@ -5,12 +5,10 @@ package org.usfirst.frc.team3164.robot;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
+import org.usfirst.frc.team3164.lib.baseComponents.sensors.I2CRFT1;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
-import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
-import org.usfirst.frc.team3164.lib.util.Timer;
 
-import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
@@ -144,7 +142,7 @@ public class Robot extends JSRobot {
     		}
     	}
     	driveTrain.stop();*/
-    	BuiltInAccelerometer acc = new BuiltInAccelerometer();
+    	/*BuiltInAccelerometer acc = new BuiltInAccelerometer();
     	double yOff = acc.getY();
     	int counter = 0;
     	System.out.println("Starting...");
@@ -165,7 +163,8 @@ public class Robot extends JSRobot {
     		counter++;
     	}
     	driveTrain.stop();
-    	System.out.println("Stopped.");
+    	System.out.println("Stopped.");*/
+    	System.out.println(new I2CRFT1(0).getAngle());
     }
     
     /**
