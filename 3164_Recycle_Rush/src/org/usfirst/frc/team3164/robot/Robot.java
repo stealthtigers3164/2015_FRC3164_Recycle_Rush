@@ -5,20 +5,15 @@ package org.usfirst.frc.team3164.robot;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
-import org.usfirst.frc.team3164.lib.baseComponents.mechDrive.MechDriveManager;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
-import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
-import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.TurnDir;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
-import org.usfirst.frc.team3164.lib.util.Callback;
-import org.usfirst.frc.team3164.lib.util.ICallback;
-import org.usfirst.frc.team3164.lib.util.Scheduler;
+import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
 import org.usfirst.frc.team3164.lib.util.Timer;
 
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.hal.PDPJNI;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -63,7 +58,7 @@ public class Robot extends JSRobot {
     /**
      * This function is called when autonomous starts
      */
-    @Override
+    /*@Override
     public void autonomousInit() {
     	driveTrain.turn(180, TurnDir.LEFT, driveGyro);
     	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000);
@@ -138,6 +133,39 @@ public class Robot extends JSRobot {
     		}
     	});
     	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 10000);
+    }*/
+    @Override
+    public void autonomousInit() {
+    	/*Accel1Test ac = new Accel1Test();
+    	driveTrain.startDrive(0.3, DriveDir.FORWARDS);
+    	while(true) {
+    		if(ac.getDistY()>=10) {
+    			break;
+    		}
+    	}
+    	driveTrain.stop();*/
+    	BuiltInAccelerometer acc = new BuiltInAccelerometer();
+    	double yOff = acc.getY();
+    	int counter = 0;
+    	System.out.println("Starting...");
+    	driveTrain.startDrive(1.0, DriveDir.FORWARDS);
+    	while(true) {
+    		System.out.println(acc.getY()-yOff);
+    		Timer.waitMilis(20);
+    		if(counter==50*3) {
+    			System.out.println("Stopping...");
+    			driveTrain.stop();
+    			Timer.waitMilis(1000);
+    			System.out.println("Reversing...");
+    			driveTrain.startDrive(1.0, DriveDir.REVERSE);
+    		}
+    		if(counter==50*3+50*3) {
+    			break;
+    		}
+    		counter++;
+    	}
+    	driveTrain.stop();
+    	System.out.println("Stopped.");
     }
     
     /**

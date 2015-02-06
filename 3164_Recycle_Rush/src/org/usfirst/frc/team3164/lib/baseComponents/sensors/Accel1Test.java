@@ -84,6 +84,8 @@ public class Accel1Test {
 		distanceFromOrigin_X += velocity_X * period;
 		distanceFromOrigin_Y += velocity_Y * period;
 		distanceFromOrigin_Z += velocity_Z * period;
+		System.out.println("Acceleration Y: " + accelData.YAxis + "  YVel: "
+				+ this.velocity_Y + "  DistY: " + this.distanceFromOrigin_Y);
 	}
 
 	public void calibrate() {

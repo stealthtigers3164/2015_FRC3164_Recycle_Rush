@@ -46,6 +46,6 @@ public abstract class JSRobot extends IterativeRobot {
 		this.liftMech = new LiftMech(new LimitSwitch(JSRobot.LIFTMECH_LIMIT_TOP), new LimitSwitch(JSRobot.LIFTMECH_LIMIT_BOTTOM),
 				new MotorEncoder(JSRobot.LIFTMECH_ENCODER_AC, JSRobot.LIFTMECH_ENCODER_BC, false), new VicMotor(JSRobot.LIFTMECH_MOTOR_1));
 		this.pinchMech = new PinchMech(new VicMotor(JSRobot.PINCHMECH_MOTOR));
-		this.ultra = new NXTRangefinder(JSRobot.RANGEFINDER);
+		//this.ultra = new NXTRangefinder(JSRobot.RANGEFINDER);
 	}
 }
