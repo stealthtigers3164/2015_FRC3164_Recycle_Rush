@@ -27,6 +27,12 @@ public class I2CRFT1 {
         
         UsageReporting.report(UsageReporting.kResourceType_HiTechnicCompass, module.getModuleNumber()-1);
         LiveWindow.addSensor("HiTechnicCompass", slot, 0, this);*/
+        new Thread() {
+        	@Override
+        	public void run() {
+        		
+        	}
+        }.start();
     }
 
     /**

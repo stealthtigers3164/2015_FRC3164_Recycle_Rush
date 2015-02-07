@@ -10,23 +10,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * @author Brendan Gregos
  */
 public class Dashboard {
-	private PowerDistributionPanel pdp;
+	//private PowerDistributionPanel pdp; Disabled on protobot
 	/**
 	 * Constructor.
 	 * @argument PowerDistributionPanel pdp Requires a power distribution board object.
 	 */
 	public Dashboard(PowerDistributionPanel pdpIn){
-		pdp= new PowerDistributionPanel();
+		//pdp= new PowerDistributionPanel(); Disabled on protobot.
 	}
 
 	/**
 	*Collects all data to be pushed to the dash and pushes it. Run this in a periodic loop.
 	*/
 	public void updateDash(){
+		/* DISABLE FOR PROTOBOT, ENABLE FOR COMPBOT
 		SmartDashboard.putNumber("Robot amperage consumption", pdp.getTotalCurrent());
 		SmartDashboard.putNumber("Robot internal temperature", pdp.getTemperature());
 		SmartDashboard.putNumber("Pincer Motor Current Draw", pdp.getCurrent(13));
-		
+		*/
 	}
 	
 	/**

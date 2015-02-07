@@ -1,4 +1,4 @@
-package org.usfirst.ftc.team3164.test.robot;
+package org.usfirst.frc.team3164.test.robot;
 
 import java.lang.Math;
 import java.util.Comparator;
@@ -56,14 +56,14 @@ public class Robot extends SampleRobot {
 		int imaqError;
 
 		//Constants
-		NIVision.Range TOTE_HUE_RANGE = new NIVision.Range(101, 64);	//Default hue range for yellow tote
-		NIVision.Range TOTE_SAT_RANGE = new NIVision.Range(88, 255);	//Default saturation range for yellow tote
-		NIVision.Range TOTE_VAL_RANGE = new NIVision.Range(134, 255);	//Default value range for yellow tote
+		NIVision.Range TOTE_HUE_RANGE = new NIVision.Range(75, 150);	//Default hue range for yellow tote
+		NIVision.Range TOTE_SAT_RANGE = new NIVision.Range(80, 255);	//Default saturation range for yellow tote
+		NIVision.Range TOTE_VAL_RANGE = new NIVision.Range(110, 255);	//Default value range for yellow tote
 		double AREA_MINIMUM = 0.5; //Default Area minimum for particle as a percentage of total image area
 		double LONG_RATIO = 2.22; //Tote long side = 26.9 / Tote height = 12.1 = 2.22
 		double SHORT_RATIO = 1.4; //Tote short side = 16.9 / Tote height = 12.1 = 1.4
-		double SCORE_MIN = 75.0;  //Minimum score to be considered a tote
-		double VIEW_ANGLE = 49.4; //View angle fo camera, set to Axis m1011 by default, 64 for m1013, 51.7 for 206, 52 for HD3000 square, 60 for HD3000 640x480
+		double SCORE_MIN = 50.0;  //Minimum score to be considered a tote
+		double VIEW_ANGLE = 60; //View angle fo camera, set to Axis m1011 by default, 64 for m1013, 51.7 for 206, 52 for HD3000 square, 60 for HD3000 640x480
 		NIVision.ParticleFilterCriteria2 criteria[] = new NIVision.ParticleFilterCriteria2[1];
 		NIVision.ParticleFilterOptions2 filterOptions = new NIVision.ParticleFilterOptions2(0,0,1,1);
 		Scores scores = new Scores();

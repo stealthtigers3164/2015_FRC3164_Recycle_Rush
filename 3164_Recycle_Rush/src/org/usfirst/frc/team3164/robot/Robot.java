@@ -43,6 +43,7 @@ public class Robot extends JSRobot {
        // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
         pdp = new PowerDistributionPanel();
         dash = new Dashboard(pdp);
+        
     }
     
     /**
@@ -164,6 +165,7 @@ public class Robot extends JSRobot {
     	}
     	driveTrain.stop();
     	System.out.println("Stopped.");*/
+    	System.out.println("Ready...");
     	System.out.println(new I2CRFT1(0).getAngle());
     }
     
