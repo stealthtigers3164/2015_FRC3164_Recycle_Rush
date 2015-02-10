@@ -418,7 +418,7 @@ public class DriveTrain {
 			if(Math.abs(deg-currDeg)<3) {
 				break;
 			}
-			Timer.waitMilis(20);
+			Timer.waitMillis(20);
 		}
 		this.setMotorPower(0, 0, 0, 0);
 	}
@@ -431,7 +431,7 @@ public class DriveTrain {
 			if(Math.abs(deg-currDeg)<7) {
 				break;
 			}
-			Timer.waitMilis(20);
+			Timer.waitMillis(20);
 		}
 		this.setMotorPower(-dir.getLMPW(), -dir.getRMPW());
 		while(cond.check()) {
@@ -439,7 +439,7 @@ public class DriveTrain {
 			if(Math.abs(deg-currDeg)<3) {
 				break;
 			}
-			Timer.waitMilis(20);
+			Timer.waitMillis(20);
 		}
 		this.setMotorPower(0, 0, 0, 0);
 	}
@@ -461,7 +461,7 @@ public class DriveTrain {
 	// lr rr lf rf
 	public void driveTime(double power, DriveDir dir, int time) {
 		this.setMotorPower(power * dir.lr, power * dir.rr, power * dir.lf, power * dir.rf);
-		Timer.waitMilis(time);
+		Timer.waitMillis(time);
 		this.setMotorPower(0, 0);
 	}
 	

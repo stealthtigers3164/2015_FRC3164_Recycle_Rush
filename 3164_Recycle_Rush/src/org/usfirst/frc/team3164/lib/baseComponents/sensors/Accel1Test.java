@@ -37,7 +37,7 @@ public class Accel1Test {
 				lastRead = new Date().getTime();
 				while(true) {
 					manage();
-					Timer.waitMilis(10);
+					Timer.waitMillis(10);
 				}
 			}
 		}).start();
@@ -92,7 +92,7 @@ public class Accel1Test {
 		CalibrationData cal = new CalibrationData();
 		for(int i = 0; i<ACCEL_NUM_CAL_PTS; i++) {
 			cal.post(accel.getX(), accel.getY(), accel.getZ());
-			Timer.waitMilis(20);
+			Timer.waitMillis(20);
 		}
 		cal.finish();
 		calib = cal;

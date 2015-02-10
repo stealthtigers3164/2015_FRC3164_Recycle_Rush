@@ -10,7 +10,7 @@ public class Scheduler extends Thread {
 	}
 	@Override
 	public void run() {
-		Timer.waitMilis(waitMillis);
+		Timer.waitMillis(waitMillis);
 		cb.call();
 	}
 }

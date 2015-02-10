@@ -87,10 +87,10 @@ public class Robot extends JSRobot {
     	Timer.waitSec(2);
     	liftMech.goDown();
     	while(liftMech.isDown()) {
-    		Timer.waitMilis(30);
+    		Timer.waitMillis(30);
     	}
     	pinchMech.close();
-    	Timer.waitMilis(2);
+    	Timer.waitMillis(2);
     	liftMech.startGoingUpToPreset();
     	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000);
     	driveTrain.startDrive(1.0, DriveDir.LEFT);
@@ -109,10 +109,10 @@ public class Robot extends JSRobot {
     	Timer.waitSec(2);
     	liftMech.goDown();
     	while(liftMech.isDown()) {
-    		Timer.waitMilis(30);
+    		Timer.waitMillis(30);
     	}
     	pinchMech.close();
-    	Timer.waitMilis(2);
+    	Timer.waitMillis(2);
     	liftMech.goUp();
     	new Scheduler(1000, new ICallback() {
     		@Override

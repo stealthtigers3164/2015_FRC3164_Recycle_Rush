@@ -298,7 +298,7 @@ public class ToteFinder {
 					SmartDashboard.putBoolean("IsTote", false);
 				}
 
-				Timer.waitMilis(5);
+				Timer.waitMillis(5);
 			}
 		}
 	}
