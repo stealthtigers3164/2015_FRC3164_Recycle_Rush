@@ -64,32 +64,44 @@ public class Robot extends JSRobot {
      */
     @Override
     public void autonomousInit() {
-    	driveTrain.turn(180, TurnDir.LEFT, driveGyro);//Turn 180 to face the totes
-    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);
-    	pinchMech.close();
-    	Timer.waitSec(2);
-    	liftMech.startGoingUpToPreset();
-    	Timer.waitSec(1);
-    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);
-    	driveTrain.startDrive(1.0, DriveDir.LEFT, driveGyro);
-    	ToteFinder tfind = new ToteFinder(new ICallback() {
+    	driveTrain.startDrive(0.2, DriveDir.LEFT, driveGyro);//Begins to drive left
+    	ToteFinder tfind = new ToteFinder(new ICallback() {//Starts listening for tote
     		@Override
-    		public void call() {
-    			Robot.rbt.auto_hasFound = true;
+    		public void call() {//Tote has been found!
+    			Robot.rbt.auto_hasFound = true;//Set cb var to true
     		}
     	});
-    	while(!auto_hasFound) {}
-    	driveTrain.stop();
-    	this.auto_hasFound = false;
-    	
-    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);
-    	pinchMech.open();
+    	while(!auto_hasFound) {Timer.waitMillis(10);}//Waits for the callback
+    	driveTrain.stop();//Stop the robot
+    }
+    /*@Override
+    public void autonomousInit() {
+    	driveTrain.turn(180, TurnDir.LEFT, driveGyro);//Turn 180 to face the totes
+    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);//Drives forwards towards the tote
+    	pinchMech.close();//Closes the pincher to pick up first tote
     	Timer.waitSec(2);
-    	liftMech.goDown();
-    	while(liftMech.isDown()) {
+    	liftMech.startGoingUpToPreset();//Begins raising the lift
+    	Timer.waitSec(1);
+    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);//Reverses to previous location
+    	driveTrain.startDrive(1.0, DriveDir.LEFT, driveGyro);//Begins to drive left
+    	ToteFinder tfind = new ToteFinder(new ICallback() {//Starts listening for tote
+    		@Override
+    		public void call() {//Tote has been found!
+    			Robot.rbt.auto_hasFound = true;//Set cb var to true
+    		}
+    	});
+    	while(!auto_hasFound) {Timer.waitMillis(10);}//Waits for the callback
+    	driveTrain.stop();//Stop the robot
+    	this.auto_hasFound = false;//Reset the cb var
+    	
+    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);//Drive forwards towards the tote
+    	pinchMech.open();//open the pinch mech; it should be at preset by now
+    	Timer.waitSec(2);
+    	liftMech.goDown();//lower pinch mech
+    	while(liftMech.isDown()) {//Wait for the pinch mech to lower all the way
     		Timer.waitMillis(30);
     	}
-    	pinchMech.close();
+    	pinchMech.close();//close the mech. 
     	Timer.waitMillis(2);
     	liftMech.startGoingUpToPreset();
     	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);
@@ -121,7 +133,7 @@ public class Robot extends JSRobot {
     		}
     	});
     	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 10000, driveGyro);
-    }
+    }*/
    // @Override
    // public void autonomousInit() {
     	/*Accel1Test ac = new Accel1Test();
