@@ -445,17 +445,19 @@ public class DriveTrain {
 	}
 	
 	public enum DriveDir {
-		FORWARDS(1.0, 1.0, 1.0, 1.0),
-		REVERSE(-1.0, -1.0, -1.0, -1.0),
-		LEFT(1.0, -1.0, -1.0, 1.0),
-		RIGHT(-1.0, 1.0, 1.0, -1.0);
+		FORWARDS(1.0, 1.0, 1.0, 1.0, 1, 0),
+		REVERSE(-1.0, -1.0, -1.0, -1.0, -1, 0),
+		LEFT(1.0, -1.0, -1.0, 1.0, 0, -1),
+		RIGHT(-1.0, 1.0, 1.0, -1.0, 0, 1);
 		
-		private double lf, lr, rf, rr;
-		private DriveDir(double lf, double lr, double rf, double rr) {
+		private double lf, lr, rf, rr, x, y;
+		private DriveDir(double lf, double lr, double rf, double rr, double x, double y) {
 			this.lf = lf;
 			this.lr = lr;
 			this.rf = rf;
 			this.rr = rr;
+			this.x = x;
+			this.y = y;
 		}
 	}
 	// lr rr lf rf
@@ -465,11 +467,53 @@ public class DriveTrain {
 		this.setMotorPower(0, 0);
 	}
 	
+	public void driveTime(double power, DriveDir dir, int time, Gyro gyro) {
+		this.mecanumDrive_Cartesian2(dir.x*power, dir.y*power, 0, gyro.getAngle());
+		Timer.waitMillis(time);
+		this.setMotorPower(0, 0);
+	}
+	
 	public void startDrive(double power, DriveDir dir) {
 		this.setMotorPower(power * dir.lr, power * dir.rr, power * dir.lf, power * dir.rf);
 	}
 	
+	private DriveTask driveTask = null;
+	
+	public void startDrive(double power, DriveDir dir, Gyro gyro) {
+		if(driveTask!=null) {
+			driveTask.kill();
+		}
+		driveTask = new DriveTask(power, dir, gyro);
+		driveTask.start();
+	}
+	
+	private class DriveTask extends Thread {
+		private boolean kill = false;
+		private Gyro gyro;
+		private DriveDir dir;
+		private double power;
+		public DriveTask(double power, DriveDir dir, Gyro gyro) {
+			this.power = power;
+			this.dir = dir;
+			this.gyro = gyro;
+		}
+		public void kill() {
+			kill = true;
+		}
+		@Override
+		public void run() {
+			while(!kill) {
+				mecanumDrive_Cartesian2(dir.x*power, dir.y*power, 0, gyro.getAngle());
+				Timer.waitMillis(10);
+			}
+		}
+	}
+	
 	public void stop() {
+		if(driveTask!=null) {
+			driveTask.kill();
+			driveTask = null;
+		}
 		this.setMotorPower(0, 0);
 	}
 	

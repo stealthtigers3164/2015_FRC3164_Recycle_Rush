@@ -64,14 +64,14 @@ public class Robot extends JSRobot {
      */
     @Override
     public void autonomousInit() {
-    	driveTrain.turn(180, TurnDir.LEFT, driveGyro);
-    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000);
+    	driveTrain.turn(180, TurnDir.LEFT, driveGyro);//Turn 180 to face the totes
+    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);
     	pinchMech.close();
     	Timer.waitSec(2);
     	liftMech.startGoingUpToPreset();
     	Timer.waitSec(1);
-    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000);
-    	driveTrain.startDrive(1.0, DriveDir.LEFT);
+    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);
+    	driveTrain.startDrive(1.0, DriveDir.LEFT, driveGyro);
     	ToteFinder tfind = new ToteFinder(new ICallback() {
     		@Override
     		public void call() {
@@ -82,7 +82,7 @@ public class Robot extends JSRobot {
     	driveTrain.stop();
     	this.auto_hasFound = false;
     	
-    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000);
+    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);
     	pinchMech.open();
     	Timer.waitSec(2);
     	liftMech.goDown();
@@ -92,8 +92,8 @@ public class Robot extends JSRobot {
     	pinchMech.close();
     	Timer.waitMillis(2);
     	liftMech.startGoingUpToPreset();
-    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000);
-    	driveTrain.startDrive(1.0, DriveDir.LEFT);
+    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);
+    	driveTrain.startDrive(1.0, DriveDir.LEFT, driveGyro);
     	tfind = new ToteFinder(new ICallback() {
     		@Override
     		public void call() {
@@ -104,7 +104,7 @@ public class Robot extends JSRobot {
     	driveTrain.stop();
     	this.auto_hasFound = false;
     	
-    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000);
+    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);
     	pinchMech.open();
     	Timer.waitSec(2);
     	liftMech.goDown();
@@ -120,7 +120,7 @@ public class Robot extends JSRobot {
     			Robot.rbt.liftMech.stop();
     		}
     	});
-    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 10000);
+    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 10000, driveGyro);
     }
    // @Override
    // public void autonomousInit() {
