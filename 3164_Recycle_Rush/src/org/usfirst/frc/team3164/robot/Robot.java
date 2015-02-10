@@ -5,9 +5,14 @@ package org.usfirst.frc.team3164.robot;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
-import org.usfirst.frc.team3164.lib.baseComponents.sensors.I2CRFT1;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
+import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
+import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.TurnDir;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
+import org.usfirst.frc.team3164.lib.util.ICallback;
+import org.usfirst.frc.team3164.lib.util.Scheduler;
+import org.usfirst.frc.team3164.lib.util.Timer;
+import org.usfirst.frc.team3164.lib.vision.ToteFinder;
 
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
@@ -57,7 +62,7 @@ public class Robot extends JSRobot {
     /**
      * This function is called when autonomous starts
      */
-    /*@Override
+    @Override
     public void autonomousInit() {
     	driveTrain.turn(180, TurnDir.LEFT, driveGyro);
     	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000);
@@ -67,23 +72,15 @@ public class Robot extends JSRobot {
     	Timer.waitSec(1);
     	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000);
     	driveTrain.startDrive(1.0, DriveDir.LEFT);
-    	ultra.startObjectListener(new ICallback() {
+    	ToteFinder tfind = new ToteFinder(new ICallback() {
+    		@Override
     		public void call() {
     			Robot.rbt.auto_hasFound = true;
-    			Timer.waitSec(2);
-    			Robot.rbt.ultra.startObjectLossListener(new ICallback() {
-    				public void call() {
-    					Robot.rbt.auto_hasFound = true;
-    					Timer.waitSec(2);
-    				}
-    			});
     		}
     	});
     	while(!auto_hasFound) {}
-    	while(!auto_hasLost) {}
     	driveTrain.stop();
     	this.auto_hasFound = false;
-    	this.auto_hasLost = false;
     	
     	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000);
     	pinchMech.open();
@@ -97,23 +94,15 @@ public class Robot extends JSRobot {
     	liftMech.startGoingUpToPreset();
     	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000);
     	driveTrain.startDrive(1.0, DriveDir.LEFT);
-    	ultra.startObjectListener(new ICallback() {
+    	tfind = new ToteFinder(new ICallback() {
+    		@Override
     		public void call() {
     			Robot.rbt.auto_hasFound = true;
-    			Timer.waitSec(2);
-    			Robot.rbt.ultra.startObjectLossListener(new ICallback() {
-    				public void call() {
-    					Robot.rbt.auto_hasFound = true;
-    					Timer.waitSec(2);
-    				}
-    			});
     		}
     	});
     	while(!auto_hasFound) {}
-    	while(!auto_hasLost) {}
     	driveTrain.stop();
     	this.auto_hasFound = false;
-    	this.auto_hasLost = false;
     	
     	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000);
     	pinchMech.open();
@@ -125,16 +114,16 @@ public class Robot extends JSRobot {
     	pinchMech.close();
     	Timer.waitMilis(2);
     	liftMech.goUp();
-    	new Scheduler(4000, new ICallback() {
+    	new Scheduler(1000, new ICallback() {
     		@Override
     		public void call() {
     			Robot.rbt.liftMech.stop();
     		}
     	});
     	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 10000);
-    }*/
-    @Override
-    public void autonomousInit() {
+    }
+   // @Override
+   // public void autonomousInit() {
     	/*Accel1Test ac = new Accel1Test();
     	driveTrain.startDrive(0.3, DriveDir.FORWARDS);
     	while(true) {
@@ -165,9 +154,9 @@ public class Robot extends JSRobot {
     	}
     	driveTrain.stop();
     	System.out.println("Stopped.");*/
-    	System.out.println("Ready...");
-    	System.out.println(new I2CRFT1(0).getAngle());
-    }
+    	//System.out.println("Ready...");
+    	//System.out.println(new I2CRFT1(0).getAngle());
+   // }
     
     /**
      * This function is called periodically during autonomous

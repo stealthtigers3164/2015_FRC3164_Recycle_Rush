@@ -5,8 +5,6 @@ import java.util.Vector;
 
 import org.usfirst.frc.team3164.lib.util.ICallback;
 import org.usfirst.frc.team3164.lib.util.Timer;
-import org.usfirst.frc.team3164.test.robot.Robot.ParticleReport;
-import org.usfirst.frc.team3164.test.robot.Robot.Scores;
 
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
@@ -110,7 +108,7 @@ public class ToteFinder {
 	
 	
 	
-	private ToteThread thr;
+	private ToteThread thr = null;
 	
 	private void onSetupCode(ICallback cb) {
 		thr = new ToteThread(cb);
@@ -120,11 +118,15 @@ public class ToteFinder {
 	public void stopWatcher() {
 		if(thr!=null) {
 			thr.kill();
+			thr=null;
 		}
 	}
 	
-	public void startWatcher() {
-		
+	public void restartWatcher(ICallback cb) {
+		if(thr==null) {
+			thr = new ToteThread(cb);
+			thr.start();
+		}
 	}
 	
 	
