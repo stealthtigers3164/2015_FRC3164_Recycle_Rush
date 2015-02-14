@@ -9,6 +9,7 @@ import org.usfirst.frc.team3164.robot.Robot;
 /**
  * All autonomous code is now found here.
  * @author Brendan Gregos
+ * @author Jaxon Brown
  *
  */
 public class Autonomous extends Robot{
@@ -43,6 +44,7 @@ public class Autonomous extends Robot{
 	public void auto1(){
 		//not done yet
 		pincer.close();
+		//need some sort of wait statement in here.
 		driveTrain.driveTime(.15, DriveDir.REVERSE, 3000, driveGyro);
 	}
 	
