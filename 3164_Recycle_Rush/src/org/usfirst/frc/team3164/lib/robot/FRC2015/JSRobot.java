@@ -34,7 +34,7 @@ public abstract class JSRobot extends IterativeRobot {
 	
 	public DriveTrain driveTrain;
 	public LiftMech liftMech;
-	public PinchMech pinchMech;
+	public PinchMech pincer;
 	public MechDriveManager mechDrive;
 	public NXTRangefinder ultra;
 	
@@ -45,7 +45,7 @@ public abstract class JSRobot extends IterativeRobot {
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARRIGHT), false);
 		this.liftMech = new LiftMech(new LimitSwitch(JSRobot.LIFTMECH_LIMIT_TOP), new LimitSwitch(JSRobot.LIFTMECH_LIMIT_BOTTOM),
 				new MotorEncoder(JSRobot.LIFTMECH_ENCODER_AC, JSRobot.LIFTMECH_ENCODER_BC, false), new VicMotor(JSRobot.LIFTMECH_MOTOR_1));
-		this.pinchMech = new PinchMech(new VicMotor(JSRobot.PINCHMECH_MOTOR));
+		this.pincer = new PinchMech(new VicMotor(JSRobot.PINCHMECH_MOTOR));
 		//this.ultra = new NXTRangefinder(JSRobot.RANGEFINDER);
 	}
 }

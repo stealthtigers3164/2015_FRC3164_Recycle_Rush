@@ -1,8 +1,6 @@
 package org.usfirst.frc.team3164.lib.baseComponents;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 /**
  * Class that links multiple motors to one power control.

@@ -9,6 +9,7 @@ import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.TurnDir;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
+import org.usfirst.frc.team3164.lib.robot.FRC2015.PinchMech;
 import org.usfirst.frc.team3164.lib.util.ICallback;
 import org.usfirst.frc.team3164.lib.util.Scheduler;
 import org.usfirst.frc.team3164.lib.util.Timer;
@@ -36,6 +37,7 @@ public class Robot extends JSRobot {
     Gyro driveGyro;
     Dashboard dash;
     PowerDistributionPanel pdp;
+    PinchMech pincer;
 
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
@@ -50,6 +52,7 @@ public class Robot extends JSRobot {
        // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
         pdp = new PowerDistributionPanel();
         dash = new Dashboard(pdp);
+        
         
     }
     
