@@ -139,9 +139,15 @@ public class Robot extends JSRobot {
 	    		}
     		}
     	}
-    	
-    	
-    	if(ftcCont.buttons.BUTTON_BACK.isOn()) {
+    	/*SmartDashboard.putBoolean("IsGood", true);
+    	System.out.println("IsGOood");
+    	if(ftcCont.jstick.getRawButton(8)) {
+    		System.out.println("eight");
+    		SmartDashboard.putBoolean("Eight", true);
+    	} else {
+    		SmartDashboard.putBoolean("Eight", false);
+    	}*/
+    	if(ftcCont.jstick.getRawButton(9)) {
     		if(!wasBackPressed) {
     			wasBackPressed = true;
     			backPressed.add(new Date().getTime());
@@ -173,7 +179,7 @@ public class Robot extends JSRobot {
 	    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
 	    		driveGyro.getAngle());
     	} else if(driveMode==1) {
-	    	driveTrain.mecanumDrive_Cartesian(
+	    	driveTrain.mecanumDrive_Cartesian3(
 		    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
 		    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
 		    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
@@ -188,7 +194,6 @@ public class Robot extends JSRobot {
     	
     	//send updates to dashboard
     	dash.updateDash();
-    	
     	Watchcat.feed();
     }
     
