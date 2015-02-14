@@ -290,6 +290,75 @@ public class DriveTrain {
         this.leftBack.setPower(wheelSpeeds.BACK_LEFT);
         this.rightBack.setPower(wheelSpeeds.BACK_RIGHT);
     }
+    
+    public void mecanumDrive_Cartesian3(double x, double y, double rotation, double gyroAngle) {
+        double xIn = x;
+        double yIn = y;
+        // Negate y for the joystick.
+        yIn = -yIn;
+        // Compenstate for gyro angle.
+
+        ///////////////
+        //This might solve the problems with tracking straight,
+        //it would check if the rate of rotation is being changed
+        //and if it is not, it will then try to fix the rotation
+        //in the case that the robot is accidently moved
+        if(trackingStraight == 4){
+        	trackingAngle = gyroAngle;
+        	trackingStraight = 0;
+        }
+        /***************************\
+        | * Why is trackingStraight a byte?:
+        | * Being a byte allows it to have more than two values
+        | * Which allows three states:
+        | * The previous 2 (user controlled spin [0] and computer gyro fix [2])
+        | * The intermediate state allows for the program to wait a small time (250 millaseconds now could probably by less)
+        | * to allow the robots momentum to slow down a tiny bit to get a more accurate reading
+        | * If this proves to be problematic, change "trackingStraight = 0;" (last instance of it) to 1
+         \***************************/
+        
+        if(Math.abs(rotation) < 0.075) {//A little leeway
+        	rotation = 0; //Just in case :)
+        	if(trackingStraight == 2) {
+        		if((gyroAngle-trackingAngle) >= 5) {
+        		//Robot has been moved clockwise, rotate left (or negative rotation) to fix
+        			rotation = -0.15; //MAY NEED TO BE ADJUSTED
+        		} else if ((gyroAngle-trackingAngle) <= -5) {
+        		//Robot has been moved counter clockwise, rotate right (or positive rotation) to fix
+        			rotation = 0.15;	//MAY NEED TO BE ADJUSTED
+        		}
+        		//Tracking straight does not need to be set to true here because the robot can still be rotated accidently
+        	} else if(trackingStraight == 1) {
+        		if(trackingTime < System.currentTimeMillis()) {
+        			trackingStraight = 2;
+        			trackingAngle = gyroAngle;//This would be the last correct line after the driver gets to the intended position and the robot isn't being moved
+        		}
+        	} else if(trackingStraight == 0) {
+        		trackingStraight = 1;
+        		trackingTime = System.currentTimeMillis() + 250;
+        	}
+        } else {
+        	trackingStraight = 0; //True because the intentional turning of the robot
+        }
+        
+        ///////////////
+        
+        
+        //double rotated[] = rotateVector(xIn, yIn, gyroAngle);
+        //xIn = rotated[0];
+        //yIn = rotated[1];
+        SpeedStorage wheelSpeeds = new SpeedStorage();
+        wheelSpeeds.FRONT_LEFT = xIn + yIn + rotation;
+        wheelSpeeds.FRONT_RIGHT = -xIn + yIn - rotation;
+        wheelSpeeds.BACK_LEFT = -xIn + yIn + rotation;
+        wheelSpeeds.BACK_RIGHT = xIn + yIn - rotation;
+        wheelSpeeds = new SpeedStorage(normalize(wheelSpeeds.getArray()));
+        
+        this.leftFront.setPower(wheelSpeeds.FRONT_LEFT);
+        this.rightFront.setPower(wheelSpeeds.FRONT_RIGHT);
+        this.leftBack.setPower(wheelSpeeds.BACK_LEFT);
+        this.rightBack.setPower(wheelSpeeds.BACK_RIGHT);
+    }
 
 		
     /**

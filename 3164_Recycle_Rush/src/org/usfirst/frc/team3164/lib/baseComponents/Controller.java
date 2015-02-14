@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Joystick;
  *
  */
 public class Controller {
-	private Joystick jstick;
+	public Joystick jstick;
 	/**
 	 * Controller button wrapper
 	 */
