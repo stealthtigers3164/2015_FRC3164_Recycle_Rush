@@ -3,20 +3,22 @@
 
 package org.usfirst.frc.team3164.robot;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
-import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.TurnDir;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
 import org.usfirst.frc.team3164.lib.util.ICallback;
-import org.usfirst.frc.team3164.lib.util.Scheduler;
 import org.usfirst.frc.team3164.lib.util.Timer;
 import org.usfirst.frc.team3164.lib.vision.ToteFinder;
 
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -41,6 +43,7 @@ public class Robot extends JSRobot {
     
     //Constructor
     public Robot() {
+    	SmartDashboard.putBoolean("IsCompCode", true);
     	rbt = this;
         //Setup new drivetrain
     	driveGyro = new Gyro(0);
@@ -82,102 +85,8 @@ public class Robot extends JSRobot {
     	driveTrain.startDrive(0.37, DriveDir.RIGHT, driveGyro);//Begins to drive left
     	while(!auto_hasFound && this.isAutonomous()) {Timer.waitMillis(10);}//Waits for the callback
     	driveTrain.stop();//Stop the robot
+    	//autonomous is now found in the Autonomous class.
     }
-    /*@Override
-    public void autonomousInit() {
-    	driveTrain.turn(180, TurnDir.LEFT, driveGyro);//Turn 180 to face the totes
-    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);//Drives forwards towards the tote
-    	pinchMech.close();//Closes the pincher to pick up first tote
-    	Timer.waitSec(2);
-    	liftMech.startGoingUpToPreset();//Begins raising the lift
-    	Timer.waitSec(1);
-    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);//Reverses to previous location
-    	driveTrain.startDrive(1.0, DriveDir.LEFT, driveGyro);//Begins to drive left
-    	ToteFinder tfind = new ToteFinder(new ICallback() {//Starts listening for tote
-    		@Override
-    		public void call() {//Tote has been found!
-    			Robot.rbt.auto_hasFound = true;//Set cb var to true
-    		}
-    	});
-    	while(!auto_hasFound) {Timer.waitMillis(10);}//Waits for the callback
-    	driveTrain.stop();//Stop the robot
-    	this.auto_hasFound = false;//Reset the cb var
-    	
-    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);//Drive forwards towards the tote
-    	pinchMech.open();//open the pinch mech; it should be at preset by now
-    	Timer.waitSec(2);
-    	liftMech.goDown();//lower pinch mech
-    	while(liftMech.isDown()) {//Wait for the pinch mech to lower all the way
-    		Timer.waitMillis(30);
-    	}
-    	pinchMech.close();//close the mech. 
-    	Timer.waitMillis(2);
-    	liftMech.startGoingUpToPreset();
-    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);
-    	driveTrain.startDrive(1.0, DriveDir.LEFT, driveGyro);
-    	tfind = new ToteFinder(new ICallback() {
-    		@Override
-    		public void call() {
-    			Robot.rbt.auto_hasFound = true;
-    		}
-    	});
-    	while(!auto_hasFound) {}
-    	driveTrain.stop();
-    	this.auto_hasFound = false;
-    	
-    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);
-    	pinchMech.open();
-    	Timer.waitSec(2);
-    	liftMech.goDown();
-    	while(liftMech.isDown()) {
-    		Timer.waitMillis(30);
-    	}
-    	pinchMech.close();
-    	Timer.waitMillis(2);
-    	liftMech.goUp();
-    	new Scheduler(1000, new ICallback() {
-    		@Override
-    		public void call() {
-    			Robot.rbt.liftMech.stop();
-    		}
-    	});
-    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 10000, driveGyro);
-    }*/
-   // @Override
-   // public void autonomousInit() {
-    	/*Accel1Test ac = new Accel1Test();
-    	driveTrain.startDrive(0.3, DriveDir.FORWARDS);
-    	while(true) {
-    		if(ac.getDistY()>=10) {
-    			break;
-    		}
-    	}
-    	driveTrain.stop();*/
-    	/*BuiltInAccelerometer acc = new BuiltInAccelerometer();
-    	double yOff = acc.getY();
-    	int counter = 0;
-    	System.out.println("Starting...");
-    	driveTrain.startDrive(1.0, DriveDir.FORWARDS);
-    	while(true) {
-    		System.out.println(acc.getY()-yOff);
-    		Timer.waitMilis(20);
-    		if(counter==50*3) {
-    			System.out.println("Stopping...");
-    			driveTrain.stop();
-    			Timer.waitMilis(1000);
-    			System.out.println("Reversing...");
-    			driveTrain.startDrive(1.0, DriveDir.REVERSE);
-    		}
-    		if(counter==50*3+50*3) {
-    			break;
-    		}
-    		counter++;
-    	}
-    	driveTrain.stop();
-    	System.out.println("Stopped.");*/
-    	//System.out.println("Ready...");
-    	//System.out.println(new I2CRFT1(0).getAngle());
-   // }
     
     /**
      * This function is called periodically during autonomous
@@ -197,6 +106,9 @@ public class Robot extends JSRobot {
     boolean hasDone = false;
     double speedPointFwd = 0;
     double speedPointStr = 0;
+    int driveMode = 0;
+    ArrayList<Long> backPressed = new ArrayList<Long>();
+    boolean wasBackPressed = false;
     @Override
     public void teleopPeriodic() {
     	
@@ -228,12 +140,45 @@ public class Robot extends JSRobot {
     		}
     	}
     	
+    	
+    	if(ftcCont.buttons.BUTTON_BACK.isOn()) {
+    		if(!wasBackPressed) {
+    			wasBackPressed = true;
+    			backPressed.add(new Date().getTime());
+    			if(backPressed.size()>=3) {
+    				long first = backPressed.get(backPressed.size()-3);
+    				long last = backPressed.get(backPressed.size()-1);
+    				if(last-first<1500) {
+    					if(driveMode==0) {
+    						driveMode=1;
+    					} else if(driveMode==1) {
+    						driveMode=0;
+    					}
+    					backPressed.clear();
+    				}
+    			}
+    		}
+    	} else {
+    		if(wasBackPressed) {
+    			wasBackPressed = false;
+    		}
+    	}
+    	
+    	
     	////Wheel movement/////
-    	driveTrain.mecanumDrive_Cartesian2(
-    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
-    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
-    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
-    		driveGyro.getAngle());
+    	if(driveMode==0) {
+	    	driveTrain.mecanumDrive_Cartesian2(
+	    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
+	    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+	    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
+	    		driveGyro.getAngle());
+    	} else if(driveMode==1) {
+	    	driveTrain.mecanumDrive_Cartesian(
+		    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
+		    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+		    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
+		    		driveGyro.getAngle());
+	    }
     	
     	//emergency gyro reset during match
     	if(ftcCont.buttons.BUTTON_START.isOn()){
