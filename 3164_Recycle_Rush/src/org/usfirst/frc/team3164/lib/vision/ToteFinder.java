@@ -38,16 +38,16 @@ public class ToteFinder {
 	private Image frame;
 	private Image binaryFrame;
 	private int imaqError;
-	private NIVision.Range TOTE_HUE_RANGE = new NIVision.Range(100, 140); // Default hue
+	private NIVision.Range TOTE_HUE_RANGE = new NIVision.Range(150, 175); // Default hue //100,140
 																	// range for
 																	// yellow
 																	// tote
-	private NIVision.Range TOTE_SAT_RANGE = new NIVision.Range(20, 255); // Default
+	private NIVision.Range TOTE_SAT_RANGE = new NIVision.Range(95, 255); // Default //20,225
 																	// saturation
 																	// range for
 																	// yellow
 																	// tote
-	private NIVision.Range TOTE_VAL_RANGE = new NIVision.Range(100, 300); // Default
+	private NIVision.Range TOTE_VAL_RANGE = new NIVision.Range(100, 300); // Default //100,300
 																	// value
 																	// range for
 																	// yellow
@@ -162,7 +162,7 @@ public class ToteFinder {
 	
 	
 	
-	private static int ITERATIONS_WITH_TOTE = 100;
+	private static int ITERATIONS_WITH_TOTE = 10;//100
 	private static int ITERATIONS_LOST_TOTE = 5;
 	
 	private class ToteThread extends Thread {
@@ -202,7 +202,9 @@ public class ToteFinder {
 						"Tote val min", TOTE_VAL_RANGE.minValue);
 				TOTE_VAL_RANGE.maxValue = (int) SmartDashboard.getNumber(
 						"Tote val max", TOTE_VAL_RANGE.maxValue);
-
+				
+				
+				
 				// Threshold the image looking for yellow (tote color)
 				NIVision.imaqColorThreshold(binaryFrame, frame, 255,
 						NIVision.ColorMode.HSV, TOTE_HUE_RANGE, TOTE_SAT_RANGE,

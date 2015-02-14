@@ -13,16 +13,6 @@ import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-/**
- * Example of finding yellow totes based on retroreflective target.
- * This example utilizes an image file, which you need to copy to the roboRIO
- * To use a camera you will have to integrate the appropriate camera details with this example.
- * To use a USB camera instead, see the SimpelVision and AdvancedVision examples for details
- * on using the USB camera. To use an Axis Camera, see the AxisCamera example for details on
- * using an Axis Camera.
- *
- * Sample images can found here: http://wp.wpi.edu/wpilib/2015/01/16/sample-images-for-vision-projects/ 
- */
 public class Robot extends SampleRobot {
 		//A structure to hold measurements of a particle
 		public class ParticleReport implements Comparator<ParticleReport>, Comparable<ParticleReport>{
@@ -99,9 +89,7 @@ public class Robot extends SampleRobot {
 		public void autonomous() {
 			while (isAutonomous() && isEnabled())
 			{
-				//read file in from disk. For this example to run you need to copy image.jpg from the SampleImages folder to the
-				//directory shown below using FTP or SFTP: http://wpilib.screenstepslive.com/s/4485/m/24166/l/282299-roborio-ftp
-				//NIVision.imaqReadFile(frame, "/home/lvuser/SampleImages/image.jpg");TODO
+				
 				NIVision.IMAQdxGrab(session, frame, 1);
 
 				//Update threshold values from SmartDashboard. For performance reasons it is recommended to remove this after calibration is finished.
@@ -148,9 +136,6 @@ public class Robot extends SampleRobot {
 					}
 					particles.remove(null);
 
-					//This example only scores the largest particle. Extending to score all particles and choosing the desired one is left as an exercise
-					//for the reader. Note that this scores and reports information about a single particle (single L shaped target). To get accurate information 
-					//about the location of the tote (not just the distance) you will need to correlate two adjacent targets in order to find the true center of the tote.
 					scores.Aspect = AspectScore(particles.elementAt(0));
 					SmartDashboard.putNumber("Aspect", scores.Aspect);
 					scores.Area = AreaScore(particles.elementAt(0));
@@ -181,10 +166,7 @@ public class Robot extends SampleRobot {
 			return particle1.PercentAreaToImageArea > particle2.PercentAreaToImageArea;
 		}
 
-		/**
-		 * Converts a ratio with ideal value of 1 to a score. The resulting function is piecewise
-		 * linear going from (0,0) to (1,100) to (2,0) and is 0 for all inputs outside the range 0-2
-		 */
+		
 		double ratioToScore(double ratio)
 		{
 			return (Math.max(0, Math.min(100*(1-Math.abs(1-ratio)), 100)));
@@ -197,23 +179,12 @@ public class Robot extends SampleRobot {
 			return ratioToScore((49/24)*report.Area/boundingArea);
 		}
 
-		/**
-		 * Method to score if the aspect ratio of the particle appears to match the retro-reflective target. Target is 7"x7" so aspect should be 1
-		 */
+		
 		double AspectScore(ParticleReport report)
 		{
 			return ratioToScore(((report.BoundingRectRight-report.BoundingRectLeft)/(report.BoundingRectBottom-report.BoundingRectTop)));
 		}
-
-		/**
-		 * Computes the estimated distance to a target using the width of the particle in the image. For more information and graphics
-		 * showing the math behind this approach see the Vision Processing section of the ScreenStepsLive documentation.
-		 *
-		 * @param image The image to use for measuring the particle estimated rectangle
-		 * @param report The Particle Analysis Report for the particle
-		 * @param isLong Boolean indicating if the target is believed to be the long side of a tote
-		 * @return The estimated distance to the target in feet.
-		 */
+		
 		double computeDistance (Image image, ParticleReport report) {
 			double normalizedWidth, targetWidth;
 			NIVision.GetImageSizeResult size;

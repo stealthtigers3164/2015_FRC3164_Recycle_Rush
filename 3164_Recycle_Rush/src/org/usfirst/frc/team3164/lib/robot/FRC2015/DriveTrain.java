@@ -178,9 +178,9 @@ public class DriveTrain {
         // Negate y for the joystick.
         yIn = -yIn;
         // Compenstate for gyro angle.
-        double rotated[] = rotateVector(xIn, yIn, gyroAngle);
-        xIn = rotated[0];
-        yIn = rotated[1];
+        //double rotated[] = rotateVector(xIn, yIn, gyroAngle);
+        //xIn = rotated[0];
+        //yIn = rotated[1];
         SpeedStorage wheelSpeeds = new SpeedStorage();
         wheelSpeeds.FRONT_LEFT = xIn + yIn + rotation;
         wheelSpeeds.FRONT_RIGHT = -xIn + yIn - rotation;
@@ -219,7 +219,7 @@ public class DriveTrain {
 			//2 means the robot has a gyro angle
 		private double trackingTime = 0; // A small waiting time so the gyro is set correctly when the robot's momentum isn't in effect
 		public void resetGyro() {
-			trackingStraight = 0;
+			trackingStraight = 4;
 			trackingAngle = 0;
 		}
     public void mecanumDrive_Cartesian2(double x, double y, double rotation, double gyroAngle) {
@@ -234,7 +234,10 @@ public class DriveTrain {
         //it would check if the rate of rotation is being changed
         //and if it is not, it will then try to fix the rotation
         //in the case that the robot is accidently moved
-        
+        if(trackingStraight == 4){
+        	trackingAngle = gyroAngle;
+        	trackingStraight = 0;
+        }
         /***************************\
         | * Why is trackingStraight a byte?:
         | * Being a byte allows it to have more than two values

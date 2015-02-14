@@ -3,14 +3,15 @@
 
 package org.usfirst.frc.team3164.robot;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
-import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.TurnDir;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
 import org.usfirst.frc.team3164.lib.util.ICallback;
-import org.usfirst.frc.team3164.lib.util.Scheduler;
 import org.usfirst.frc.team3164.lib.util.Timer;
 import org.usfirst.frc.team3164.lib.vision.ToteFinder;
 
@@ -188,6 +189,9 @@ public class Robot extends JSRobot {
     boolean hasDone = false;
     double speedPointFwd = 0;
     double speedPointStr = 0;
+    int driveMode = 0;
+    ArrayList<Long> backPressed = new ArrayList<Long>();
+    boolean wasBackPressed = false;
     @Override
     public void teleopPeriodic() {
     	
@@ -219,12 +223,45 @@ public class Robot extends JSRobot {
     		}
     	}
     	
+    	
+    	if(ftcCont.buttons.BUTTON_BACK.isOn()) {
+    		if(!wasBackPressed) {
+    			wasBackPressed = true;
+    			backPressed.add(new Date().getTime());
+    			if(backPressed.size()>=3) {
+    				long first = backPressed.get(backPressed.size()-3);
+    				long last = backPressed.get(backPressed.size()-1);
+    				if(last-first<1500) {
+    					if(driveMode==0) {
+    						driveMode=1;
+    					} else if(driveMode==1) {
+    						driveMode=0;
+    					}
+    					backPressed.clear();
+    				}
+    			}
+    		}
+    	} else {
+    		if(wasBackPressed) {
+    			wasBackPressed = false;
+    		}
+    	}
+    	
+    	
     	////Wheel movement/////
-    	driveTrain.mecanumDrive_Cartesian2(
-    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
-    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
-    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
-    		driveGyro.getAngle());
+    	if(driveMode==0) {
+	    	driveTrain.mecanumDrive_Cartesian2(
+	    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
+	    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+	    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
+	    		driveGyro.getAngle());
+    	} else if(driveMode==1) {
+	    	driveTrain.mecanumDrive_Cartesian(
+		    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
+		    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+		    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
+		    		driveGyro.getAngle());
+	    }
     	
     	//emergency gyro reset during match
     	if(ftcCont.buttons.BUTTON_START.isOn()){
