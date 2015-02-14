@@ -62,8 +62,8 @@ public class Controller {
 	public class FTCAxes {
 		public LeftRightAxis LEFT_STICK_X = new LeftRightAxis(0);
 		public UpDownAxis LEFT_STICK_Y = new UpDownAxis(1);
-		public LeftRightAxis RIGHT_STICK_X = new LeftRightAxis(4);
-		public UpDownAxis RIGHT_STICK_Y = new UpDownAxis(5);
+		public LeftRightAxis RIGHT_STICK_X = new LeftRightAxis(2);
+		public UpDownAxis RIGHT_STICK_Y = new UpDownAxis(3);
 	}
 	
 	/**
