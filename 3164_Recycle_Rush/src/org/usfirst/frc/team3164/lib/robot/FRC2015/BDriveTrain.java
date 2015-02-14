@@ -1,10 +1,8 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
-import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Gyro;
 
 public class BDriveTrain {
 	private IMotor leftBack;

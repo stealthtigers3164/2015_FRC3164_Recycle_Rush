@@ -38,5 +38,18 @@ public class Dashboard {
 		SmartDashboard.putNumber(key,number);
 	}
 	
+	public void uploadBoolean(String key, boolean bool){
+		SmartDashboard.putBoolean(key, bool);
+	}
+	
+	public boolean getBoolean(String key){
+		return SmartDashboard.getBoolean(key);
+	}
+	
+	public double getNumber(String key){
+		return SmartDashboard.getNumber(key);
+	}
+
+	
 	
 }

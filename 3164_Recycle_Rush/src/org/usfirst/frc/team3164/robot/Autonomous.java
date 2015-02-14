@@ -1,6 +1,5 @@
 package org.usfirst.frc.team3164.robot;
 
-import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
 import org.usfirst.frc.team3164.lib.util.ICallback;
 import org.usfirst.frc.team3164.lib.util.Timer;
@@ -18,22 +17,33 @@ public class Autonomous extends Robot{
 	 * Constructor is empty.
 	 */
 	public Autonomous(){
-		
+		//place an autonomous select button on the driverstation
+		dash.uploadBoolean("Autonomous Enabled", false);
+		dash.uploadBoolean("Vision", true);
 	}
 	
 	/**
-	 * This method does not run anything during autonomous mode. Use when existing code is buggy.
+	 * This is what selects and starts the selected autonomous script.
+	 * There are no parameters, the data on which auto to run comes from SmartDashboard and is handled internally by the class.
 	 */
-	public void doNothing(){
-		
+	public void runAutonomous(){
+		if(dash.getBoolean("Autonomous Enabled")){
+			if(dash.getBoolean("Vision")){
+				vision();
+			}else{
+				auto1();
+			}
+		}
 	}
+	
 	
 	/**
 	 * This method pinches the pincer and drives backwards.
 	 */
 	public void auto1(){
 		//not done yet
-		driveTrain.mecanumDrive_Cartesian2(0, -.3, 0, driveGyro.getAngle());
+		pincer.close();
+		driveTrain.driveTime(.15, DriveDir.REVERSE, 3000, driveGyro);
 	}
 	
 	/**

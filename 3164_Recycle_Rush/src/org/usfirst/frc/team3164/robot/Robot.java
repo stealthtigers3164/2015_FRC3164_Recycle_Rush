@@ -10,8 +10,11 @@ import org.usfirst.frc.team3164.lib.baseComponents.Controller;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
+import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.TurnDir;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
+import org.usfirst.frc.team3164.lib.robot.FRC2015.PinchMech;
 import org.usfirst.frc.team3164.lib.util.ICallback;
+import org.usfirst.frc.team3164.lib.util.Scheduler;
 import org.usfirst.frc.team3164.lib.util.Timer;
 import org.usfirst.frc.team3164.lib.vision.ToteFinder;
 
@@ -37,6 +40,7 @@ public class Robot extends JSRobot {
     Gyro driveGyro;
     Dashboard dash;
     PowerDistributionPanel pdp;
+    PinchMech pincer;
 
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
@@ -51,6 +55,7 @@ public class Robot extends JSRobot {
        // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
         pdp = new PowerDistributionPanel();
         dash = new Dashboard(pdp);
+        
         
     }
     
@@ -139,15 +144,9 @@ public class Robot extends JSRobot {
 	    		}
     		}
     	}
-    	/*SmartDashboard.putBoolean("IsGood", true);
-    	System.out.println("IsGOood");
-    	if(ftcCont.jstick.getRawButton(8)) {
-    		System.out.println("eight");
-    		SmartDashboard.putBoolean("Eight", true);
-    	} else {
-    		SmartDashboard.putBoolean("Eight", false);
-    	}*/
-    	if(ftcCont.jstick.getRawButton(9)) {
+    	
+    	
+    	if(ftcCont.buttons.BUTTON_BACK.isOn()) {
     		if(!wasBackPressed) {
     			wasBackPressed = true;
     			backPressed.add(new Date().getTime());
@@ -173,13 +172,13 @@ public class Robot extends JSRobot {
     	
     	////Wheel movement/////
     	if(driveMode==0) {
-	    	driveTrain.mecanumDrive_Cartesian2(
-	    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
-	    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
-	    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
-	    		driveGyro.getAngle());
+    	driveTrain.mecanumDrive_Cartesian2(
+    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
+    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
+    		driveGyro.getAngle());
     	} else if(driveMode==1) {
-	    	driveTrain.mecanumDrive_Cartesian3(
+	    	driveTrain.mecanumDrive_Cartesian(
 		    		ftcCont.sticks.LEFT_STICK_X.getRaw(),
 		    		ftcCont.sticks.LEFT_STICK_Y.getRaw(),
 		    		ftcCont.sticks.RIGHT_STICK_X.getRaw(),
@@ -194,6 +193,7 @@ public class Robot extends JSRobot {
     	
     	//send updates to dashboard
     	dash.updateDash();
+    	
     	Watchcat.feed();
     }
     
