@@ -62,16 +62,25 @@ public class Robot extends JSRobot {
     /**
      * This function is called when autonomous starts
      */
+    ToteFinder tfind;
     @Override
     public void autonomousInit() {
-    	driveTrain.startDrive(0.2, DriveDir.LEFT, driveGyro);//Begins to drive left
-    	ToteFinder tfind = new ToteFinder(new ICallback() {//Starts listening for tote
+    	driveGyro.initGyro();
+    	driveGyro.reset();
+    	driveTrain.resetGyro();
+    	if(tfind!=null) {
+    		tfind.stopWatcherWait();
+    	}
+    	
+    	tfind = new ToteFinder(new ICallback() {//Starts listening for tote
     		@Override
     		public void call() {//Tote has been found!
     			Robot.rbt.auto_hasFound = true;//Set cb var to true
     		}
     	});
-    	while(!auto_hasFound) {Timer.waitMillis(10);}//Waits for the callback
+    	Timer.waitSec(10);
+    	driveTrain.startDrive(0.37, DriveDir.RIGHT, driveGyro);//Begins to drive left
+    	while(!auto_hasFound && this.isAutonomous()) {Timer.waitMillis(10);}//Waits for the callback
     	driveTrain.stop();//Stop the robot
     }
     /*@Override

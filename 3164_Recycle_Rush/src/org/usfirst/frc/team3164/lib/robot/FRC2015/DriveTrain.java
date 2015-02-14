@@ -447,8 +447,8 @@ public class DriveTrain {
 	public enum DriveDir {
 		FORWARDS(1.0, 1.0, 1.0, 1.0, 1, 0),
 		REVERSE(-1.0, -1.0, -1.0, -1.0, -1, 0),
-		LEFT(1.0, -1.0, -1.0, 1.0, 0, -1),
-		RIGHT(-1.0, 1.0, 1.0, -1.0, 0, 1);
+		LEFT(1.0, -1.0, -1.0, 1.0, 1, 0),
+		RIGHT(-1.0, 1.0, 1.0, -1.0, -1, 0);
 		
 		private double lf, lr, rf, rr, x, y;
 		private DriveDir(double lf, double lr, double rf, double rr, double x, double y) {

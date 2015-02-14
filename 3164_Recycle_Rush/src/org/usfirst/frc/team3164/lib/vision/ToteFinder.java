@@ -38,16 +38,16 @@ public class ToteFinder {
 	private Image frame;
 	private Image binaryFrame;
 	private int imaqError;
-	private NIVision.Range TOTE_HUE_RANGE = new NIVision.Range(100, 140); // Default hue
+	private NIVision.Range TOTE_HUE_RANGE = new NIVision.Range(130, 180); // Default hue
 																	// range for
 																	// yellow
 																	// tote
-	private NIVision.Range TOTE_SAT_RANGE = new NIVision.Range(20, 255); // Default
+	private NIVision.Range TOTE_SAT_RANGE = new NIVision.Range(90, 255); // Default
 																	// saturation
 																	// range for
 																	// yellow
 																	// tote
-	private NIVision.Range TOTE_VAL_RANGE = new NIVision.Range(100, 300); // Default
+	private NIVision.Range TOTE_VAL_RANGE = new NIVision.Range(90, 300); // Default
 																	// value
 																	// range for
 																	// yellow
@@ -122,6 +122,14 @@ public class ToteFinder {
 		}
 	}
 	
+	public void stopWatcherWait() {
+		if(thr!=null) {
+			thr.kill();
+			while(thr.isAlive()) {}
+			thr=null;
+		}
+	}
+	
 	public void restartWatcher(ICallback cb) {
 		if(thr==null) {
 			thr = new ToteThread(cb);
@@ -162,7 +170,7 @@ public class ToteFinder {
 	
 	
 	
-	private static int ITERATIONS_WITH_TOTE = 100;
+	private static int ITERATIONS_WITH_TOTE = 10;
 	private static int ITERATIONS_LOST_TOTE = 5;
 	
 	private class ToteThread extends Thread {
@@ -173,6 +181,7 @@ public class ToteFinder {
 		}
 		public void kill() {
 			kill=true;
+			NIVision.IMAQdxCloseCamera(session);
 		}
 		private int foundFor = 0;
 		private int lostFor = 0;
