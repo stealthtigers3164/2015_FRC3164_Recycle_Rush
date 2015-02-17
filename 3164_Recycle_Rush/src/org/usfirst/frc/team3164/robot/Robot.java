@@ -17,6 +17,7 @@ import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.TurnDir;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.PinchMech;
 import org.usfirst.frc.team3164.lib.util.ICallback;
+import org.usfirst.frc.team3164.lib.util.Scheduler;
 import org.usfirst.frc.team3164.lib.util.Timer;
 import org.usfirst.frc.team3164.lib.vision.ToteFinder;
 
@@ -49,6 +50,10 @@ public class Robot extends JSRobot {
     final int joystickChannel	= 1;
     final int joystickChannel2	= 2;
     
+    
+    private Autonomous autonomous;
+    
+    
     //Constructor
     public Robot() {
     	SmartDashboard.putBoolean("IsCompCode", true);
@@ -60,8 +65,7 @@ public class Robot extends JSRobot {
         // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
         pdp = new PowerDistributionPanel();
         dash = new Dashboard(pdp);
-        
-        
+        autonomous = new Autonomous();
     }
     
     /**
@@ -71,38 +75,20 @@ public class Robot extends JSRobot {
     @Override
     public void robotInit() {
     	driveGyro.initGyro();
+    	driveGyro.reset();
     }
+    
     /**
      * This function is called when autonomous starts
      */
-    ToteFinder tfind;
     @Override
     public void autonomousInit() {
-    	driveGyro.initGyro();
-    	driveGyro.reset();
-    	driveTrain.resetGyro();
-    	if(tfind!=null) {
-    		tfind.stopWatcherWait();
-    	}
-    	
-    	tfind = new ToteFinder(new ICallback() {//Starts listening for tote
-    		@Override
-    		public void call() {//Tote has been found!
-    			Robot.rbt.auto_hasFound = true;//Set cb var to true
-    		}
-    	});
-    	Timer.waitSec(10);
-    	driveTrain.startDrive(0.37, DriveDir.RIGHT, driveGyro);//Begins to drive left
-    	while(!auto_hasFound && this.isAutonomous()) {Timer.waitMillis(10);}//Waits for the callback
-    	driveTrain.stop();//Stop the robot
-    	//autonomous is now found in the Autonomous class.
+    	autonomous.runAutonomous();
     }
    
     /**
      * This function is called periodically during autonomous
      */
-    public boolean auto_hasFound = false;
-    public boolean auto_hasLost = false;
     @Override
     public void autonomousPeriodic() {
     	
@@ -296,6 +282,128 @@ public class Robot extends JSRobot {
 	public void testPeriodic() {
 		driveGyro.initGyro(); //Reset Gyro when robot placed into test mode.
 		Watchcat.feed();
+	}
+	
+	
+	
+	/**
+	 * All autonomous code is now found here.
+	 * @author Brendan Gregos
+	 * @author Jaxon Brown
+	 *
+	 */
+	public class Autonomous {
+		
+		/**
+		 * Constructor is empty.
+		 */
+		public Autonomous(){
+			//place an autonomous select button on the driverstation
+			dash.uploadBoolean("Autonomous Enabled", true);
+			dash.uploadBoolean("Vision", false);
+		}
+		
+		/**
+		 * This is what selects and starts the selected autonomous script.
+		 * There are no parameters, the data on which auto to run comes from SmartDashboard and is handled internally by the class.
+		 */
+		public void runAutonomous(){
+			if(dash.getBoolean("Autonomous Enabled")){
+				if(dash.getBoolean("Vision")){
+					vision();
+				}else{
+					auto1();
+				}
+			}
+		}
+		
+		
+		/**
+		 * This method pinches the pincer and drives backwards.
+		 */
+		public void auto1(){
+			//not done yet
+			pincer.close();
+			//need some sort of wait statement in here.
+			Timer.waitSec(3);
+			driveTrain.driveTime(.6, DriveDir.REVERSE, 3000, driveGyro);
+		}
+		
+		/**
+		 * This method runs the vision processing autonomous, picking up 3 totes and driving backwards at the end.
+		 */
+		private boolean auto_hasFound = false;
+		public void visionTest(){
+	    	driveTrain.startDrive(0.2, DriveDir.LEFT, driveGyro);//Begins to drive left
+	    	ToteFinder tfind = new ToteFinder(new ICallback() {//Starts listening for tote
+	    		@Override
+	    		public void call() {//Tote has been found!
+	    			auto_hasFound = true;//Set cb var to true
+	    			System.out.println("Found Tote");
+	    		}
+	    	});
+	    	while(!auto_hasFound) {Timer.waitMillis(10);}//Waits for the callback
+	    	driveTrain.stop();//Stop the robot
+	    }
+	    public void vision() {
+	    	driveTrain.turn(180, TurnDir.LEFT, driveGyro);//Turn 180 to face the totes
+	    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);//Drives forwards towards the tote
+	    	pincer.close();//Closes the pincher to pick up first tote
+	    	Timer.waitSec(2);
+	    	liftMech.startGoingUpToPreset();//Begins raising the lift
+	    	Timer.waitSec(1);
+	    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);//Reverses to previous location
+	    	driveTrain.startDrive(1.0, DriveDir.LEFT, driveGyro);//Begins to drive left
+	    	ToteFinder tfind = new ToteFinder(new ICallback() {//Starts listening for tote
+	    		@Override
+	    		public void call() {//Tote has been found!
+	    			auto_hasFound = true;//Set cb var to true
+	    		}
+	    	});
+	    	while(!auto_hasFound) {Timer.waitMillis(10);}//Waits for the callback
+	    	driveTrain.stop();//Stop the robot
+	    	this.auto_hasFound = false;//Reset the cb var
+	    	
+	    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);//Drive forwards towards the tote
+	    	pincer.open();//open the pinch mech; it should be at preset by now
+	    	Timer.waitSec(2);
+	    	liftMech.goDown();//lower pinch mech
+	    	while(liftMech.isDown()) {//Wait for the pinch mech to lower all the way
+	    		Timer.waitMillis(30);
+	    	}
+	    	pincer.close();//close the mech. 
+	    	Timer.waitMillis(2);
+	    	liftMech.startGoingUpToPreset();
+	    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);
+	    	driveTrain.startDrive(1.0, DriveDir.LEFT, driveGyro);
+	    	tfind = new ToteFinder(new ICallback() {
+	    		@Override
+	    		public void call() {
+	    			auto_hasFound = true;
+	    		}
+	    	});
+	    	while(!auto_hasFound) {}
+	    	driveTrain.stop();
+	    	this.auto_hasFound = false;
+	    	
+	    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);
+	    	pincer.open();
+	    	Timer.waitSec(2);
+	    	liftMech.goDown();
+	    	while(liftMech.isDown()) {
+	    		Timer.waitMillis(30);
+	    	}
+	    	pincer.close();
+	    	Timer.waitMillis(2);
+	    	liftMech.goUp();
+	    	new Scheduler(1000, new ICallback() {
+	    		@Override
+	    		public void call() {
+	    			Robot.rbt.liftMech.stop();
+	    		}
+	    	});
+	    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 10000, driveGyro);
+	    }
 	}
 	
 }
