@@ -1,6 +1,9 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
+import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
+import org.usfirst.frc.team3164.lib.util.ICallback;
+import org.usfirst.frc.team3164.lib.util.Repeater;
 
 /**
  * Controls the Pinch mechanism.
@@ -10,16 +13,33 @@ import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 public class PinchMech {
 	private IMotor motor;
 	//private MotorEncoder enc;
+	private LimitSwitch closeLim;
+	private LimitSwitch openLim;
+	
 	
 	/**
 	 * Instantiates new PinchMech controller
 	 * @param m The motor controlling the mechanism*/
 	 /* @param en The encoder attached to the rotating axis of m
 	 */
-	public PinchMech(IMotor m/*, MotorEncoder en*/) {
+	public PinchMech(IMotor m, LimitSwitch c, LimitSwitch o/*, MotorEncoder en*/) {
 		motor = m;
+		this.closeLim = c;
+		this.openLim = o;
+		
 		//enc = en;
 		//new Thread(new PinchLimiter()).start();
+		new Repeater(30, new ICallback() {
+			@Override
+			public void call() {
+				if(closeLim.isPressed() && motor.getPower()>0) {
+					motor.stop();
+				}
+				if(openLim.isPressed() && motor.getPower()<0) {
+					motor.stop();
+				}
+			}
+		});
 	}
 	
 	//private static final int LIMIT_HIGH = 100;
@@ -68,7 +88,7 @@ public class PinchMech {
 	 * Starts closing the pinching mechanism
 	 */
 	public void close() {
-		if(isAuto)
+		if(!isAuto)
 			motor.setPower(1.0);
 	}
 	
@@ -76,7 +96,7 @@ public class PinchMech {
 	 * Starts opening the pinching mechanism
 	 */
 	public void open() {
-		if(isAuto)
+		if(!isAuto)
 			motor.setPower(-1.0);
 	}
 	

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.usfirst.frc.team3164.lib.baseComponents.Controller;
+import org.usfirst.frc.team3164.lib.baseComponents.Controller.TopHatDir;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
@@ -193,6 +194,20 @@ public class Robot extends JSRobot {
     	
     	//send updates to dashboard
     	dash.updateDash();
+    	
+    	
+    	TopHatDir thd = ftcCont.tophat.getDir();
+    	if(thd==TopHatDir.DOWN) {
+    		liftMech.goDown();
+    	} else if(thd==TopHatDir.UP) {
+    		if(liftMech.isDown()) {
+    			
+    		}
+    	}
+    	
+    	
+    	
+    	
     	
     	Watchcat.feed();
     }

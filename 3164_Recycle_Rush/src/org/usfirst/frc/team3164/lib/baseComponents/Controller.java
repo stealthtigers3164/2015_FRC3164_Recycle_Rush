@@ -24,6 +24,10 @@ public class Controller {
 	 * Controller trigger wrapper
 	 */
 	public FTCTriggers trigger;
+	/**
+	 * Controller tophat wrapper
+	 */
+	public TopHat tophat;
 	
 	/**
 	 * Controller constructor
@@ -34,6 +38,7 @@ public class Controller {
 		this.buttons = new FTCButtons();
 		this.sticks = new FTCAxes();
 		this.trigger = new FTCTriggers(3);
+		this.tophat = new TopHat(4, 5);
 	}
 	
 	/**
