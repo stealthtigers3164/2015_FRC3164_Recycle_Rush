@@ -299,7 +299,7 @@ public class Controller {
 		 * @return raw value of stick, [-1, 1]
 		 */
 		public double getRaw() {
-			return jstick.getRawAxis(port);
+			return Math.abs(jstick.getRawAxis(port))>=0.07 ? jstick.getRawAxis(port) : 0;
 		}
 	}
 }

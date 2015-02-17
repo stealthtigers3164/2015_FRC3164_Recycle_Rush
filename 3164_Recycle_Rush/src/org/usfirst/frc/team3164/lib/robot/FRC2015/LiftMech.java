@@ -132,12 +132,18 @@ public class LiftMech {
 	 * Cancels upgoing task. Control will be regained momentarily after this is called.
 	 * @return the thread that was being used. If you intend to set power immediately after calling, you may wish to use "liftMechObj.cancelGoingUp().join();" to wait for the thread.
 	 */
-	public Thread cancelGoingUp() {
+	public void cancelGoingUp() {
 		if(gUR==null || !isInAuto) {
-			return null;
+			return;
 		}
 		gUR.kill();
-		return gUT;
+	}
+	
+	public void cancelGoingUpWait() {
+		cancelGoingUp();
+		try {
+			gUT.join();
+		} catch(Exception ex) {ex.printStackTrace();}
 	}
 	
 	/**

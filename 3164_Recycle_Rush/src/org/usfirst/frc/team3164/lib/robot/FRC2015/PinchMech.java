@@ -100,6 +100,11 @@ public class PinchMech {
 			motor.setPower(-1.0);
 	}
 	
+	public void stop() {
+		if(!isAuto)
+			motor.setPower(0);
+	}
+	
 	/**
 	 * Indicates different positions the Pinch Mech can be opened to
 	 * @author J
