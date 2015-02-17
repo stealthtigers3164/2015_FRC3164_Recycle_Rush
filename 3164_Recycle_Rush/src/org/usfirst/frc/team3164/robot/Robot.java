@@ -37,6 +37,7 @@ public class Robot extends JSRobot {
 	
 	//List of all declared robot parts
     Controller ftcCont;
+    Controller ftcCont2;
     Joystick stick;
     Gyro driveGyro;
     Dashboard dash;
@@ -45,6 +46,7 @@ public class Robot extends JSRobot {
 
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
+    final int joystickChannel2	= 2;
     
     //Constructor
     public Robot() {
@@ -53,7 +55,8 @@ public class Robot extends JSRobot {
         //Setup new drivetrain
     	driveGyro = new Gyro(0);
         ftcCont = new Controller(joystickChannel);
-       // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
+        ftcCont2 = new Controller(joystickChannel2);
+        // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
         pdp = new PowerDistributionPanel();
         dash = new Dashboard(pdp);
         
@@ -93,7 +96,7 @@ public class Robot extends JSRobot {
     	driveTrain.stop();//Stop the robot
     	//autonomous is now found in the Autonomous class.
     }
-    
+   
     /**
      * This function is called periodically during autonomous
      */
