@@ -3,6 +3,7 @@ package org.usfirst.frc.team3164.lib.robot.FRC2015;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.MotorEncoder;
+import org.usfirst.frc.team3164.lib.util.Timer;
 
 /**
  * Controls the Lift Mechanism. Use it to manage the Lifting mechanism.
@@ -10,13 +11,14 @@ import org.usfirst.frc.team3164.lib.baseComponents.sensors.MotorEncoder;
  *
  */
 public class LiftMech {
-	private static double DEFAULT_UP_SPEED = 1.0;
-	private static double DEFAULT_DOWN_SPEED = -1.0;
+	private static double DEFAULT_UP_SPEED = -.5;
+	private static double DEFAULT_DOWN_SPEED = .5;
 	
 	
 	private IMotor motors;
 	private LimitSwitch topLim;
 	private LimitSwitch lowLim;
+	private LimitSwitch midLim;
 	private MotorEncoder enc;
 	private boolean isInAuto = false;
 	private int eval = 0;
@@ -29,8 +31,12 @@ public class LiftMech {
 	 * @param enc Encoder attached to a controlling motor
 	 * @param ms List all motors used in the subsystem.
 	 */
-	public LiftMech(LimitSwitch topLS, LimitSwitch lowLS, MotorEncoder enc, IMotor m) {
+	public LiftMech(LimitSwitch topLS, LimitSwitch midLS, LimitSwitch lowLS, MotorEncoder enc, IMotor m) {
 		this.motors = m;
+		this.topLim = topLS;
+		this.midLim = midLS;
+		this.lowLim = lowLS;
+		this.enc = enc;
 		watcher = new LiftWatcher();
 		watcher.start();
 	}
@@ -71,7 +77,7 @@ public class LiftMech {
 	 */
 	public void goUp() {
 		if(!this.isInAuto)
-			this.goDown(DEFAULT_UP_SPEED);
+			this.goUp(DEFAULT_UP_SPEED);
 	}
 	
 	/**
@@ -126,12 +132,10 @@ public class LiftMech {
 		@Override
 		public void run() {
 			while(g) {
-				if(enc.getValue()>encDist-tolerance && enc.getValue()<encDist+tolerance) {
+				if(midLim.isPressed()) {
 					break;
 				}
-				try {
-					Thread.sleep(10);
-				} catch(InterruptedException ex) {}
+				Timer.waitMillis(35);
 			}
 			motors.stop();
 			isInAuto = false;

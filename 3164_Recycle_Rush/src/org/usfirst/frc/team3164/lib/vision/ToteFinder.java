@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import org.usfirst.frc.team3164.lib.util.ICallback;
 import org.usfirst.frc.team3164.lib.util.Timer;
+import org.usfirst.frc.team3164.robot.Robot;
 
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
@@ -81,9 +82,10 @@ public class ToteFinder {
 
 		// the camera name (ex "cam0") can be found through the roborio web
 		// interface
-		session = NIVision.IMAQdxOpenCamera("cam0",
-				NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-		NIVision.IMAQdxConfigureGrab(session);
+		//session = NIVision.IMAQdxOpenCamera("cam0",
+		//		NIVision.IMAQdxCameraControlMode.CameraControlModeController);
+		session = Robot.rbt.camses;
+		
 		// TODO
 
 		// Put default values to SmartDashboard so fields will appear
@@ -181,7 +183,7 @@ public class ToteFinder {
 		}
 		public void kill() {
 			kill=true;
-			NIVision.IMAQdxCloseCamera(session);
+			//NIVision.IMAQdxCloseCamera(session);
 		}
 		private int foundFor = 0;
 		private int lostFor = 0;

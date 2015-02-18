@@ -108,6 +108,7 @@ public class Robot extends JSRobot {
 	@Override
 	public void teleopPeriodic() {
 		
+		
 		/*if(!hasDone) {
 			mechDrive.start();
 			hasDone = true;
@@ -115,6 +116,7 @@ public class Robot extends JSRobot {
 		*/
 		
 		if(ftcCont.sticks.LEFT_STICK_X.getIntensity()>0.1) {
+			System.out.println("1");
 			speedPointStr = (ftcCont.sticks.LEFT_STICK_X.getRaw()<0 ? -1 : 1) * 
 					Math.pow(2, Math.abs(ftcCont.sticks.LEFT_STICK_X.getRaw()))/2;
 		} else {
@@ -200,7 +202,7 @@ public class Robot extends JSRobot {
 		
 		
 		TopHatDir thd = ftcCont.tophat.getDir();
-		if(ftcCont2.sticks.RIGHT_STICK_X.getIntensity()==0) {
+		//if(ftcCont2.sticks.RIGHT_STICK_X.getIntensity()==0) {
 			if(thd==TopHatDir.RIGHT) {//Manual open
 				manualOpen = true;
 			} else if(thd==TopHatDir.LEFT) {//Manual close
@@ -211,13 +213,13 @@ public class Robot extends JSRobot {
 			} else if(ftcCont.buttons.BUTTON_B.isOn()) {
 				open = 1;
 			}
-		} else {
+		//} else {
 			if(ftcCont2.sticks.RIGHT_STICK_X.getDirection()==LeftRightDir.LEFT) {
 				close = ftcCont2.sticks.RIGHT_STICK_X.getIntensity();
 			} else {
 				open = ftcCont2.sticks.RIGHT_STICK_X.getIntensity();
 			}
-		}
+		//}
 		
 		if(ftcCont2.sticks.LEFT_STICK_Y.getIntensity()==0) {
 			if(thd==TopHatDir.DOWN) {//Manual go down
@@ -228,7 +230,7 @@ public class Robot extends JSRobot {
 			if(ftcCont.buttons.BUTTON_A.isOn()) {
 				goDown = 1;
 			} else if(ftcCont.buttons.BUTTON_Y.isOn()) {
-				goUp = 1;
+				goUp = 2;
 			}
 		} else {
 			if(ftcCont2.sticks.LEFT_STICK_Y.getDirection()==UpDownDir.UP) {
@@ -249,7 +251,11 @@ public class Robot extends JSRobot {
 			if(goDown!=-1) {
 				liftMech.goDown(goDown);
 			} else if(goUp!=-1) {
-				liftMech.goUp(goUp);
+				if(goUp == 2) {
+					liftMech.startGoingUpToPreset();
+				} else {
+					liftMech.goUp(goUp);
+				}
 			} else {
 				liftMech.stop();
 			}
@@ -261,11 +267,11 @@ public class Robot extends JSRobot {
 			pincer.close();
 		} else {
 			if(open!=-1) {
-				pincer.open();
+				//pincer.open();
 			} else if(close!=-1) {
-				pincer.close();
+				//pincer.close();
 			} else {
-				pincer.stop();
+				//pincer.stop();
 			}
 		}
 		
