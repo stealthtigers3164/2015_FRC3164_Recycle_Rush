@@ -52,7 +52,7 @@ public class LiftMech {
 				if(lowLim.isPressed() && motors.getPower()<0) {
 					motors.stop();
 				}
-				if(Math.abs(enc.getValue()-eval)>10) {
+				if(Math.abs(enc.getValue()-eval)>10 && isStopped) {
 					double mvVal = (enc.getValue()-eval)/-100.0;
 					motors.setPower(Math.abs(mvVal)>1 ? (mvVal>=0 ? 1.0 : -1.0) : mvVal);
 				}
@@ -68,8 +68,10 @@ public class LiftMech {
 	 * @param power Power (0.1-1) to move the motors up at.
 	 */
 	public void goUp(double power) {
-		if(!this.isInAuto)
+		if(!this.isInAuto && !topLim.isPressed()) {
 			motors.setPower(power);
+			isStopped = false;
+		}
 	}
 	
 	/**
@@ -85,8 +87,10 @@ public class LiftMech {
 	 * @param power Power (-0.1 to -1) to move the motors down at.
 	 */
 	public void goDown(double power) {
-		if(!this.isInAuto)
+		if(!this.isInAuto && !lowLim.isPressed()) {
 			motors.setPower(power);
+			isStopped = false;
+		}
 	}
 	
 	/**
@@ -100,10 +104,12 @@ public class LiftMech {
 	/**
 	 * Stops the lift.
 	 */
+	boolean isStopped = true;
 	public void stop() {
-		if(!this.isInAuto) {
+		if(!this.isInAuto && !isStopped) {
 			motors.stop();
 			eval = enc.getValue();
+			isStopped = true;
 		}
 	}
 	

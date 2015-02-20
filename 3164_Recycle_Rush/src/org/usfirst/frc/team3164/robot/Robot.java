@@ -34,7 +34,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class Robot extends JSRobot {
-	
+	//A static instance of Robot
 	public static Robot rbt;
 	
 	//List of all declared robot parts
@@ -43,20 +43,20 @@ public class Robot extends JSRobot {
     Joystick stick;
     Gyro driveGyro;
     Dashboard dash;
-    PowerDistributionPanel pdp;
+    public PowerDistributionPanel pdp;
     PinchMech pincer;
 
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
     final int joystickChannel2	= 2;
     
-    
+    //Autonomous
     private Autonomous autonomous;
     
     
     //Constructor
     public Robot() {
-    	SmartDashboard.putBoolean("IsCompCode", true);
+    	//SmartDashboard.putBoolean("IsCompCode", true);
     	rbt = this;
         //Setup new drivetrain
     	driveGyro = new Gyro(0);
@@ -115,10 +115,11 @@ public class Robot extends JSRobot {
 		}
 		*/
 		
+		
+		//This junk is designed to allow the robot to increase speed exponentially.
 		if(ftcCont.sticks.LEFT_STICK_X.getIntensity()>0.1) {
-			System.out.println("1");
 			speedPointStr = (ftcCont.sticks.LEFT_STICK_X.getRaw()<0 ? -1 : 1) * 
-					Math.pow(2, Math.abs(ftcCont.sticks.LEFT_STICK_X.getRaw()))/2;
+					Math.pow(2, ftcCont.sticks.LEFT_STICK_X.getIntensity())/10;
 		} else {
 			if(Math.abs(speedPointStr)<0.1) {
 				if(speedPointStr==0) {
@@ -126,10 +127,9 @@ public class Robot extends JSRobot {
 				}
 			}
 		}
-		
 		if(ftcCont.sticks.LEFT_STICK_Y.getIntensity()>0.1) {
 			speedPointFwd = (ftcCont.sticks.LEFT_STICK_Y.getRaw()<0 ? -1 : 1) * 
-					Math.pow(2, Math.abs(ftcCont.sticks.LEFT_STICK_Y.getRaw()))/2;
+					Math.pow(2, Math.abs(ftcCont.sticks.LEFT_STICK_Y.getRaw()))/10;
 		} else {
 			if(Math.abs(speedPointFwd)<0.1) {
 				if(speedPointFwd==0) {
@@ -138,6 +138,7 @@ public class Robot extends JSRobot {
 			}
 		}
 		
+		//On tripple clicking Back, the driveMode will toggle. 
 		if(ftcCont.buttons.BUTTON_BACK.isOn()) {
 			if(!wasBackPressed) {
 				wasBackPressed = true;
@@ -163,13 +164,13 @@ public class Robot extends JSRobot {
 		
 		
 		////Wheel movement/////
-		if(driveMode==0) {
-		driveTrain.mecanumDrive_Cartesian2(
-			ftcCont.sticks.LEFT_STICK_X.getRaw(),
-			ftcCont.sticks.LEFT_STICK_Y.getRaw(),
-			ftcCont.sticks.RIGHT_STICK_X.getRaw(),
-			driveGyro.getAngle());
-		} else if(driveMode==1) {
+		if(driveMode==0) {//If drive mode is on field oriented...
+			driveTrain.mecanumDrive_Cartesian2(
+					ftcCont.sticks.LEFT_STICK_X.getRaw(),
+					ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+					ftcCont.sticks.RIGHT_STICK_X.getRaw(),
+					driveGyro.getAngle());
+		} else if(driveMode==1) {//If drive mode is on non-field non-oriented...
 			driveTrain.mecanumDrive_Cartesian(
 					ftcCont.sticks.LEFT_STICK_X.getRaw(),
 					ftcCont.sticks.LEFT_STICK_Y.getRaw(),
@@ -178,7 +179,7 @@ public class Robot extends JSRobot {
 		}
 		
 		//emergency gyro reset during match
-		if(ftcCont.buttons.BUTTON_START.isOn()){
+		if(ftcCont.buttons.BUTTON_START.isOn()){//Reset gyr0...
 			driveGyro.initGyro();
 			driveTrain.resetGyro();
 		}
@@ -202,40 +203,40 @@ public class Robot extends JSRobot {
 		
 		
 		TopHatDir thd = ftcCont.tophat.getDir();
-		//if(ftcCont2.sticks.RIGHT_STICK_X.getIntensity()==0) {
+		if(ftcCont2.sticks.RIGHT_STICK_X.getIntensity()==0) {//Check if the controller 2 is trying to control... If it is NOT:
 			if(thd==TopHatDir.RIGHT) {//Manual open
 				manualOpen = true;
 			} else if(thd==TopHatDir.LEFT) {//Manual close
 				manualClose = true;
 			}
-			if(ftcCont.buttons.BUTTON_X.isOn()) {
+			if(ftcCont.buttons.BUTTON_X.isOn()) {//Standard close
 				close = 1;
-			} else if(ftcCont.buttons.BUTTON_B.isOn()) {
+			} else if(ftcCont.buttons.BUTTON_B.isOn()) {//Standard open
 				open = 1;
 			}
-		//} else {
+		} else {//If it IS:
 			if(ftcCont2.sticks.RIGHT_STICK_X.getDirection()==LeftRightDir.LEFT) {
 				close = ftcCont2.sticks.RIGHT_STICK_X.getIntensity();
 			} else {
 				open = ftcCont2.sticks.RIGHT_STICK_X.getIntensity();
 			}
-		//}
+		}
 		
-		if(ftcCont2.sticks.LEFT_STICK_Y.getIntensity()==0) {
+		if(ftcCont2.sticks.LEFT_STICK_Y.getIntensity()==0) {//Check if the controller 2 is trying to control... If it is NOT:
 			if(thd==TopHatDir.DOWN) {//Manual go down
 				manualDown = true;
 			} else if(thd==TopHatDir.UP) {//Manual go up
 				manualUp = true;
 			}
-			if(ftcCont.buttons.BUTTON_A.isOn()) {
+			if(ftcCont.buttons.BUTTON_A.isOn()) {//Standard go down
 				goDown = 1;
-			} else if(ftcCont.buttons.BUTTON_Y.isOn()) {
+			} else if(ftcCont.buttons.BUTTON_Y.isOn()) {//Standard go up to preset
 				goUp = 2;
 			}
-		} else {
-			if(ftcCont2.sticks.LEFT_STICK_Y.getDirection()==UpDownDir.UP) {
+		} else {//If it IS:
+			if(ftcCont2.sticks.LEFT_STICK_Y.getDirection()==UpDownDir.UP) {//Standard go up with ctrl2
 				goUp = ftcCont2.sticks.LEFT_STICK_Y.getIntensity();
-			} else {
+			} else {//Standard go down with ctrl2
 				goDown = ftcCont2.sticks.LEFT_STICK_Y.getIntensity();
 			}
 		}
@@ -267,11 +268,11 @@ public class Robot extends JSRobot {
 			pincer.close();
 		} else {
 			if(open!=-1) {
-				//pincer.open();
+				pincer.open();
 			} else if(close!=-1) {
-				//pincer.close();
+				pincer.close();
 			} else {
-				//pincer.stop();
+				pincer.stop();
 			}
 		}
 		

@@ -4,6 +4,7 @@ import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
 import org.usfirst.frc.team3164.lib.util.ICallback;
 import org.usfirst.frc.team3164.lib.util.Repeater;
+import org.usfirst.frc.team3164.robot.Robot;
 
 /**
  * Controls the Pinch mechanism.
@@ -13,8 +14,8 @@ import org.usfirst.frc.team3164.lib.util.Repeater;
 public class PinchMech {
 	private IMotor motor;
 	//private MotorEncoder enc;
-	private LimitSwitch closeLim;
-	private LimitSwitch openLim;
+	//private LimitSwitch closeLim;
+	//private LimitSwitch openLim;
 	
 	
 	/**
@@ -24,22 +25,25 @@ public class PinchMech {
 	 */
 	public PinchMech(IMotor m, LimitSwitch c, LimitSwitch o/*, MotorEncoder en*/) {
 		motor = m;
-		this.closeLim = c;
-		this.openLim = o;
+		//this.closeLim = c;
+		//this.openLim = o;
 		
 		//enc = en;
 		//new Thread(new PinchLimiter()).start();
-		new Repeater(30, new ICallback() {
+		/*new Repeater(30, new ICallback() {
 			@Override
 			public void call() {
-				if(closeLim.isPressed() && motor.getPower()>0) {
+				/*if(closeLim.isPressed() && motor.getPower()>0) {
 					motor.stop();
 				}
 				if(openLim.isPressed() && motor.getPower()<0) {
 					motor.stop();
-				}
+				}*/
+				/*if(Robot.rbt.pdp.getCurrent(JSRobot.PINCHER_POWER_CHANNEL)>10000000) {
+					motor.stop();
+				}*//*
 			}
-		});
+		});*/
 	}
 	
 	//private static final int LIMIT_HIGH = 100;
