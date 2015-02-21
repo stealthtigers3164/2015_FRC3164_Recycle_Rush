@@ -10,9 +10,11 @@ import org.usfirst.frc.team3164.lib.baseComponents.sensors.NXTRangefinder;
 import org.usfirst.frc.team3164.lib.util.Timer;
 
 import com.ni.vision.NIVision;
+import com.ni.vision.NIVision.FlipAxis;
 import com.ni.vision.NIVision.Image;
 
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 public abstract class JSRobot extends IterativeRobot {
@@ -45,6 +47,7 @@ public abstract class JSRobot extends IterativeRobot {
 	public NXTRangefinder ultra;
 	public int camses;
 	private Image frame;
+	private Image toStatImg;
 	
 	public JSRobot() {
 		Watchcat.init();
@@ -59,12 +62,14 @@ public abstract class JSRobot extends IterativeRobot {
 						NIVision.IMAQdxCameraControlMode.CameraControlModeController);
 		NIVision.IMAQdxConfigureGrab(camses);
 		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
+		toStatImg = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
 		new Thread() {
 			@Override
 			public void run() {
 				while(true) {
 					NIVision.IMAQdxGrab(camses, frame, 1);
-					CameraServer.getInstance().setImage(frame);
+					NIVision.imaqFlip(toStatImg, frame, FlipAxis.HORIZONTAL_AXIS);
+					CameraServer.getInstance().setImage(toStatImg);
 					Timer.waitMillis(100);
 				}
 			}
