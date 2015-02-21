@@ -23,7 +23,7 @@ public class PinchMech {
 	 * @param m The motor controlling the mechanism*/
 	 /* @param en The encoder attached to the rotating axis of m
 	 */
-	public PinchMech(IMotor m, LimitSwitch c, LimitSwitch o/*, MotorEncoder en*/) {
+	public PinchMech(IMotor m/*, LimitSwitch c, LimitSwitch o/*, MotorEncoder en*/) {
 		motor = m;
 		//this.closeLim = c;
 		//this.openLim = o;
@@ -39,7 +39,9 @@ public class PinchMech {
 				if(openLim.isPressed() && motor.getPower()<0) {
 					motor.stop();
 				}*/
-				/*if(Robot.rbt.pdp.getCurrent(JSRobot.PINCHER_POWER_CHANNEL)>10000000) {
+				/*
+				System.out.println("Power... " + Robot.rbt.pdp.getCurrent(JSRobot.PINCHER_POWER_CHANNEL));
+				if(Robot.rbt.pdp.getCurrent(JSRobot.PINCHER_POWER_CHANNEL)>10000000) {
 					motor.stop();
 				}*//*
 			}

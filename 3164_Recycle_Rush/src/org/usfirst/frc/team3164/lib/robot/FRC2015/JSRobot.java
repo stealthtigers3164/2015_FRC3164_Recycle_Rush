@@ -54,7 +54,7 @@ public abstract class JSRobot extends IterativeRobot {
 		this.liftMech = new LiftMech(new LimitSwitch(JSRobot.LIFTMECH_LIMIT_TOP), new LimitSwitch(JSRobot.LIFTMECH_LIMIT_BOTTOM),
 				new LimitSwitch(JSRobot.LIFTMECH_LIMIT_MIDDLE)
 				,new MotorEncoder(JSRobot.LIFTMECH_ENCODER_AC, JSRobot.LIFTMECH_ENCODER_BC, false), new VicMotor(JSRobot.LIFTMECH_MOTOR_1));
-		this.pincer = new PinchMech(new VicMotor(JSRobot.PINCHMECH_MOTOR), new LimitSwitch(JSRobot.PINCHMECH_LIMIT_SWITCH_CLOSE), new LimitSwitch(JSRobot.PINCHMECH_LIMIT_SWITCH_OPEN));
+		this.pincer = new PinchMech(new VicMotor(JSRobot.PINCHMECH_MOTOR));
 		camses = NIVision.IMAQdxOpenCamera("cam0",
 						NIVision.IMAQdxCameraControlMode.CameraControlModeController);
 		NIVision.IMAQdxConfigureGrab(camses);
@@ -65,7 +65,7 @@ public abstract class JSRobot extends IterativeRobot {
 				while(true) {
 					NIVision.IMAQdxGrab(camses, frame, 1);
 					CameraServer.getInstance().setImage(frame);
-					Timer.waitMillis(50);
+					Timer.waitMillis(100);
 				}
 			}
 		}.start();
