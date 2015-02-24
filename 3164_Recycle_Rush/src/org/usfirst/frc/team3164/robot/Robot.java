@@ -231,7 +231,7 @@ public class Robot extends JSRobot {
 			if(ftcCont.buttons.BUTTON_A.isOn()) {//Standard go down
 				goDown = 1;
 			} else if(ftcCont.buttons.BUTTON_Y.isOn()) {//Standard go up to preset
-				goUp = 2;
+				goUp = 1;//TODO SHOULD BE 2
 			}
 		} else {//If it IS:
 			if(ftcCont2.sticks.LEFT_STICK_Y.getDirection()==UpDownDir.UP) {//Standard go up with ctrl2

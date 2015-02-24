@@ -123,7 +123,7 @@ public class LiftMech {
 	 * Goes up to preset distance. All control will be halted upon calling this.
 	 */
 	public void startGoingUpToPreset() {
-		if(!this.isInAuto) {
+		if(!this.isInAuto && midLim!=null) {
 			goUp();
 			isInAuto = true;
 			gUR = new GoingUpTask();
@@ -153,7 +153,7 @@ public class LiftMech {
 	 * @return the thread that was being used. If you intend to set power immediately after calling, you may wish to use "liftMechObj.cancelGoingUp().join();" to wait for the thread.
 	 */
 	public void cancelGoingUp() {
-		if(gUR==null || !isInAuto) {
+		if(gUR==null || !isInAuto || midLim==null) {
 			return;
 		}
 		gUR.kill();
@@ -161,6 +161,9 @@ public class LiftMech {
 	
 	public void cancelGoingUpWait() {
 		cancelGoingUp();
+		if(midLim==null) {
+			return;
+		}
 		try {
 			gUT.join();
 		} catch(Exception ex) {ex.printStackTrace();}
