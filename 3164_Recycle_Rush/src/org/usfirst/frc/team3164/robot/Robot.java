@@ -117,26 +117,43 @@ public class Robot extends JSRobot {
 		
 		
 		//This junk is designed to allow the robot to increase speed exponentially.
+		//Exponentality factor. The higher the number, the slower it will accellerate:
+		double exp_drive_factor = 5;
+		double decellFactor = 1.4;
 		//It should work. It is almost midnight and I'm too tired to interpret my code. <3
-		if(ftcCont.sticks.LEFT_STICK_X.getIntensity()>0.1) {
-			speedPointStr = (ftcCont.sticks.LEFT_STICK_X.getRaw()<0 ? -1 : 1) * 
-					Math.pow(2, ftcCont.sticks.LEFT_STICK_X.getIntensity())/10;
+		if(ftcCont.sticks.LEFT_STICK_X.getIntensity()>0.1) {//Threshold the stick
+			speedPointStr += (ftcCont.sticks.LEFT_STICK_X.getRaw()<0 ? -1 : 1) * //If the value neds to be negative, make it negative.
+					Math.pow(2, ftcCont.sticks.LEFT_STICK_X.getIntensity())/exp_drive_factor;
+			//The above line is described below
+			//Raises 2 to a power of a number that will always be less than 1.
+			//We then divide by the factor.
+			/*
+			 * Say that the controller input was .5, and the current speed point was 0.3
+			 * speed point = .3 + 2^(.5)/5
+			 * speed point = .3 + 1.41/5 = .58
+			 * speed point = .58
+			 */
 		} else {
-			if(Math.abs(speedPointStr)<0.1) {
-				if(speedPointStr==0) {
-					speedPointStr /= 1.1;
-				}
-			}
+			speedPointStr/=decellFactor;//Slow down
 		}
 		if(ftcCont.sticks.LEFT_STICK_Y.getIntensity()>0.1) {
-			speedPointFwd = (ftcCont.sticks.LEFT_STICK_Y.getRaw()<0 ? -1 : 1) * 
-					Math.pow(2, Math.abs(ftcCont.sticks.LEFT_STICK_Y.getRaw()))/10;
+			speedPointFwd += (ftcCont.sticks.LEFT_STICK_Y.getRaw()<0 ? -1 : 1) * 
+					Math.pow(2, Math.abs(ftcCont.sticks.LEFT_STICK_Y.getRaw()))/exp_drive_factor;
 		} else {
-			if(Math.abs(speedPointFwd)<0.1) {
-				if(speedPointFwd==0) {
-					speedPointFwd /= 1.1;
-				}
-			}
+			speedPointFwd /= decellFactor;
+		}
+		
+		if(Math.abs(speedPointStr)>1) {
+			speedPointStr = (speedPointStr>0) ? 1 : -1;
+		}
+		if(Math.abs(speedPointFwd)>1) {
+			speedPointFwd = (speedPointFwd>0) ? 1 : -1;
+		}
+		if(Math.abs(speedPointStr)<0.075) {
+			speedPointStr = 0;
+		}
+		if(Math.abs(speedPointFwd)<0.075) {
+			speedPointFwd = 0;
 		}
 		
 		//On tripple clicking Back, the driveMode will toggle.
@@ -168,14 +185,18 @@ public class Robot extends JSRobot {
 		////Wheel movement/////
 		if(driveMode==0) {//If drive mode is on field oriented...
 			driveTrain.mecanumDrive_Cartesian2(
-					ftcCont.sticks.LEFT_STICK_X.getRaw(),
-					ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+					//ftcCont.sticks.LEFT_STICK_X.getRaw(),
+					speedPointStr,
+					//ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+					speedPointFwd,
 					ftcCont.sticks.RIGHT_STICK_X.getRaw(),
 					driveGyro.getAngle());
 		} else if(driveMode==1) {//If drive mode is on non-field non-oriented...
 			driveTrain.mecanumDrive_Cartesian(
-					ftcCont.sticks.LEFT_STICK_X.getRaw(),
-					ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+					//ftcCont.sticks.LEFT_STICK_X.getRaw(),
+					speedPointStr,
+					//ftcCont.sticks.LEFT_STICK_Y.getRaw(),
+					speedPointFwd,
 					ftcCont.sticks.RIGHT_STICK_X.getRaw(),
 					driveGyro.getAngle());
 		}
