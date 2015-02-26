@@ -55,7 +55,7 @@ public class LimitSwitch {
 	 * @return true if the limit switch is pressed.
 	 */
 	public boolean isPressed() {
-		return !lin.get();//TODO The NOT is because all of our limit swithches are reversed/
+		return lin.get();//TODO The NOT is because all of our limit swithches are reversed/
 	}
 	
 	/**

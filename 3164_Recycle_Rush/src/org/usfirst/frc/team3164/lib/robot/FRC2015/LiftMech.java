@@ -5,6 +5,8 @@ import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.MotorEncoder;
 import org.usfirst.frc.team3164.lib.util.Timer;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * Controls the Lift Mechanism. Use it to manage the Lifting mechanism.
  * @author jaxon
@@ -45,6 +47,7 @@ public class LiftMech {
 	private class LiftWatcher extends Thread {
 		@Override
 		public void run() {
+			SmartDashboard.putDouble("LiftCompensation", 300);
 			while(true) {
 				if(topLim.isPressed() && motors.getPower()>0) {
 					motors.stop();
@@ -52,9 +55,9 @@ public class LiftMech {
 				if(lowLim.isPressed() && motors.getPower()<0) {
 					motors.stop();
 				}
-				if(Math.abs(enc.getValue()-eval)>10 && isStopped) {
-					double mvVal = (enc.getValue()-eval)/-100.0;
-					motors.setPower(Math.abs(mvVal)>1 ? (mvVal>=0 ? 1.0 : -1.0) : mvVal);
+				if(/*Math.abs(enc.getValue()-eval)>100 && */isStopped) {
+					double mval = (enc.getValue()-eval)/-SmartDashboard.getDouble("LiftCompensation");
+					motors.setPower(mval>=0 ? mval : 0);
 				}
 				try {
 					Thread.sleep(50);
@@ -88,7 +91,7 @@ public class LiftMech {
 	 */
 	public void goDown(double power) {
 		if(!this.isInAuto && !lowLim.isPressed()) {
-			motors.setPower(power);
+			motors.setPower(-power/8);
 			isStopped = false;
 		}
 	}
@@ -98,7 +101,7 @@ public class LiftMech {
 	 */
 	public void goDown() {
 		if(!this.isInAuto)
-			this.goDown(DEFAULT_DOWN_SPEED);
+			this.goDown(DEFAULT_DOWN_SPEED/4);
 	}
 	
 	/**
