@@ -45,7 +45,6 @@ public class Robot extends JSRobot {
     Gyro driveGyro;
     Dashboard dash;
     public PowerDistributionPanel pdp;
-    PinchMech pincer;
 
     // The channel on the driver station that the joystick is connected to
     final int joystickChannel	= 1;
@@ -258,7 +257,7 @@ public class Robot extends JSRobot {
 			if(ftcCont.buttons.BUTTON_A.isOn()) {//Standard go down
 				goDown = 1;//Sets downgoing power to 1. No override.
 			} else if(ftcCont.buttons.BUTTON_Y.isOn()) {//Standard go up to preset
-				goUp = 1;//TODO SHOULD BE 2
+				goUp = 2;//TODO SHOULD BE 2
 				//This would normally make the lift go up to the preset but...
 			}
 		} else {//If it IS:

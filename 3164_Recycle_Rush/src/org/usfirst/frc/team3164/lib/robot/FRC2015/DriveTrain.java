@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Gyro;
 
 public class DriveTrain {
-	private IMotor leftBack;
-	private IMotor rightBack;
-	private IMotor leftFront;
-	private IMotor rightFront;
+	public IMotor leftBack;
+	public IMotor rightBack;
+	public IMotor leftFront;
+	public IMotor rightFront;
 	public boolean slowMode = false;
 	
 	

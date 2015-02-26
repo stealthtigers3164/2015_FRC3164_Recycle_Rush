@@ -10,6 +10,7 @@ import org.usfirst.frc.team3164.lib.baseComponents.sensors.NXTRangefinder;
 import org.usfirst.frc.team3164.lib.util.Timer;
 import org.usfirst.frc.team3164.lib.vision.ToteParser;
 import org.usfirst.frc.team3164.lib.vision.ToteParser.ToteParseResult;
+import org.usfirst.frc.team3164.robot.Robot;
 
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.FlipAxis;
@@ -28,9 +29,9 @@ public abstract class JSRobot extends IterativeRobot {
 	
 	//Lift Mech
 	public static int LIFTMECH_MOTOR_1 = 4;
-	public static int LIFTMECH_LIMIT_TOP = 6;
-	public static int LIFTMECH_LIMIT_MIDDLE = 0;//TODO PORT
-	public static int LIFTMECH_LIMIT_BOTTOM = 7;
+	public static int LIFTMECH_LIMIT_TOP = 0;
+	public static int LIFTMECH_LIMIT_MIDDLE = 1;//TODO PORT
+	public static int LIFTMECH_LIMIT_BOTTOM = 2;
 	public static int LIFTMECH_ENCODER_AC = 8;
 	public static int LIFTMECH_ENCODER_BC = 9;
 	
@@ -61,7 +62,7 @@ public abstract class JSRobot extends IterativeRobot {
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTRIGHT, false), new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARLEFT, true),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARRIGHT), false);
 		this.liftMech = new LiftMech(new LimitSwitch(JSRobot.LIFTMECH_LIMIT_TOP), new LimitSwitch(JSRobot.LIFTMECH_LIMIT_BOTTOM),
-				/*new LimitSwitch(JSRobot.LIFTMECH_LIMIT_MIDDLE)*/null
+				new LimitSwitch(JSRobot.LIFTMECH_LIMIT_MIDDLE)
 				,new MotorEncoder(JSRobot.LIFTMECH_ENCODER_AC, JSRobot.LIFTMECH_ENCODER_BC, false), new VicMotor(JSRobot.LIFTMECH_MOTOR_1));
 		this.pincer = new PinchMech(new VicMotor(JSRobot.PINCHMECH_MOTOR));
 		camses = NIVision.IMAQdxOpenCamera("cam0",
@@ -87,6 +88,27 @@ public abstract class JSRobot extends IterativeRobot {
 					}
 					CAMERAUPDATEDELAY = SmartDashboard.getInt("CameraUpdateSpeed");
 					Timer.waitMillis(SmartDashboard.getInt("CameraUpdateSpeed"));
+				}
+			}
+		}.start();
+		new Thread() {
+			@Override
+			public void run() {
+				while(true) {
+					try {SmartDashboard.putDouble("FL Mtr Pwr", Robot.rbt.driveTrain.leftFront.getPower());} catch(Exception ex) {}
+					try {SmartDashboard.putDouble("FR Mtr Pwr", Robot.rbt.driveTrain.rightFront.getPower());} catch(Exception ex) {}
+					try {SmartDashboard.putDouble("BL Mtr Pwr", Robot.rbt.driveTrain.leftBack.getPower());} catch(Exception ex) {}
+					try {SmartDashboard.putDouble("BR Mtr Pwr", Robot.rbt.driveTrain.rightBack.getPower());} catch(Exception ex) {}
+					try {SmartDashboard.putDouble("Lift Mtr Pwr", Robot.rbt.liftMech.motors.getPower());} catch(Exception ex) {}
+					try {SmartDashboard.putDouble("Pincer Mtr Pwr", Robot.rbt.pincer.motor.getPower());} catch(Exception ex) {}
+					try {SmartDashboard.putBoolean("Lift Lowlim", Robot.rbt.liftMech.lowLim.isPressed());} catch(Exception ex) {}
+					try {SmartDashboard.putBoolean("Lift Midlim", Robot.rbt.liftMech.midLim.isPressed());} catch(Exception ex) {}
+					try {SmartDashboard.putBoolean("Lift Toplim", Robot.rbt.liftMech.topLim.isPressed());} catch(Exception ex) {}
+					try {SmartDashboard.putDouble("Lift Enc", Robot.rbt.liftMech.enc.getValue());} catch(Exception ex) {}
+					try {SmartDashboard.putDouble("Lift Setpoint", Robot.rbt.liftMech.eval);} catch(Exception ex) {}
+					
+					
+					Timer.waitMillis(100);
 				}
 			}
 		}.start();

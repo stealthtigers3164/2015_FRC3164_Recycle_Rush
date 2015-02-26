@@ -15,13 +15,13 @@ public class LiftMech {
 	private static double DEFAULT_DOWN_SPEED = .5;
 	
 	
-	private IMotor motors;
-	private LimitSwitch topLim;
-	private LimitSwitch lowLim;
-	private LimitSwitch midLim;
-	private MotorEncoder enc;
-	private boolean isInAuto = false;
-	private int eval = 0;
+	public IMotor motors;
+	public LimitSwitch topLim;
+	public LimitSwitch lowLim;
+	public LimitSwitch midLim;
+	public MotorEncoder enc;
+	public boolean isInAuto = false;
+	public int eval = 0;
 	private LiftWatcher watcher;
 	
 	/**

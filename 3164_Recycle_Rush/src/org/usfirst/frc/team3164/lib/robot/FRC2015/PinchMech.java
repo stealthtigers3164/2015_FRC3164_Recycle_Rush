@@ -12,7 +12,7 @@ import org.usfirst.frc.team3164.robot.Robot;
  *
  */
 public class PinchMech {
-	private IMotor motor;
+	public IMotor motor;
 	//private MotorEncoder enc;
 	//private LimitSwitch closeLim;
 	//private LimitSwitch openLim;
