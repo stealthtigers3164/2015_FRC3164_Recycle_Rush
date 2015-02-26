@@ -65,6 +65,7 @@ public class Robot extends JSRobot {
         // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
         pdp = new PowerDistributionPanel();
         dash = new Dashboard(pdp);
+        dash.uploadBoolean("expo-drive", true);
         autonomous = new Autonomous();
     }
     
@@ -183,12 +184,13 @@ public class Robot extends JSRobot {
 		
 		
 		////Wheel movement/////
+		boolean USEEXPONENTIALSPEED = dash.getBoolean("expo-drive");//TODO CHange this to turn off exponential drive train speed
 		if(driveMode==0) {//If drive mode is on field oriented...
 			driveTrain.mecanumDrive_Cartesian2(
 					//ftcCont.sticks.LEFT_STICK_X.getRaw(),
-					speedPointStr,
+					(!USEEXPONENTIALSPEED) ? ftcCont.sticks.LEFT_STICK_X.getRaw() : speedPointStr,
 					//ftcCont.sticks.LEFT_STICK_Y.getRaw(),
-					speedPointFwd,
+					(!USEEXPONENTIALSPEED) ? ftcCont.sticks.LEFT_STICK_Y.getRaw() : speedPointFwd,
 					ftcCont.sticks.RIGHT_STICK_X.getRaw(),
 					driveGyro.getAngle());
 		} else if(driveMode==1) {//If drive mode is on non-field non-oriented...
