@@ -20,6 +20,7 @@ import org.usfirst.frc.team3164.lib.util.ICallback;
 import org.usfirst.frc.team3164.lib.util.Scheduler;
 import org.usfirst.frc.team3164.lib.util.Timer;
 import org.usfirst.frc.team3164.lib.vision.ToteFinder;
+import org.usfirst.frc.team3164.lib.vision.ToteFinder2;
 
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
@@ -381,7 +382,7 @@ public class Robot extends JSRobot {
 	    	driveTrain.stop();//Stop the robot
 	    }
 	    public void vision() {
-	    	driveTrain.turn(180, TurnDir.LEFT, driveGyro);//Turn 180 to face the totes
+	    	//driveTrain.turn(180, TurnDir.LEFT, driveGyro);//Turn 180 to face the totes
 	    	driveTrain.driveTime(1.0, DriveDir.FORWARDS, 3000, driveGyro);//Drives forwards towards the tote
 	    	pincer.close();//Closes the pincher to pick up first tote
 	    	Timer.waitSec(2);
@@ -389,7 +390,7 @@ public class Robot extends JSRobot {
 	    	Timer.waitSec(1);
 	    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);//Reverses to previous location
 	    	driveTrain.startDrive(1.0, DriveDir.LEFT, driveGyro);//Begins to drive left
-	    	ToteFinder tfind = new ToteFinder(new ICallback() {//Starts listening for tote
+	    	ToteFinder2 tfind = new ToteFinder2(new ICallback() {//Starts listening for tote
 	    		@Override
 	    		public void call() {//Tote has been found!
 	    			auto_hasFound = true;//Set cb var to true
@@ -411,7 +412,7 @@ public class Robot extends JSRobot {
 	    	liftMech.startGoingUpToPreset();
 	    	driveTrain.driveTime(-1.0, DriveDir.REVERSE, 3000, driveGyro);
 	    	driveTrain.startDrive(1.0, DriveDir.LEFT, driveGyro);
-	    	tfind = new ToteFinder(new ICallback() {
+	    	tfind = new ToteFinder2(new ICallback() {
 	    		@Override
 	    		public void call() {
 	    			auto_hasFound = true;

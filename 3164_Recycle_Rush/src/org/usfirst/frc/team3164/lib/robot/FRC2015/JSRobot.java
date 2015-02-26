@@ -8,14 +8,16 @@ import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.MotorEncoder;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.NXTRangefinder;
 import org.usfirst.frc.team3164.lib.util.Timer;
+import org.usfirst.frc.team3164.lib.vision.ToteParser;
+import org.usfirst.frc.team3164.lib.vision.ToteParser.ToteParseResult;
 
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.FlipAxis;
 import com.ni.vision.NIVision.Image;
 
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public abstract class JSRobot extends IterativeRobot {
 	//Drive train
@@ -40,14 +42,18 @@ public abstract class JSRobot extends IterativeRobot {
 	public static int RANGEFINDER = -1;
 
 	
+	public static int CAMERAUPDATEDELAY = 100;
+	
+	
 	public DriveTrain driveTrain;
 	public LiftMech liftMech;
 	public PinchMech pincer;
 	public MechDriveManager mechDrive;
 	public NXTRangefinder ultra;
 	public int camses;
-	private Image frame;
-	private Image toStatImg;
+	public static Image frame;
+	public static Image toStatImg;
+	public static ToteParseResult latestParseResult;
 	
 	public JSRobot() {
 		Watchcat.init();
@@ -66,11 +72,21 @@ public abstract class JSRobot extends IterativeRobot {
 		new Thread() {
 			@Override
 			public void run() {
+				SmartDashboard.putBoolean("ShowToteParsedImage", false);
+				SmartDashboard.putInt("CameraUpdateSpeed", JSRobot.CAMERAUPDATEDELAY);
 				while(true) {
 					NIVision.IMAQdxGrab(camses, frame, 1);
 					NIVision.imaqFlip(toStatImg, frame, FlipAxis.HORIZONTAL_AXIS);
-					CameraServer.getInstance().setImage(toStatImg);
-					Timer.waitMillis(100);
+					if(SmartDashboard.getBoolean("ShowToteParsedImage")) {
+						ToteParseResult result = ToteParser.parseImg(toStatImg);
+						latestParseResult = result;
+						SmartDashboard.putBoolean("IsTote", result.isTote);
+						CameraServer.getInstance().setImage(result.parsedImage);
+					} else {
+						CameraServer.getInstance().setImage(toStatImg);
+					}
+					CAMERAUPDATEDELAY = SmartDashboard.getInt("CameraUpdateSpeed");
+					Timer.waitMillis(SmartDashboard.getInt("CameraUpdateSpeed"));
 				}
 			}
 		}.start();
