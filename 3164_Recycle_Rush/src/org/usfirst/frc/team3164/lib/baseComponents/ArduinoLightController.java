@@ -1,9 +1,9 @@
 package org.usfirst.frc.team3164.lib.baseComponents;
 
-import edu.wpi.first.wpilibj.AnalogOutput;
+import edu.wpi.first.wpilibj.PWM;
 
 public class ArduinoLightController {
-	private static double voltageModder = 5D/255D;
+	private static double voltageModder = 2000D/255D;
 	
 	public static enum Color {
 		RED(255, 0, 0),
@@ -26,30 +26,30 @@ public class ArduinoLightController {
 			ret.g = g;
 			return ret;
 		}
-		private double getRedVoltage() {
-			return r*voltageModder;
+		private int getRedVoltage() {
+			return (int) (r*voltageModder);
 		}
-		private double getBlueVoltage() {
-			return b*voltageModder;
+		private int getBlueVoltage() {
+			return (int) (b*voltageModder);
 		}
-		private double getGreenVoltage() {
-			return g*voltageModder;
+		private int getGreenVoltage() {
+			return (int) (g*voltageModder);
 		}
 	}
-	private AnalogOutput redOut;
-	private AnalogOutput blueOut;
-	private AnalogOutput greenOut;
+	private PWM redOut;
+	private PWM blueOut;
+	private PWM greenOut;
 	private Color currColor;
 	public ArduinoLightController(int red, int blue, int green) {
-		redOut = new AnalogOutput(red);
-		blueOut = new AnalogOutput(blue);
-		greenOut = new AnalogOutput(green);
+		redOut = new PWM(red);
+		blueOut = new PWM(blue);
+		greenOut = new PWM(green);
 		setColor(Color.WHITE);
 	}
 	public void setColor(Color c) {
-		redOut.setVoltage(c.getRedVoltage());
-		blueOut.setVoltage(c.getBlueVoltage());
-		greenOut.setVoltage(c.getGreenVoltage());
+		redOut.setRaw(c.getRedVoltage());
+		blueOut.setRaw(c.getBlueVoltage());
+		greenOut.setRaw(c.getGreenVoltage());
 		currColor = c;
 	}
 	public Color getColor() {

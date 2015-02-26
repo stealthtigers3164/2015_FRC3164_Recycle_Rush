@@ -65,7 +65,7 @@ public abstract class JSRobot extends IterativeRobot {
 	
 	public JSRobot() {
 		Watchcat.init();
-		this.lights = new ArduinoLightController(1,2,3);
+		this.lights = new ArduinoLightController(14,15,16);
 		this.driveTrain = new DriveTrain(new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTLEFT, true),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTRIGHT, false), new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARLEFT, true),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARRIGHT), false);
