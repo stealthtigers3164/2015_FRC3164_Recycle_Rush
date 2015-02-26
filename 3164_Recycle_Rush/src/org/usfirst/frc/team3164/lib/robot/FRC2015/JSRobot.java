@@ -1,5 +1,10 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.usfirst.frc.team3164.lib.baseComponents.ArduinoLightController;
+import org.usfirst.frc.team3164.lib.baseComponents.ArduinoLightController.Color;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.baseComponents.mechDrive.MechDriveManager;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.JagMotor;
@@ -7,6 +12,7 @@ import org.usfirst.frc.team3164.lib.baseComponents.motors.VicMotor;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.MotorEncoder;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.NXTRangefinder;
+import org.usfirst.frc.team3164.lib.util.ColorFader;
 import org.usfirst.frc.team3164.lib.util.Timer;
 import org.usfirst.frc.team3164.lib.vision.ToteParser;
 import org.usfirst.frc.team3164.lib.vision.ToteParser.ToteParseResult;
@@ -55,9 +61,11 @@ public abstract class JSRobot extends IterativeRobot {
 	public static Image frame;
 	public static Image toStatImg;
 	public static ToteParseResult latestParseResult;
+	public ArduinoLightController lights;
 	
 	public JSRobot() {
 		Watchcat.init();
+		this.lights = new ArduinoLightController(1,2,3);
 		this.driveTrain = new DriveTrain(new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTLEFT, true),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTRIGHT, false), new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARLEFT, true),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARRIGHT), false);
@@ -112,6 +120,26 @@ public abstract class JSRobot extends IterativeRobot {
 				}
 			}
 		}.start();
-		//this.ultra = new NXTRangefinder(JSRobot.RANGEFINDER);
+		new Thread() {
+			@Override
+			public void run() {
+				List<Color> cols = Arrays.asList(Color.AQUA, Color.RED, Color.MAGENTA, Color.BLUE, Color.WHITE);
+				int loc = -1;
+				ColorFader fad = new ColorFader(Color.getRGB(0, 0, 0), Color.WHITE);
+				while(true) {
+					if(fad.disp()) {
+						Timer.waitSec(4);
+						loc++;
+						if(loc>=cols.size()) {
+							loc = 0;
+						}
+						Color c = cols.get(loc);
+						fad = new ColorFader(lights.getColor(), c);
+					} else {
+						Timer.waitMillis(20);
+					}
+				}
+			}
+		}.start();
 	}
 }
