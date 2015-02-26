@@ -117,6 +117,7 @@ public class Robot extends JSRobot {
 		
 		
 		//This junk is designed to allow the robot to increase speed exponentially.
+		//It should work. It is almost midnight and I'm too tired to interpret my code. <3
 		if(ftcCont.sticks.LEFT_STICK_X.getIntensity()>0.1) {
 			speedPointStr = (ftcCont.sticks.LEFT_STICK_X.getRaw()<0 ? -1 : 1) * 
 					Math.pow(2, ftcCont.sticks.LEFT_STICK_X.getIntensity())/10;
@@ -138,27 +139,28 @@ public class Robot extends JSRobot {
 			}
 		}
 		
-		//On tripple clicking Back, the driveMode will toggle. 
-		if(ftcCont.buttons.BUTTON_BACK.isOn()) {
-			if(!wasBackPressed) {
-				wasBackPressed = true;
-				backPressed.add(new Date().getTime());
-				if(backPressed.size()>=3) {
-					long first = backPressed.get(backPressed.size()-3);
-					long last = backPressed.get(backPressed.size()-1);
-					if(last-first<1500) {
-						if(driveMode==0) {
-							driveMode=1;
-						} else if(driveMode==1) {
-							driveMode=0;
+		//On tripple clicking Back, the driveMode will toggle.
+		//I've tested it and it works.
+		if(ftcCont.buttons.BUTTON_BACK.isOn()) {//If the toggle button is pressed.
+			if(!wasBackPressed) {//Check to make sure this is a unique keypress
+				wasBackPressed = true;//Store that the back button was pressed so that the previous step can refernce the information
+				backPressed.add(new Date().getTime());//Log the back button being pressed
+				if(backPressed.size()>=3) {//If there are enough entries in the back button's pressing to possibly be a toggle
+					long first = backPressed.get(backPressed.size()-3);//Get the first time the back button was pressed
+					long last = backPressed.get(backPressed.size()-1);//Get the most recent pressing of the back button
+					if(last-first<1500) {//Make sure the values are within 1.5 seconds of each other
+						if(driveMode==0) {//Toggle from field oriented...
+							driveMode=1;//To non-field non-oriented.
+						} else if(driveMode==1) {//Toggle from non-field non-oriented...
+							driveMode=0;//To field oriented
 						}
-						backPressed.clear();
+						backPressed.clear();//Clear the pressing cache.
 					}
 				}
 			}
 		} else {
 			if(wasBackPressed) {
-				wasBackPressed = false;
+				wasBackPressed = false;//Reset the back button state storage.
 			}
 		}
 		
@@ -191,6 +193,7 @@ public class Robot extends JSRobot {
 		//If a controller is not plugged in, the intensity will return 0.
 		
 		
+		//Variables to store information about what to do with the motors.
 		boolean manualDown = false;
 		boolean manualUp = false;
 		boolean manualOpen = false;
@@ -202,84 +205,86 @@ public class Robot extends JSRobot {
 		
 		
 		
-		TopHatDir thd = ftcCont.tophat.getDir();
+		TopHatDir thd = ftcCont.tophat.getDir();//Gets the information about the top hat
 		if(ftcCont2.sticks.RIGHT_STICK_X.getIntensity()==0) {//Check if the controller 2 is trying to control... If it is NOT:
 			if(thd==TopHatDir.RIGHT) {//Manual open
-				manualOpen = true;
+				manualOpen = true;//The pincer WILL open by manual override
 			} else if(thd==TopHatDir.LEFT) {//Manual close
-				manualClose = true;
+				manualClose = true;//The pincer WILL close by manual override
 			}
 			if(ftcCont.buttons.BUTTON_X.isOn()) {//Standard close
-				close = 1;
+				close = 1;//Store info. This means that the pincer will close with intensity 1.
 			} else if(ftcCont.buttons.BUTTON_B.isOn()) {//Standard open
-				open = 1;
+				open = 1;//Store info. This means that the pincer will open with intensity 1.
 			}
 		} else {//If it IS:
-			if(ftcCont2.sticks.RIGHT_STICK_X.getDirection()==LeftRightDir.LEFT) {
-				close = ftcCont2.sticks.RIGHT_STICK_X.getIntensity();
+			if(ftcCont2.sticks.RIGHT_STICK_X.getDirection()==LeftRightDir.LEFT) {//Check direction of movment to make
+				close = ftcCont2.sticks.RIGHT_STICK_X.getIntensity();//Should close. Closes with intensity equivelent to that of the stick.
 			} else {
-				open = ftcCont2.sticks.RIGHT_STICK_X.getIntensity();
+				open = ftcCont2.sticks.RIGHT_STICK_X.getIntensity();//Should open. Opens with intensity equivelent to that of the stick.
 			}
 		}
 		
 		if(ftcCont2.sticks.LEFT_STICK_Y.getIntensity()==0) {//Check if the controller 2 is trying to control... If it is NOT:
 			if(thd==TopHatDir.DOWN) {//Manual go down
-				manualDown = true;
+				manualDown = true;//Manually forces going down.
 			} else if(thd==TopHatDir.UP) {//Manual go up
-				manualUp = true;
+				manualUp = true;//Manually forces going up.
 			}
 			if(ftcCont.buttons.BUTTON_A.isOn()) {//Standard go down
-				goDown = 1;
+				goDown = 1;//Sets downgoing power to 1. No override.
 			} else if(ftcCont.buttons.BUTTON_Y.isOn()) {//Standard go up to preset
 				goUp = 1;//TODO SHOULD BE 2
+				//This would normally make the lift go up to the preset but...
 			}
 		} else {//If it IS:
 			if(ftcCont2.sticks.LEFT_STICK_Y.getDirection()==UpDownDir.UP) {//Standard go up with ctrl2
-				goUp = ftcCont2.sticks.LEFT_STICK_Y.getIntensity();
+				goUp = ftcCont2.sticks.LEFT_STICK_Y.getIntensity();//Raises the lift with intensity of the stick
 			} else {//Standard go down with ctrl2
-				goDown = ftcCont2.sticks.LEFT_STICK_Y.getIntensity();
+				goDown = ftcCont2.sticks.LEFT_STICK_Y.getIntensity();//Lowers the lift with the intensity of the stick
 			}
 		}
 		
 		
-		if(manualDown) {
-			liftMech.cancelGoingUpWait();
-			liftMech.goDown();
-		} else if(manualUp) {
-			liftMech.cancelGoingUpWait();
-			liftMech.goUp();
-		} else {
-			if(goDown!=-1) {
-				liftMech.goDown(goDown);
-			} else if(goUp!=-1) {
-				if(goUp == 2) {
-					liftMech.startGoingUpToPreset();
+		
+		//The following lines actually execute the actions dictated by the above section.
+		if(manualDown) {//Is manual down override active?
+			liftMech.cancelGoingUpWait();//Makes this soooo manual! :D
+			liftMech.goDown();//Starts going down
+		} else if(manualUp) {//Is manual up override active?
+			liftMech.cancelGoingUpWait();//Makes this soooo manual! :D
+			liftMech.goUp();//Starts going up
+		} else {//If there is no manual override active:
+			if(goDown!=-1) {//If the go down value was not changed
+				liftMech.goDown(goDown);//Gets going down
+			} else if(goUp!=-1) {//If the go up value was not changed
+				if(goUp == 2) {//If the lift should go up to the preset
+					liftMech.startGoingUpToPreset();//Goes up to the preset; it will check to make sure the thread isn't already running
 				} else {
-					liftMech.goUp(goUp);
+					liftMech.goUp(goUp);//Go up. Get goin'!
 				}
-			} else {
-				liftMech.stop();
+			} else {//Woah. You don't seem to want the lift to move.
+				liftMech.stop();//Stop the lift. HALT! YOU SHALL NOT PASS!
 			}
 		}
-		
-		if(manualOpen) {
-			pincer.open();
-		} else if(manualClose) {
-			pincer.close();
+		if(manualOpen) {//Manually open the pincer
+			pincer.open();//OPEN!
+		} else if(manualClose) {//SHould manually override a close on the pincer
+			pincer.close();//Close the pincer
 		} else {
-			if(open!=-1) {
-				pincer.open();
-			} else if(close!=-1) {
-				pincer.close();
-			} else {
-				pincer.stop();
+			if(open!=-1) {//Non-override version of the pincer
+				pincer.open();//Start opening
+			} else if(close!=-1) {//Close the pincer
+				pincer.close();//Start closing
+			} else {//Woah. You don't seem to want the pincer to move.
+				pincer.stop();//HALT!
 			}
 		}
 		
 		
 		
 		
-		Watchcat.feed();
+		Watchcat.feed();//FEEED ME!
 	}
 	
 	/**
