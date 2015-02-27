@@ -54,7 +54,7 @@ public class LiftMech {
 				}
 				if(Math.abs(enc.getValue()-eval)>10 && isStopped) {
 					double mvVal = (enc.getValue()-eval)/-100.0;
-					motors.setPower(Math.abs(mvVal)>1 ? (mvVal>=0 ? 1.0 : -1.0) : mvVal);
+					motors.setPower(Math.abs(mvVal)>1 ? (mvVal>=0 ? 1.0 : -1.0) : mvVal);//3240
 				}
 				try {
 					Thread.sleep(50);

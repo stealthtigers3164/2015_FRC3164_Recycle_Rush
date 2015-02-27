@@ -235,9 +235,9 @@ public class Robot extends JSRobot {
 			} else if(thd==TopHatDir.LEFT) {//Manual close
 				manualClose = true;//The pincer WILL close by manual override
 			}
-			if(ftcCont.buttons.BUTTON_X.isOn()) {//Standard close
+			if(ftcCont.buttons.BUTTON_B.isOn()) {//Standard close
 				close = 1;//Store info. This means that the pincer will close with intensity 1.
-			} else if(ftcCont.buttons.BUTTON_B.isOn()) {//Standard open
+			} else if(ftcCont.buttons.BUTTON_X.isOn()) {//Standard open
 				open = 1;//Store info. This means that the pincer will open with intensity 1.
 			}
 		} else {//If it IS:

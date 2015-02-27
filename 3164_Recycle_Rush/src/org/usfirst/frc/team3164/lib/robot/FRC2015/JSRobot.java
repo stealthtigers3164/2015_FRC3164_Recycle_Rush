@@ -125,7 +125,7 @@ public abstract class JSRobot extends IterativeRobot {
 			public void run() {
 				List<Color> cols = Arrays.asList(Color.AQUA, Color.RED, Color.MAGENTA, Color.BLUE, Color.WHITE);
 				int loc = -1;
-				ColorFader fad = new ColorFader(Color.getRGB(0, 0, 0), Color.WHITE);
+				ColorFader fad = new ColorFader(new Color(0, 0, 0), Color.WHITE);
 				while(true) {
 					if(fad.disp()) {
 						Timer.waitSec(4);

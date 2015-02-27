@@ -3,28 +3,22 @@ package org.usfirst.frc.team3164.lib.baseComponents;
 import edu.wpi.first.wpilibj.PWM;
 
 public class ArduinoLightController {
-	private static double voltageModder = 2000D/255D;
+	private static double voltageModder = 1;
 	
-	public static enum Color {
-		RED(255, 0, 0),
-		BLUE(0, 255, 0),
-		GREEN(0, 0, 255),
-		AQUA(0, 255, 234),
-		MAGENTA(255, 0, 212),
-		WHITE(255, 255, 255);
+	public static class Color {
+		public static Color WHITE = new Color(255, 255, 255);
+		public static Color BLUE = new Color(0, 255, 0);
+		public static Color RED = new Color(255, 0, 0);
+		public static Color GREEN = new Color(0, 0, 255);
+		public static Color AQUA = new Color(0, 255, 234);
+		public static Color MAGENTA = new Color(255, 0, 212);
+		
 		
 		public int r, b, g;
-		private Color(int r, int b, int g) {
+		public Color(int r, int b, int g) {
 			this.r = r;
 			this.b = b;
 			this.g = g;
-		}
-		public static Color getRGB(int r, int b, int g) {
-			Color ret = Color.WHITE;
-			ret.r = r;
-			ret.b = b;
-			ret.g = g;
-			return ret;
 		}
 		private int getRedVoltage() {
 			return (int) (r*voltageModder);
@@ -56,6 +50,6 @@ public class ArduinoLightController {
 		return currColor;
 	}
 	public void setRGB(int r, int b, int g) {
-		setColor(Color.getRGB(r, b, g));
+		setColor(new Color(r, b, g));
 	}
 }
