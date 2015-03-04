@@ -100,9 +100,9 @@ public class PinchMech {
 	/**
 	 * Starts closing the pinching mechanism
 	 */
-	public void close() {
+	public void close(double power) {
 		if(!isAuto && closeLim.isPressed()) {
-			motor.setPower(-1.0);
+			motor.setPower(-power);
 		} else {
 			motor.stop();
 		}
@@ -111,12 +111,20 @@ public class PinchMech {
 	/**
 	 * Starts opening the pinching mechanism
 	 */
-	public void open() {
+	public void open(double power) {
 		if(!isAuto && !openLim.isPressed()) {
-			motor.setPower(1.0);
+			motor.setPower(power);
 		} else {
 			motor.stop();
 		}
+	}
+	
+	public void open() {
+		open(1);
+	}
+	
+	public void close() {
+		close(1);
 	}
 	
 	public void stop() {

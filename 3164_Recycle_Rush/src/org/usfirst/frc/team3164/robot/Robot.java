@@ -118,13 +118,17 @@ public class Robot extends JSRobot {
 		double SPEEDMOD = SmartDashboard.getDouble("SpeedModifier");
 		double TURNMOD = SmartDashboard.getDouble("TurnModifier");
 		double LIFTMOD = SmartDashboard.getDouble("LiftModifier");
+		double PINCERMOD = SmartDashboard.getDouble("PinchModifier");
 		SmartDashboard.putBoolean("FieldOriented", false);
 		
 		
 		
-		if(ftcCont2.buttons.BUTTON_LB.isOn() || ftcCont2.buttons.BUTTON_RB.isOn()
-				|| ftcCont2.buttons.BUTTON_RT.isOn() || ftcCont2.buttons.BUTTON_LT.isOn()) {
+		if(ftcCont2.buttons.BUTTON_RB.isOn() || ftcCont2.buttons.BUTTON_RT.isOn()) {
 			LIFTMOD = 1;
+		}
+		
+		if(ftcCont2.buttons.BUTTON_LB.isOn() || ftcCont2.buttons.BUTTON_LT.isOn()) {
+			PINCERMOD = 1;
 		}
 		
 		if(ftcCont.buttons.BUTTON_LB.isOn() || ftcCont.buttons.BUTTON_RB.isOn()
@@ -316,14 +320,14 @@ public class Robot extends JSRobot {
 			}
 		}
 		if(manualOpen) {//Manually open the pincer
-			pincer.open();//OPEN!
+			pincer.open(PINCERMOD);//OPEN!
 		} else if(manualClose) {//SHould manually override a close on the pincer
-			pincer.close();//Close the pincer
+			pincer.close(PINCERMOD);//Close the pincer
 		} else {
 			if(open!=-1) {//Non-override version of the pincer
-				pincer.open();//Start opening
+				pincer.open(open*LIFTMOD);//Start opening
 			} else if(close!=-1) {//Close the pincer
-				pincer.close();//Start closing
+				pincer.close(close*LIFTMOD);//Start closing
 			} else {//Woah. You don't seem to want the pincer to move.
 				pincer.stop();//HALT!
 			}
