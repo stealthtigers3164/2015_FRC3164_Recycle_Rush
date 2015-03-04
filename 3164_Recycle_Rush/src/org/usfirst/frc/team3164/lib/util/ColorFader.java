@@ -1,6 +1,6 @@
 package org.usfirst.frc.team3164.lib.util;
 
-import org.usfirst.frc.team3164.lib.baseComponents.ArduinoLightController.Color;
+import org.usfirst.frc.team3164.lib.baseComponents.LightController.Color;
 import org.usfirst.frc.team3164.robot.Robot;
 
 public class ColorFader {

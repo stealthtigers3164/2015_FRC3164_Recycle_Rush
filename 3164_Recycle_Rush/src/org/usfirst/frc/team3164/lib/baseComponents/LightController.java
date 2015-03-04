@@ -1,9 +1,21 @@
 package org.usfirst.frc.team3164.lib.baseComponents;
 
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class ArduinoLightController {
+public class LightController {
 	private static double voltageModder = 1;
+	
+	public class LED extends PWM {
+		public LED(int channel) {
+			super(channel);
+			super.setBounds(255, 200, 100, 50, .5);
+			super.setPeriodMultiplier(PeriodMultiplier.k1X);
+			super.setRaw(1);
+			super.setZeroLatch();
+		}
+	}
+	
 	
 	public static class Color {
 		public static Color WHITE = new Color(255, 255, 255);
@@ -34,10 +46,10 @@ public class ArduinoLightController {
 	private PWM blueOut;
 	private PWM greenOut;
 	private Color currColor;
-	public ArduinoLightController(int red, int blue, int green) {
-		redOut = new PWM(red);
-		blueOut = new PWM(blue);
-		greenOut = new PWM(green);
+	public LightController(int red, int blue, int green) {
+		redOut = new LED(red);
+		blueOut = new LED(blue);
+		greenOut = new LED(green);
 		setColor(Color.WHITE);
 	}
 	public void setColor(Color c) {
@@ -45,6 +57,7 @@ public class ArduinoLightController {
 		blueOut.setRaw(c.getBlueVoltage());
 		greenOut.setRaw(c.getGreenVoltage());
 		currColor = c;
+		SmartDashboard.putString("ColorInfo", "R"+c.r+"B"+c.b+"G"+c.g);
 	}
 	public Color getColor() {
 		return currColor;

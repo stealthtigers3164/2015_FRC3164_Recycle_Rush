@@ -3,8 +3,8 @@ package org.usfirst.frc.team3164.lib.robot.FRC2015;
 import java.util.Arrays;
 import java.util.List;
 
-import org.usfirst.frc.team3164.lib.baseComponents.ArduinoLightController;
-import org.usfirst.frc.team3164.lib.baseComponents.ArduinoLightController.Color;
+import org.usfirst.frc.team3164.lib.baseComponents.LightController;
+import org.usfirst.frc.team3164.lib.baseComponents.LightController.Color;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.baseComponents.mechDrive.MechDriveManager;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.JagMotor;
@@ -43,13 +43,13 @@ public abstract class JSRobot extends IterativeRobot {
 	
 	//Pinch Mech
 	public static int PINCHMECH_MOTOR = 5;
-	public static int PINCHMECH_LIMIT_SWITCH_OPEN = 10;
-	public static int PINCHMECH_LIMIT_SWITCH_CLOSE = 11;
+	public static int PINCHMECH_LIMIT_SWITCH_OPEN = 3;
+	public static int PINCHMECH_LIMIT_SWITCH_CLOSE = 4;
 	
 	public static int RANGEFINDER = -1;
 
 	
-	public static int CAMERAUPDATEDELAY = 100;
+	public static int CAMERAUPDATEDELAY = 50;
 	
 	
 	public DriveTrain driveTrain;
@@ -60,24 +60,27 @@ public abstract class JSRobot extends IterativeRobot {
 	public int camses;
 	public static Image frame;
 	public static Image toStatImg;
+	public static Image frame2;
 	public static ToteParseResult latestParseResult;
-	public ArduinoLightController lights;
+	public LightController lights;
 	
 	public JSRobot() {
 		Watchcat.init();
-		this.lights = new ArduinoLightController(14,15,16);
+		this.lights = new LightController(7,8,9);
 		this.driveTrain = new DriveTrain(new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTLEFT, true),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_FRONTRIGHT, false), new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARLEFT, true),
 				new JagMotor(JSRobot.DRIVETRAIN_MOTOR_REARRIGHT), false);
 		this.liftMech = new LiftMech(new LimitSwitch(JSRobot.LIFTMECH_LIMIT_TOP), new LimitSwitch(JSRobot.LIFTMECH_LIMIT_BOTTOM),
 				new LimitSwitch(JSRobot.LIFTMECH_LIMIT_MIDDLE)
 				,new MotorEncoder(JSRobot.LIFTMECH_ENCODER_AC, JSRobot.LIFTMECH_ENCODER_BC, false), new VicMotor(JSRobot.LIFTMECH_MOTOR_1));
-		this.pincer = new PinchMech(new VicMotor(JSRobot.PINCHMECH_MOTOR));
+		this.pincer = new PinchMech(new VicMotor(JSRobot.PINCHMECH_MOTOR), new LimitSwitch(JSRobot.PINCHMECH_LIMIT_SWITCH_CLOSE),
+				new LimitSwitch(JSRobot.PINCHMECH_LIMIT_SWITCH_OPEN));
 		camses = NIVision.IMAQdxOpenCamera("cam0",
 						NIVision.IMAQdxCameraControlMode.CameraControlModeController);
 		NIVision.IMAQdxConfigureGrab(camses);
 		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
 		toStatImg = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
+		frame2 = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
 		new Thread() {
 			@Override
 			public void run() {
@@ -85,7 +88,8 @@ public abstract class JSRobot extends IterativeRobot {
 				SmartDashboard.putInt("CameraUpdateSpeed", JSRobot.CAMERAUPDATEDELAY);
 				while(true) {
 					NIVision.IMAQdxGrab(camses, frame, 1);
-					NIVision.imaqFlip(toStatImg, frame, FlipAxis.HORIZONTAL_AXIS);
+					NIVision.imaqFlip(frame2, frame, FlipAxis.HORIZONTAL_AXIS);
+					NIVision.imaqFlip(toStatImg, frame2, FlipAxis.VERTICAL_AXIS);
 					if(SmartDashboard.getBoolean("ShowToteParsedImage")) {
 						ToteParseResult result = ToteParser.parseImg(toStatImg);
 						latestParseResult = result;
@@ -114,7 +118,8 @@ public abstract class JSRobot extends IterativeRobot {
 					try {SmartDashboard.putBoolean("Lift Toplim", Robot.rbt.liftMech.topLim.isPressed());} catch(Exception ex) {}
 					try {SmartDashboard.putDouble("Lift Enc", Robot.rbt.liftMech.enc.getValue());} catch(Exception ex) {}
 					try {SmartDashboard.putDouble("Lift Setpoint", Robot.rbt.liftMech.eval);} catch(Exception ex) {}
-					
+					try {SmartDashboard.putBoolean("Pincer Open", Robot.rbt.pincer.openLim.isPressed());} catch(Exception ex) {}
+					try {SmartDashboard.putBoolean("Pincer Close", !Robot.rbt.pincer.closeLim.isPressed());} catch(Exception ex) {}
 					
 					Timer.waitMillis(100);
 				}
