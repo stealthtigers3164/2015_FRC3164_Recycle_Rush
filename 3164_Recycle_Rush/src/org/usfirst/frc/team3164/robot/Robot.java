@@ -78,6 +78,7 @@ public class Robot extends JSRobot {
     	SmartDashboard.putDouble("SpeedModifier", 0.5);
 		SmartDashboard.putDouble("TurnModifier", 0.4);
 		SmartDashboard.putDouble("LiftModifier", 0.5);
+		SmartDashboard.putDouble("PinchModifier", 0.4);
 		SmartDashboard.putBoolean("Auto Drives Over Ramp", false);
 		SmartDashboard.putBoolean("Auto NonRamp IsTote", false);
 		SmartDashboard.putInt("AutoDist", 2000);
