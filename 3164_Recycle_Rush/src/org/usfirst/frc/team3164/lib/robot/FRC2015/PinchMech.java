@@ -4,7 +4,10 @@ import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
 import org.usfirst.frc.team3164.lib.baseComponents.sensors.LimitSwitch;
 import org.usfirst.frc.team3164.lib.util.ICallback;
 import org.usfirst.frc.team3164.lib.util.Repeater;
+import org.usfirst.frc.team3164.lib.util.Timer;
 import org.usfirst.frc.team3164.robot.Robot;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Controls the Pinch mechanism.
@@ -14,8 +17,8 @@ import org.usfirst.frc.team3164.robot.Robot;
 public class PinchMech {
 	public IMotor motor;
 	//private MotorEncoder enc;
-	//private LimitSwitch closeLim;
-	//private LimitSwitch openLim;
+	public LimitSwitch closeLim;
+	public LimitSwitch openLim;
 	
 	
 	/**
@@ -23,29 +26,33 @@ public class PinchMech {
 	 * @param m The motor controlling the mechanism*/
 	 /* @param en The encoder attached to the rotating axis of m
 	 */
-	public PinchMech(IMotor m/*, LimitSwitch c, LimitSwitch o/*, MotorEncoder en*/) {
+	public PinchMech(IMotor m, LimitSwitch c, LimitSwitch o/*, MotorEncoder en*/) {
 		motor = m;
-		//this.closeLim = c;
-		//this.openLim = o;
+		this.closeLim = c;
+		this.openLim = o;
 		
 		//enc = en;
 		//new Thread(new PinchLimiter()).start();
-		/*new Repeater(30, new ICallback() {
+		new Thread() {
 			@Override
-			public void call() {
-				/*if(closeLim.isPressed() && motor.getPower()>0) {
-					motor.stop();
+			public void run() {
+				while(true) {
+					if(!closeLim.isPressed() && motor.getPower()<0) {
+						motor.stop();
+					}
+					if(openLim.isPressed() && motor.getPower()>0) {
+						motor.stop();
+					}
+					SmartDashboard.putDouble("PincerPower", Robot.rbt.pdp.getCurrent(3));
+					Timer.waitMillis(20);
 				}
-				if(openLim.isPressed() && motor.getPower()<0) {
-					motor.stop();
-				}*/
 				/*
 				System.out.println("Power... " + Robot.rbt.pdp.getCurrent(JSRobot.PINCHER_POWER_CHANNEL));
 				if(Robot.rbt.pdp.getCurrent(JSRobot.PINCHER_POWER_CHANNEL)>10000000) {
 					motor.stop();
-				}*//*
+				}*/
 			}
-		});*/
+		}.start();
 	}
 	
 	//private static final int LIMIT_HIGH = 100;
@@ -93,17 +100,31 @@ public class PinchMech {
 	/**
 	 * Starts closing the pinching mechanism
 	 */
-	public void close() {
-		if(!isAuto)
-			motor.setPower(1.0);
+	public void close(double power) {
+		if(!isAuto && closeLim.isPressed()) {
+			motor.setPower(-power);
+		} else {
+			motor.stop();
+		}
 	}
 	
 	/**
 	 * Starts opening the pinching mechanism
 	 */
+	public void open(double power) {
+		if(!isAuto && !openLim.isPressed()) {
+			motor.setPower(power);
+		} else {
+			motor.stop();
+		}
+	}
+	
 	public void open() {
-		if(!isAuto)
-			motor.setPower(-1.0);
+		open(1);
+	}
+	
+	public void close() {
+		close(1);
 	}
 	
 	public void stop() {

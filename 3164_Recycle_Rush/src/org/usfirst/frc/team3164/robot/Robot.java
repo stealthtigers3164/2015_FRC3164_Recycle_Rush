@@ -13,9 +13,7 @@ import org.usfirst.frc.team3164.lib.baseComponents.Controller.UpDownDir;
 import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.Dashboard;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.DriveDir;
-import org.usfirst.frc.team3164.lib.robot.FRC2015.DriveTrain.TurnDir;
 import org.usfirst.frc.team3164.lib.robot.FRC2015.JSRobot;
-import org.usfirst.frc.team3164.lib.robot.FRC2015.PinchMech;
 import org.usfirst.frc.team3164.lib.util.ICallback;
 import org.usfirst.frc.team3164.lib.util.Scheduler;
 import org.usfirst.frc.team3164.lib.util.Timer;
@@ -65,7 +63,7 @@ public class Robot extends JSRobot {
         // mechDrive = new MechDriveManager(driveTrain, drivegyro, ftcCont);
         pdp = new PowerDistributionPanel();
         dash = new Dashboard(pdp);
-        dash.uploadBoolean("expo-drive", true);
+        dash.uploadBoolean("expo-drive", false);
         autonomous = new Autonomous();
     }
     
@@ -77,6 +75,13 @@ public class Robot extends JSRobot {
     public void robotInit() {
     	driveGyro.initGyro();
     	driveGyro.reset();
+    	SmartDashboard.putDouble("SpeedModifier", 0.5);
+		SmartDashboard.putDouble("TurnModifier", 0.4);
+		SmartDashboard.putDouble("LiftModifier", 0.5);
+		SmartDashboard.putDouble("PinchModifier", 0.4);
+		SmartDashboard.putBoolean("Auto Drives Over Ramp", false);
+		SmartDashboard.putBoolean("Auto NonRamp IsTote", false);
+		SmartDashboard.putInt("AutoDist", 2000);
     }
     
     /**
@@ -84,6 +89,9 @@ public class Robot extends JSRobot {
      */
     @Override
     public void autonomousInit() {
+    	driveGyro.reset();
+    	liftMech.enc.reset();
+		liftMech.eval = 0;
     	autonomous.runAutonomous();
     }
    
@@ -96,18 +104,39 @@ public class Robot extends JSRobot {
     	
     	Watchcat.feed();
     }
-
+    
 	/**
 	 * This function is called periodically during operator control
 	 */
 	boolean hasDone = false;
 	double speedPointFwd = 0;
 	double speedPointStr = 0;
-	int driveMode = 0;
+	int driveMode = 1;
 	ArrayList<Long> backPressed = new ArrayList<Long>();
 	boolean wasBackPressed = false;
 	@Override
 	public void teleopPeriodic() {
+		double SPEEDMOD = SmartDashboard.getDouble("SpeedModifier");
+		double TURNMOD = SmartDashboard.getDouble("TurnModifier");
+		double LIFTMOD = SmartDashboard.getDouble("LiftModifier");
+		double PINCERMOD = SmartDashboard.getDouble("PinchModifier");
+		SmartDashboard.putBoolean("FieldOriented", false);
+		
+		
+		
+		if(ftcCont2.buttons.BUTTON_RB.isOn() || ftcCont2.buttons.BUTTON_RT.isOn()) {
+			LIFTMOD = 1;
+		}
+		
+		if(ftcCont2.buttons.BUTTON_LB.isOn() || ftcCont2.buttons.BUTTON_LT.isOn()) {
+			PINCERMOD = 1;
+		}
+		
+		if(ftcCont.buttons.BUTTON_LB.isOn() || ftcCont.buttons.BUTTON_RB.isOn()
+				|| ftcCont.buttons.BUTTON_RT.isOn() || ftcCont.buttons.BUTTON_LT.isOn()) {
+			SPEEDMOD = 1;
+			TURNMOD = 1;
+		}
 		
 		
 		/*if(!hasDone) {
@@ -157,6 +186,7 @@ public class Robot extends JSRobot {
 			speedPointFwd = 0;
 		}
 		
+		driveMode = SmartDashboard.getBoolean("FieldOriented") ? 0:1;
 		//On tripple clicking Back, the driveMode will toggle.
 		//I've tested it and it works.
 		if(ftcCont.buttons.BUTTON_BACK.isOn()) {//If the toggle button is pressed.
@@ -168,9 +198,9 @@ public class Robot extends JSRobot {
 					long last = backPressed.get(backPressed.size()-1);//Get the most recent pressing of the back button
 					if(last-first<1500) {//Make sure the values are within 1.5 seconds of each other
 						if(driveMode==0) {//Toggle from field oriented...
-							driveMode=1;//To non-field non-oriented.
+							SmartDashboard.putBoolean("FieldOriented", false);//To non-field non-oriented.
 						} else if(driveMode==1) {//Toggle from non-field non-oriented...
-							driveMode=0;//To field oriented
+							SmartDashboard.putBoolean("FieldOriented", true);//To field oriented
 						}
 						backPressed.clear();//Clear the pressing cache.
 					}
@@ -181,25 +211,25 @@ public class Robot extends JSRobot {
 				wasBackPressed = false;//Reset the back button state storage.
 			}
 		}
-		
+		driveMode = SmartDashboard.getBoolean("FieldOriented") ? 0:1;
 		
 		////Wheel movement/////
 		boolean USEEXPONENTIALSPEED = dash.getBoolean("expo-drive");//TODO CHange this to turn off exponential drive train speed
 		if(driveMode==0) {//If drive mode is on field oriented...
 			driveTrain.mecanumDrive_Cartesian2(
 					//ftcCont.sticks.LEFT_STICK_X.getRaw(),
-					(!USEEXPONENTIALSPEED) ? ftcCont.sticks.LEFT_STICK_X.getRaw() : speedPointStr,
+					ftcCont.sticks.LEFT_STICK_X.getRaw()*SPEEDMOD,
 					//ftcCont.sticks.LEFT_STICK_Y.getRaw(),
-					(!USEEXPONENTIALSPEED) ? ftcCont.sticks.LEFT_STICK_Y.getRaw() : speedPointFwd,
-					ftcCont.sticks.RIGHT_STICK_X.getRaw(),
+					ftcCont.sticks.LEFT_STICK_Y.getRaw()*SPEEDMOD,
+					ftcCont.sticks.RIGHT_STICK_X.getRaw()*TURNMOD,
 					driveGyro.getAngle());
 		} else if(driveMode==1) {//If drive mode is on non-field non-oriented...
 			driveTrain.mecanumDrive_Cartesian(
-					//ftcCont.sticks.LEFT_STICK_X.getRaw(),
-					speedPointStr,
-					//ftcCont.sticks.LEFT_STICK_Y.getRaw(),
-					speedPointFwd,
-					ftcCont.sticks.RIGHT_STICK_X.getRaw(),
+					ftcCont.sticks.LEFT_STICK_X.getRaw()*SPEEDMOD,
+					//speedPointStr,
+					ftcCont.sticks.LEFT_STICK_Y.getRaw()*SPEEDMOD,
+					//speedPointFwd,
+					ftcCont.sticks.RIGHT_STICK_X.getRaw()*TURNMOD,
 					driveGyro.getAngle());
 		}
 		
@@ -235,13 +265,13 @@ public class Robot extends JSRobot {
 			} else if(thd==TopHatDir.LEFT) {//Manual close
 				manualClose = true;//The pincer WILL close by manual override
 			}
-			if(ftcCont.buttons.BUTTON_X.isOn()) {//Standard close
+			if(ftcCont.buttons.BUTTON_B.isOn()) {//Standard close
 				close = 1;//Store info. This means that the pincer will close with intensity 1.
-			} else if(ftcCont.buttons.BUTTON_B.isOn()) {//Standard open
+			} else if(ftcCont.buttons.BUTTON_X.isOn()) {//Standard open
 				open = 1;//Store info. This means that the pincer will open with intensity 1.
 			}
 		} else {//If it IS:
-			if(ftcCont2.sticks.RIGHT_STICK_X.getDirection()==LeftRightDir.LEFT) {//Check direction of movment to make
+			if(ftcCont2.sticks.RIGHT_STICK_X.getDirection()==LeftRightDir.RIGHT) {//Check direction of movment to make
 				close = ftcCont2.sticks.RIGHT_STICK_X.getIntensity();//Should close. Closes with intensity equivelent to that of the stick.
 			} else {
 				open = ftcCont2.sticks.RIGHT_STICK_X.getIntensity();//Should open. Opens with intensity equivelent to that of the stick.
@@ -257,7 +287,7 @@ public class Robot extends JSRobot {
 			if(ftcCont.buttons.BUTTON_A.isOn()) {//Standard go down
 				goDown = 1;//Sets downgoing power to 1. No override.
 			} else if(ftcCont.buttons.BUTTON_Y.isOn()) {//Standard go up to preset
-				goUp = 2;//TODO SHOULD BE 2
+				goUp = 1;//TODO SHOULD BE 2
 				//This would normally make the lift go up to the preset but...
 			}
 		} else {//If it IS:
@@ -273,32 +303,32 @@ public class Robot extends JSRobot {
 		//The following lines actually execute the actions dictated by the above section.
 		if(manualDown) {//Is manual down override active?
 			liftMech.cancelGoingUpWait();//Makes this soooo manual! :D
-			liftMech.goDown();//Starts going down
+			liftMech.goDown(LIFTMOD);//Starts going down
 		} else if(manualUp) {//Is manual up override active?
 			liftMech.cancelGoingUpWait();//Makes this soooo manual! :D
-			liftMech.goUp();//Starts going up
+			liftMech.goUp(LIFTMOD);//Starts going up
 		} else {//If there is no manual override active:
 			if(goDown!=-1) {//If the go down value was not changed
-				liftMech.goDown(goDown);//Gets going down
+				liftMech.goDown(goDown*LIFTMOD);//Gets going down
 			} else if(goUp!=-1) {//If the go up value was not changed
 				if(goUp == 2) {//If the lift should go up to the preset
 					liftMech.startGoingUpToPreset();//Goes up to the preset; it will check to make sure the thread isn't already running
 				} else {
-					liftMech.goUp(goUp);//Go up. Get goin'!
+					liftMech.goUp(goUp*LIFTMOD);//Go up. Get goin'!
 				}
 			} else {//Woah. You don't seem to want the lift to move.
 				liftMech.stop();//Stop the lift. HALT! YOU SHALL NOT PASS!
 			}
 		}
 		if(manualOpen) {//Manually open the pincer
-			pincer.open();//OPEN!
+			pincer.open(PINCERMOD);//OPEN!
 		} else if(manualClose) {//SHould manually override a close on the pincer
-			pincer.close();//Close the pincer
+			pincer.close(PINCERMOD);//Close the pincer
 		} else {
 			if(open!=-1) {//Non-override version of the pincer
-				pincer.open();//Start opening
+				pincer.open(open*LIFTMOD);//Start opening
 			} else if(close!=-1) {//Close the pincer
-				pincer.close();//Start closing
+				pincer.close(close*LIFTMOD);//Start closing
 			} else {//Woah. You don't seem to want the pincer to move.
 				pincer.stop();//HALT!
 			}
@@ -357,11 +387,13 @@ public class Robot extends JSRobot {
 		 * This method pinches the pincer and drives backwards.
 		 */
 		public void auto1(){
-			//not done yet
-			pincer.close();
-			//need some sort of wait statement in here.
-			Timer.waitSec(3);
-			driveTrain.driveTime(.6, DriveDir.REVERSE, 3000, driveGyro);
+			driveTrain.driveTime(.6, DriveDir.FORWARDS, SmartDashboard.getBoolean("Auto Drives Over Ramp") ?
+					2100 : 2000);
+			liftMech.goUp(0.5);
+			Timer.waitMillis(1000);
+			liftMech.stop();
+			driveTrain.driveTime(.5, DriveDir.REVERSE, 100);
+			
 		}
 		
 		/**
