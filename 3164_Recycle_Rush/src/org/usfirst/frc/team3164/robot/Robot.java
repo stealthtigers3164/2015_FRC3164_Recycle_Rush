@@ -1,6 +1,6 @@
 //This code was written for FRC Team 3164 by Jaxon Brown and Brendan Gregos.
 //For a list of port assignments, please refer to the Wiki on Github.
-
+//Test comment for pi repository.
 package org.usfirst.frc.team3164.robot;
 
 import java.util.ArrayList;
@@ -387,8 +387,8 @@ public class Robot extends JSRobot {
 		 * This method pinches the pincer and drives backwards.
 		 */
 		public void auto1(){
-			driveTrain.driveTime(.6, DriveDir.FORWARDS, /*SmartDashboard.getBoolean("Auto Drives Over Ramp") ?
-					2600 : (SmartDashboard.getBoolean("Auto NonRamp IsTote") ? 2400 : 2000)*/SmartDashboard.getInt("AutoDist"), driveGyro);
+			driveTrain.driveTime(.6, DriveDir.FORWARDS, SmartDashboard.getBoolean("Auto Drives Over Ramp") ?
+					2100 : 2000);
 			liftMech.goUp(0.5);
 			Timer.waitMillis(1000);
 			liftMech.stop();
