@@ -326,9 +326,9 @@ public class Robot extends JSRobot {
 			pincer.close(PINCERMOD);//Close the pincer
 		} else {
 			if(open!=-1) {//Non-override version of the pincer
-				pincer.open(open*LIFTMOD);//Start opening
+				pincer.open(open*PINCERMOD);//Start opening
 			} else if(close!=-1) {//Close the pincer
-				pincer.close(close*LIFTMOD);//Start closing
+				pincer.close(close*PINCERMOD);//Start closing
 			} else {//Woah. You don't seem to want the pincer to move.
 				pincer.stop();//HALT!
 			}
