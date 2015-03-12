@@ -88,15 +88,15 @@ public abstract class JSRobot extends IterativeRobot {
 				SmartDashboard.putInt("CameraUpdateSpeed", JSRobot.CAMERAUPDATEDELAY);
 				while(true) {
 					NIVision.IMAQdxGrab(camses, frame, 1);
-					NIVision.imaqFlip(frame2, frame, FlipAxis.HORIZONTAL_AXIS);
-					NIVision.imaqFlip(toStatImg, frame2, FlipAxis.VERTICAL_AXIS);
+					//NIVision.imaqFlip(frame2, frame, FlipAxis.HORIZONTAL_AXIS);
+					//NIVision.imaqFlip(toStatImg, frame2, FlipAxis.VERTICAL_AXIS);
 					if(SmartDashboard.getBoolean("ShowToteParsedImage")) {
 						ToteParseResult result = ToteParser.parseImg(toStatImg);
 						latestParseResult = result;
 						SmartDashboard.putBoolean("IsTote", result.isTote);
 						CameraServer.getInstance().setImage(result.parsedImage);
 					} else {
-						CameraServer.getInstance().setImage(toStatImg);
+						CameraServer.getInstance().setImage(frame/*toStatImg   <-- Was*/);
 					}
 					CAMERAUPDATEDELAY = SmartDashboard.getInt("CameraUpdateSpeed");
 					Timer.waitMillis(SmartDashboard.getInt("CameraUpdateSpeed"));
