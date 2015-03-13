@@ -83,6 +83,7 @@ public class Robot extends JSRobot {
 		SmartDashboard.putBoolean("Auto Drives Over Ramp", false);
 		SmartDashboard.putBoolean("Auto NonRamp IsTote", false);
 		SmartDashboard.putInt("AutoDist", 2200);
+		SmartDashboard.putBoolean("RobotOrientedUsesGyro", false);
     }
     
     /**
@@ -200,8 +201,10 @@ public class Robot extends JSRobot {
 					if(last-first<1500) {//Make sure the values are within 1.5 seconds of each other
 						if(driveMode==0) {//Toggle from field oriented...
 							SmartDashboard.putBoolean("FieldOriented", false);//To non-field non-oriented.
+							driveMode = 1;
 						} else if(driveMode==1) {//Toggle from non-field non-oriented...
 							SmartDashboard.putBoolean("FieldOriented", true);//To field oriented
+							driveMode = 0;
 						}
 						backPressed.clear();//Clear the pressing cache.
 					}
@@ -212,12 +215,12 @@ public class Robot extends JSRobot {
 				wasBackPressed = false;//Reset the back button state storage.
 			}
 		}
-		driveMode = SmartDashboard.getBoolean("FieldOriented") ? 0:1;
 		
 		////Wheel movement/////
 		boolean USEEXPONENTIALSPEED = dash.getBoolean("expo-drive");//TODO CHange this to turn off exponential drive train speed
+		boolean GYRORODRIVE = SmartDashboard.getBoolean("RobotOrientedUsesGyro");
 		if(driveMode==0) {//If drive mode is on field oriented...
-			driveTrain.mecanumDrive_Cartesian2(
+			driveTrain.mecanumDrive_FieldOriented_Gyro(
 					//ftcCont.sticks.LEFT_STICK_X.getRaw(),
 					ftcCont.sticks.LEFT_STICK_X.getRaw()*SPEEDMOD,
 					//ftcCont.sticks.LEFT_STICK_Y.getRaw(),
@@ -225,13 +228,23 @@ public class Robot extends JSRobot {
 					ftcCont.sticks.RIGHT_STICK_X.getRaw()*TURNMOD,
 					driveGyro.getAngle());
 		} else if(driveMode==1) {//If drive mode is on non-field non-oriented...
-			driveTrain.mecanumDrive_Cartesian(
-					ftcCont.sticks.LEFT_STICK_X.getRaw()*SPEEDMOD,
-					//speedPointStr,
-					ftcCont.sticks.LEFT_STICK_Y.getRaw()*SPEEDMOD,
-					//speedPointFwd,
-					ftcCont.sticks.RIGHT_STICK_X.getRaw()*TURNMOD,
-					driveGyro.getAngle());
+			if(GYRORODRIVE) {
+				driveTrain.mecanumDrive_RobotOriented_NonGyro(
+						ftcCont.sticks.LEFT_STICK_X.getRaw()*SPEEDMOD,
+						//speedPointStr,
+						ftcCont.sticks.LEFT_STICK_Y.getRaw()*SPEEDMOD,
+						//speedPointFwd,
+						ftcCont.sticks.RIGHT_STICK_X.getRaw()*TURNMOD,
+						driveGyro.getAngle());
+			} else {
+				driveTrain.mecanumDrive_RobotOriented_NonGyro(
+						ftcCont.sticks.LEFT_STICK_X.getRaw()*SPEEDMOD,
+						//speedPointStr,
+						ftcCont.sticks.LEFT_STICK_Y.getRaw()*SPEEDMOD,
+						//speedPointFwd,
+						ftcCont.sticks.RIGHT_STICK_X.getRaw()*TURNMOD,
+						driveGyro.getAngle());
+			}
 		}
 		
 		//emergency gyro reset during match

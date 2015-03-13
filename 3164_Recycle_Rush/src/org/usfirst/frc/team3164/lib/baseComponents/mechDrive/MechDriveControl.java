@@ -30,7 +30,7 @@ public class MechDriveControl implements Runnable {
 	    		offset-=180;
 	    		offset/=180;
 	    		if(offset>0.1 || offset<-0.1) {
-	    			dTrain.mecanumDrive_Cartesian(-ctrl.sticks.LEFT_STICK_X.getRaw(), -ctrl.sticks.LEFT_STICK_Y.getRaw(), offset/5, gyro.getAngle());
+	    			dTrain.mecanumDrive_RobotOriented_NonGyro(-ctrl.sticks.LEFT_STICK_X.getRaw(), -ctrl.sticks.LEFT_STICK_Y.getRaw(), offset/5, gyro.getAngle());
 	    		}
     		}
 	    	try {Thread.sleep(10);} catch(Exception ex) {}

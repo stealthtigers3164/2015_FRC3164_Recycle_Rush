@@ -1,9 +1,6 @@
 package org.usfirst.frc.team3164.lib.robot.FRC2015;
 
-import org.usfirst.frc.team3164.lib.baseComponents.Controller;
-import org.usfirst.frc.team3164.lib.baseComponents.Watchcat;
 import org.usfirst.frc.team3164.lib.baseComponents.motors.IMotor;
-import org.usfirst.frc.team3164.lib.util.Conditional;
 import org.usfirst.frc.team3164.lib.util.IConditional;
 import org.usfirst.frc.team3164.lib.util.Timer;
 
@@ -172,11 +169,69 @@ public class DriveTrain {
      * the translation. [-1.0..1.0]
      * @param gyroAngle The current angle reading from the gyro.  Use this to implement field-oriented controls.
      */
-    public void mecanumDrive_Cartesian(double x, double y, double rotation, double gyroAngle) {
+    public void mecanumDrive_RobotOriented_NonGyro(double x, double y, double rotation, double gyroAngle) {
         double xIn = x;
         double yIn = y;
         // Negate y for the joystick.
         yIn = -yIn;
+        // Compenstate for gyro angle.
+        //double rotated[] = rotateVector(xIn, yIn, gyroAngle);
+        //xIn = rotated[0];
+        //yIn = rotated[1];
+        SpeedStorage wheelSpeeds = new SpeedStorage();
+        wheelSpeeds.FRONT_LEFT = xIn + yIn + rotation;
+        wheelSpeeds.FRONT_RIGHT = -xIn + yIn - rotation;
+        wheelSpeeds.BACK_LEFT = -xIn + yIn + rotation;
+        wheelSpeeds.BACK_RIGHT = xIn + yIn - rotation;
+
+        wheelSpeeds = new SpeedStorage(normalize(wheelSpeeds.getArray()));
+        
+        this.leftFront.setPower(wheelSpeeds.FRONT_LEFT);
+        this.rightFront.setPower(wheelSpeeds.FRONT_RIGHT);
+        this.leftBack.setPower(wheelSpeeds.BACK_LEFT);
+        this.rightBack.setPower(wheelSpeeds.BACK_RIGHT);
+    }
+    
+    public void mecanumDrive_RobotOriented_Gyro(double x, double y, double rotation, double gyroAngle) {
+    	
+    	if(trackingStraight == 4){
+        	trackingAngle = gyroAngle;
+        	trackingStraight = 0;
+        }
+    	
+    	
+        double xIn = x;
+        double yIn = y;
+        // Negate y for the joystick.
+        yIn = -yIn;
+        
+        
+        if(Math.abs(rotation) < 0.075) {//A little leeway
+        	rotation = 0; //Just in case :)
+        	if(trackingStraight == 2) {
+        		if((gyroAngle-trackingAngle) >= 5) {
+        		//Robot has been moved clockwise, rotate left (or negative rotation) to fix
+        			rotation = -0.15; //MAY NEED TO BE ADJUSTED
+        		} else if ((gyroAngle-trackingAngle) <= -5) {
+        		//Robot has been moved counter clockwise, rotate right (or positive rotation) to fix
+        			rotation = 0.15;	//MAY NEED TO BE ADJUSTED
+        		}
+        		//Tracking straight does not need to be set to true here because the robot can still be rotated accidently
+        	} else if(trackingStraight == 1) {
+        		if(trackingTime < System.currentTimeMillis()) {
+        			trackingStraight = 2;
+        			trackingAngle = gyroAngle;//This would be the last correct line after the driver gets to the intended position and the robot isn't being moved
+        		}
+        	} else if(trackingStraight == 0) {
+        		trackingStraight = 1;
+        		trackingTime = System.currentTimeMillis() + 250;
+        	}
+        } else {
+        	trackingStraight = 0; //True because the intentional turning of the robot
+        }
+        
+        
+        
         // Compenstate for gyro angle.
         //double rotated[] = rotateVector(xIn, yIn, gyroAngle);
         //xIn = rotated[0];
@@ -222,7 +277,7 @@ public class DriveTrain {
 			trackingStraight = 4;
 			trackingAngle = 0;
 		}
-    public void mecanumDrive_Cartesian2(double x, double y, double rotation, double gyroAngle) {
+    public void mecanumDrive_FieldOriented_Gyro(double x, double y, double rotation, double gyroAngle) {
         double xIn = x;
         double yIn = y;
         // Negate y for the joystick.
@@ -540,7 +595,7 @@ public class DriveTrain {
 	}
 	
 	public void driveTime(double power, DriveDir dir, int time, Gyro gyro) {
-		this.mecanumDrive_Cartesian2(dir.x*power, dir.y*power, 0, gyro.getAngle());
+		this.mecanumDrive_FieldOriented_Gyro(dir.x*power, dir.y*power, 0, gyro.getAngle());
 		Timer.waitMillis(time);
 		this.setMotorPower(0, 0);
 	}
@@ -575,7 +630,7 @@ public class DriveTrain {
 		@Override
 		public void run() {
 			while(!kill) {
-				mecanumDrive_Cartesian2(dir.x*power, dir.y*power, 0, gyro.getAngle());
+				mecanumDrive_FieldOriented_Gyro(dir.x*power, dir.y*power, 0, gyro.getAngle());
 				Timer.waitMillis(10);
 			}
 		}
